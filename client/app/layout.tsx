@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import React from "react";
 import AppLayout from "@/components/layouts/app-layout";
+import type { Metadata } from "next";
+import React, { Fragment } from "react";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,11 +14,11 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="dark">
-       <>
-         <AppLayout>{children}</AppLayout>
-       </>
+        <Fragment>
+          <AppLayout>{children}</AppLayout>
+        </Fragment>
       </body>
     </html>
   );

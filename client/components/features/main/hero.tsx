@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Play, Star, Users } from "lucide-react";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -24,9 +25,11 @@ const Hero = () => {
               competitive edge in your career.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="rounded-full px-8">
-                Explore Courses
-              </Button>
+              <Link href="course/list">
+                <Button size="lg" className="rounded-full px-8 cursor-pointer">
+                  Explore Courses
+                </Button>
+              </Link>
               <Button
                 size="lg"
                 variant="outline"
