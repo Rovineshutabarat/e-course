@@ -1,8 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star } from "lucide-react";
+import CourseCard from "../course/course-card";
 
 const TopCourses = () => {
   const popularCourses = [
@@ -12,7 +10,7 @@ const TopCourses = () => {
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZjrHJ7etMn2x06FgG4AFV5bE4owz4u7cpCw&s",
       rating: 4.6,
       reviews: "980",
-      level: "Beginner",
+      difficulty: "Beginner",
       duration: "50 hours",
       modules: "120",
       price: "Rp.120.000",
@@ -29,7 +27,7 @@ const TopCourses = () => {
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZjrHJ7etMn2x06FgG4AFV5bE4owz4u7cpCw&s",
       rating: 4.7,
       reviews: "850",
-      level: "Intermediate",
+      difficulty: "Intermediate",
       duration: "45 hours",
       modules: "95",
       price: "Rp.150.000",
@@ -46,7 +44,7 @@ const TopCourses = () => {
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZjrHJ7etMn2x06FgG4AFV5bE4owz4u7cpCw&s",
       rating: 4.8,
       reviews: "1.3K",
-      level: "Advanced",
+      difficulty: "Advanced",
       duration: "60 hours",
       modules: "150",
       price: "Rp.180.000",
@@ -63,7 +61,7 @@ const TopCourses = () => {
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZjrHJ7etMn2x06FgG4AFV5bE4owz4u7cpCw&s",
       rating: 4.5,
       reviews: "1.1K",
-      level: "Beginner",
+      difficulty: "Beginner",
       duration: "40 hours",
       modules: "85",
       price: "Rp.120.000",
@@ -115,43 +113,7 @@ const TopCourses = () => {
             <ScrollArea className="w-full rounded-md">
               <div className="flex w-max space-x-8">
                 {popularCourses.map((course) => (
-                  <div
-                    className="group w-[20rem] shrink-0 cursor-pointer"
-                    key={course.title}
-                  >
-                    <div className="overflow-hidden rounded-xl mb-4 relative">
-                      <img
-                        src={course.image}
-                        alt={course.title}
-                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <Badge className="py-1 mb-3">{course.level}</Badge>
-
-                    <h3 className="mb-2 text-lg font-semibold group-hover:text-blue-500 transition-colors truncate">
-                      {course.title}
-                    </h3>
-
-                    <div className="flex items-center text-sm text-muted-foreground mb-2">
-                      <Avatar className="w-5 h-5 mr-1.5 border">
-                        <AvatarImage
-                          src={course.instructor.avatar}
-                          alt={course.instructor.name}
-                        />
-                        <AvatarFallback className="text-xs">
-                          {course.instructor.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span>By {course.instructor.name}</span>
-                      <span className="mx-2">•</span>
-                      <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 mr-1" />
-                      <p>{course.rating} (120)</p>
-                    </div>
-                    <div className="text-lg font-bold text-foreground">
-                      {course.price}
-                    </div>
-                  </div>
+                  <CourseCard key={course.title} course={course} />
                 ))}
               </div>
               <ScrollBar orientation="horizontal" />
