@@ -118,3 +118,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+}
