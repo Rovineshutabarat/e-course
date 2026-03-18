@@ -57,7 +57,6 @@ const Page = () => {
           className="cursor-pointer"
           onClick={() => {
             reset();
-            router.back();
           }}
         >
           Discard Changes

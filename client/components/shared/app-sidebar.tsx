@@ -113,13 +113,18 @@ const AppSidebar = ({ data }: AppSidebarProps) => {
                     >
                       <SidebarMenuItem>
                         <CollapsibleTrigger asChild>
-                          <SidebarMenuButton className="cursor-pointer tracking-wide]">
-                            <item.icon />
-                            <Link href={item.path ?? ""}>{item.label}</Link>
-                            {(item.subItems ?? []).length > 0 && (
-                              <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                            )}
-                          </SidebarMenuButton>
+                          <Link href={item.path ?? ""}>
+                            <SidebarMenuButton
+                              className="cursor-pointer tracking-wide]"
+                              isActive={isActive(item.path!)}
+                            >
+                              <item.icon />
+                              {item.label}
+                              {(item.subItems ?? []).length > 0 && (
+                                <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                              )}
+                            </SidebarMenuButton>
+                          </Link>
                         </CollapsibleTrigger>
                         {item?.subItems?.map(
                           (subItem: NavigationSubItem, index: number) => {
