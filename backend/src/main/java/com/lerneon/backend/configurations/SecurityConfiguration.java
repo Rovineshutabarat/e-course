@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                                                 .requestMatchers(
                                                                 "/auth/**",
                                                                 "/oauth2/**",
-                                                                // "/category/**",
+                                                                "/category/**",
                                                                 "/login/**",
                                                                 "/jwt/**")
                                                 .permitAll()

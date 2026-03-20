@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "sonner";
 import AuthProvider from "@/components/providers/auth-provider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React from "react";
+import { Toaster } from "sonner";
+import { TooltipProvider } from "../ui/tooltip";
 
 type AppLayoutProps = {
   children: React.ReactNode;
@@ -30,7 +31,9 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         richColors={true}
       />
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </>
   );

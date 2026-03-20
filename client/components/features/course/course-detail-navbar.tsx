@@ -11,7 +11,6 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
@@ -42,46 +41,44 @@ const CourseDetailNavbar = () => {
 
       <div className="flex items-center gap-x-4 shrink-0">
         <div className="flex items-center pr-4 border-r gap-x-1">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground cursor-pointer"
-                >
-                  <Heart className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Add to wishlist</TooltipContent>
-            </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground cursor-pointer"
+              >
+                <Heart className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Add to wishlist</TooltipContent>
+          </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground cursor-pointer"
-                >
-                  <Share2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Share this course</TooltipContent>
-            </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground cursor-pointer"
+              >
+                <Share2 className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Share this course</TooltipContent>
+          </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground cursor-pointer"
-                >
-                  <ShoppingCart className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Your Shopping Cart</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground cursor-pointer"
+              >
+                <ShoppingCart className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Your Shopping Cart</TooltipContent>
+          </Tooltip>
         </div>
 
         <div className="flex items-center gap-x-3 pl-2">
