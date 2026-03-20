@@ -64,7 +64,7 @@ const InstructorSidebar = () => {
           {
             label: "Enrollment History",
             icon: History,
-            path: "/instructor/analytics/enrollment",
+            path: "/instructor/enrollment/history",
           },
         ],
       },
@@ -79,7 +79,7 @@ const InstructorSidebar = () => {
           {
             label: "Payout History",
             icon: DollarSign,
-            path: "/instructor/revenue/payouts",
+            path: "/instructor/revenue/payout",
           },
         ],
       },
@@ -89,17 +89,17 @@ const InstructorSidebar = () => {
           {
             label: "Payout Settings",
             icon: CreditCard,
-            path: "/instructor/settings/profile",
+            path: "/instructor/setting/payout",
           },
           {
             label: "Notification Settings",
             icon: Bell,
-            path: "/instructor/settings/profile",
+            path: "/instructor/setting/notification",
           },
           {
             label: "Profile Settings",
             icon: Settings,
-            path: "/instructor/settings/profile",
+            path: "/instructor/setting/profile",
           },
         ],
       },

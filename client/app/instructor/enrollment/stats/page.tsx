@@ -76,51 +76,6 @@ const enrollmentPerCourse = [
   { name: "Node.js", enrollments: 310, newThisMonth: 26 },
 ];
 
-const recentEnrollments = [
-  {
-    name: "Ali Hasan",
-    course: "React Fund.",
-    date: "Mar 19, 2025",
-    avatar: "AH",
-  },
-  {
-    name: "Sarah Putri",
-    course: "Next.js",
-    date: "Mar 19, 2025",
-    avatar: "SP",
-  },
-  {
-    name: "Budi Santoso",
-    course: "TypeScript",
-    date: "Mar 18, 2025",
-    avatar: "BS",
-  },
-  {
-    name: "Maya Dewi",
-    course: "JS Basics",
-    date: "Mar 18, 2025",
-    avatar: "MD",
-  },
-  {
-    name: "Reza Firmansyah",
-    course: "Node.js",
-    date: "Mar 17, 2025",
-    avatar: "RF",
-  },
-  {
-    name: "Nadia Amelia",
-    course: "React Fund.",
-    date: "Mar 17, 2025",
-    avatar: "NA",
-  },
-  {
-    name: "Dian Kusuma",
-    course: "Next.js",
-    date: "Mar 16, 2025",
-    avatar: "DK",
-  },
-];
-
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088fe"];
 
 const EnrollmentStatsPage = () => {
@@ -305,58 +260,6 @@ const EnrollmentStatsPage = () => {
           </CardContent>
         </Card>
       </div>
-
-      <Card className="col-span-3">
-        <CardHeader>
-          <CardTitle>Recent Enrollments</CardTitle>
-          <CardDescription>Latest students who enrolled</CardDescription>
-        </CardHeader>
-        <CardContent className="px-0">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left font-medium text-muted-foreground px-6 py-3">
-                  Student
-                </th>
-                <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                  Course
-                </th>
-                <th className="text-right font-medium text-muted-foreground px-6 py-3">
-                  Date
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentEnrollments.map((row, i) => (
-                <tr
-                  key={i}
-                  className="border-b last:border-0 hover:bg-muted/50 transition-colors"
-                >
-                  <td className="px-6 py-3">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="h-7 w-7 rounded-full flex items-center justify-center text-xs font-semibold text-white shrink-0"
-                        style={{ background: COLORS[i % COLORS.length] }}
-                      >
-                        {row.avatar}
-                      </div>
-                      <span className="font-medium">{row.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                      {row.course}
-                    </span>
-                  </td>
-                  <td className="px-6 py-3 text-right text-muted-foreground text-xs">
-                    {row.date}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </CardContent>
-      </Card>
     </div>
   );
 };
