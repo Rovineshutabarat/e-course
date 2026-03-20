@@ -295,7 +295,7 @@ const DashboardPage = () => {
                 <th className="text-left font-medium text-muted-foreground px-4 py-3">
                   Avg. Rating
                 </th>
-                <th className="text-right font-medium text-muted-foreground px-6 py-3">
+                <th className="text-left font-medium text-muted-foreground px-4 py-3">
                   Total Revenue
                 </th>
               </tr>
@@ -327,7 +327,7 @@ const DashboardPage = () => {
                       {course.rating}
                     </span>
                   </td>
-                  <td className="px-6 py-3 text-right font-medium">
+                  <td className="px-4 py-3 text-muted-foreground">
                     {course.revenue}
                   </td>
                 </tr>

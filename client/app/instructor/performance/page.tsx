@@ -83,7 +83,6 @@ const courseData = [
     completion: 78,
     rating: 4.9,
     reviews: 318,
-    revenue: 12480,
     updatedAt: "Mar 12, 2025",
   },
   {
@@ -93,7 +92,6 @@ const courseData = [
     completion: 65,
     rating: 4.8,
     reviews: 245,
-    revenue: 9240,
     updatedAt: "Mar 10, 2025",
   },
   {
@@ -103,7 +101,6 @@ const courseData = [
     completion: 55,
     rating: 4.7,
     reviews: 187,
-    revenue: 7100,
     updatedAt: "Feb 28, 2025",
   },
   {
@@ -113,7 +110,6 @@ const courseData = [
     completion: 90,
     rating: 4.6,
     reviews: 154,
-    revenue: 4800,
     updatedAt: "Feb 20, 2025",
   },
   {
@@ -123,7 +119,6 @@ const courseData = [
     completion: 42,
     rating: 4.5,
     reviews: 98,
-    revenue: 3650,
     updatedAt: "Mar 5, 2025",
   },
 ];
@@ -428,8 +423,8 @@ const PerformancePage = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="text-left font-medium text-muted-foreground px-6 py-3">
-                  Course
+                <th className="text-left font-medium text-muted-foreground px-4 py-3">
+                  Course Name
                 </th>
                 <th className="text-left font-medium text-muted-foreground px-4 py-3">
                   Category
@@ -447,9 +442,6 @@ const PerformancePage = () => {
                   Total Reviews
                 </th>
                 <th className="text-left font-medium text-muted-foreground px-4 py-3">
-                  Revenue
-                </th>
-                <th className="text-right font-medium text-muted-foreground px-6 py-3">
                   Last Updated
                 </th>
               </tr>
@@ -457,7 +449,7 @@ const PerformancePage = () => {
             <tbody>
               {courseData.map((course, i) => (
                 <tr key={i} className="hover:bg-muted/50 transition-colors">
-                  <td className="px-6 py-3 text-muted-foreground">
+                  <td className="px-4 py-3 text-muted-foreground">
                     {course.name}
                   </td>
                   <td className="px-4 py-3">
@@ -482,10 +474,7 @@ const PerformancePage = () => {
                   <td className="px-4 py-3 text-muted-foreground">
                     {course.reviews.toLocaleString()}
                   </td>
-                  <td className="px-4 py-3 font-medium">
-                    ${course.revenue.toLocaleString()}
-                  </td>
-                  <td className="px-6 py-3 text-right text-muted-foreground text-xs">
+                  <td className="px-4 py-3 text-muted-foreground">
                     {course.updatedAt}
                   </td>
                 </tr>

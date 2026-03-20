@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/use-auth";
-import { Bell, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
@@ -43,8 +42,6 @@ const InstructorNavbar = () => {
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-x-5">
-        <Bell />
-        <ShoppingCart className="cursor-pointer" />
         <Avatar className="h-8 w-8 rounded-lg">
           <AvatarImage src={""} alt={session?.user.username} />
           <AvatarFallback className="rounded-lg uppercase">

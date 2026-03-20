@@ -59,7 +59,7 @@ const InstructorSidebar = () => {
           {
             label: "Enrollment Stats",
             icon: LineChart,
-            path: "/instructor/analytics/enrollment",
+            path: "/instructor/enrollment/stats",
           },
           {
             label: "Enrollment History",
@@ -69,17 +69,17 @@ const InstructorSidebar = () => {
         ],
       },
       {
-        label: "Earnings",
+        label: "Revenue",
         items: [
           {
-            label: "Earnings Overview",
+            label: "Revenue Overview",
             icon: Wallet,
-            path: "/instructor/earnings",
+            path: "/instructor/revenue/overview",
           },
           {
             label: "Payout History",
             icon: DollarSign,
-            path: "/instructor/earnings/payouts",
+            path: "/instructor/revenue/payouts",
           },
         ],
       },
