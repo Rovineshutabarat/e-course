@@ -1,5 +1,10 @@
 package com.lerneon.backend.services.implementations;
 
+import java.util.Optional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import com.lerneon.backend.models.entity.User;
 import com.lerneon.backend.models.exceptions.AuthException;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
@@ -8,10 +13,6 @@ import com.lerneon.backend.models.payload.request.UpdateProfileRequest;
 import com.lerneon.backend.repositories.UserRepository;
 import com.lerneon.backend.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,9 +26,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(
-                () -> new ResourceNotFoundException("User was not found.")
-        );
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User was not found."));
     }
 
     @Override
@@ -55,13 +55,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Integer id, UpdateProfileRequest updateProfileRequest) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User was not found.")
-        );
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User was not found."));
 
         user.setUsername(updateProfileRequest.getUsername());
         user.setEmail(updateProfileRequest.getEmail());
 
         return saveUser(user);
+    }
+
+    @Override
+    public User getCurrentAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!authentication.isAuthenticated()) {
+            throw new AuthException("Request is not authenticated");
+        }
+
+        return (User) authentication.getPrincipal();
     }
 }

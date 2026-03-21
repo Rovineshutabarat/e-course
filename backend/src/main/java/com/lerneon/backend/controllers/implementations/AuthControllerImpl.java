@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.lerneon.backend.controllers.AuthController;
 import com.lerneon.backend.handlers.ResponseHandler;
 import com.lerneon.backend.models.entity.OneTimePassword;
@@ -25,7 +24,6 @@ import com.lerneon.backend.services.AuthService;
 import com.lerneon.backend.services.OneTimePasswordService;
 import com.lerneon.backend.services.RefreshTokenService;
 import com.lerneon.backend.services.UserService;
-
 import jakarta.annotation.Nonnull;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -46,26 +44,25 @@ public class AuthControllerImpl implements AuthController {
         public ResponseEntity<SuccessResponse<AuthResponse>> login(
                         @Nonnull HttpServletResponse response,
                         @RequestBody @Valid LoginRequest loginRequest) {
-                return ResponseHandler.buildSuccessResponse(
-                                HttpStatus.OK,
+                return ResponseHandler.buildSuccessResponse(HttpStatus.OK,
                                 "Authentication successful.",
                                 authService.login(response, loginRequest));
         }
 
         @PostMapping("/register")
         @Override
-        public ResponseEntity<SuccessResponse<User>> register(@RequestBody @Valid RegisterRequest registerRequest) {
-                return ResponseHandler.buildSuccessResponse(
-                                HttpStatus.CREATED,
+        public ResponseEntity<SuccessResponse<User>> register(
+                        @RequestBody @Valid RegisterRequest registerRequest) {
+                return ResponseHandler.buildSuccessResponse(HttpStatus.CREATED,
                                 "User account has been created successfully.",
                                 authService.register(registerRequest));
         }
 
         @PostMapping("/refresh-token")
         @Override
-        public ResponseEntity<SuccessResponse<AuthResponse>> refreshToken(@Nonnull HttpServletResponse response) {
-                return ResponseHandler.buildSuccessResponse(
-                                HttpStatus.OK,
+        public ResponseEntity<SuccessResponse<AuthResponse>> refreshToken(
+                        @Nonnull HttpServletResponse response) {
+                return ResponseHandler.buildSuccessResponse(HttpStatus.OK,
                                 "token refreshed successfully.",
                                 refreshTokenService.refreshToken(response));
         }
@@ -74,29 +71,24 @@ public class AuthControllerImpl implements AuthController {
         @Override
         public ResponseEntity<SuccessResponse<Void>> logout(@Nonnull HttpServletResponse response) {
                 authService.logout(response);
-                return ResponseHandler.buildSuccessResponse(
-                                HttpStatus.OK,
-                                "Successfully logged out.",
-                                null);
+                return ResponseHandler.buildSuccessResponse(HttpStatus.OK,
+                                "Successfully logged out.", null);
         }
 
         @PostMapping("/send-otp")
         @Override
-        public ResponseEntity<SuccessResponse<Void>> sendOneTimePassword(@RequestBody @Valid EmailRequest emailRequest)
-                        throws MessagingException {
+        public ResponseEntity<SuccessResponse<Void>> sendOneTimePassword(
+                        @RequestBody @Valid EmailRequest emailRequest) throws MessagingException {
                 oneTimePasswordService.sendOneTimePassword(emailRequest);
-                return ResponseHandler.buildSuccessResponse(
-                                HttpStatus.OK,
-                                "OTP has been sent to the email address.",
-                                null);
+                return ResponseHandler.buildSuccessResponse(HttpStatus.OK,
+                                "OTP has been sent to the email address.", null);
         }
 
         @PostMapping("/change-password")
         @Override
         public ResponseEntity<SuccessResponse<User>> changePassword(
                         @RequestBody @Valid UpdatePasswordRequest updatePasswordRequest) {
-                return ResponseHandler.buildSuccessResponse(
-                                HttpStatus.OK,
+                return ResponseHandler.buildSuccessResponse(HttpStatus.OK,
                                 "Password has been successfully updated.",
                                 userService.changePassword(updatePasswordRequest));
         }
@@ -104,10 +96,8 @@ public class AuthControllerImpl implements AuthController {
         @GetMapping("/user")
         @Override
         public ResponseEntity<SuccessResponse<User>> findUserbyEmail(@RequestParam String email) {
-                return ResponseHandler.buildSuccessResponse(
-                                HttpStatus.OK,
-                                "Success get user by email.",
-                                userService.findUserByEmail(email));
+                return ResponseHandler.buildSuccessResponse(HttpStatus.OK,
+                                "Success get user by email.", userService.findUserByEmail(email));
         }
 
         @PostMapping("/verify-otp")
@@ -116,10 +106,9 @@ public class AuthControllerImpl implements AuthController {
                         @RequestBody @Valid OneTimePasswordRequest oneTimePasswordRequest,
                         @RequestParam String email,
                         @RequestParam(name = "type") VerificationType verificationType) {
-                return ResponseHandler.buildSuccessResponse(
-                                HttpStatus.OK,
+                return ResponseHandler.buildSuccessResponse(HttpStatus.OK,
                                 "Account has been successfully verified.",
-                                oneTimePasswordService.verifyOneTimePassword(oneTimePasswordRequest, email,
-                                                verificationType));
+                                oneTimePasswordService.verifyOneTimePassword(oneTimePasswordRequest,
+                                                email, verificationType));
         }
 }

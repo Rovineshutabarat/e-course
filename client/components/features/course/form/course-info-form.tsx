@@ -39,6 +39,7 @@ type CourseInfoRequest = z.infer<typeof CourseInfoRequest>;
 const CourseInfoForm = () => {
   const { data, setData, setCurrentTab, subscribeReset } = useCourseFormStore();
 
+
   const {
     register,
     handleSubmit,

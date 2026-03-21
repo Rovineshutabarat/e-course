@@ -18,8 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface AuthController {
 
-        ResponseEntity<SuccessResponse<AuthResponse>> login(
-                        HttpServletResponse response,
+
+        ResponseEntity<SuccessResponse<AuthResponse>> login(HttpServletResponse response,
                         LoginRequest loginRequest);
 
         ResponseEntity<SuccessResponse<User>> register(RegisterRequest registerRequest);
@@ -28,13 +28,15 @@ public interface AuthController {
 
         ResponseEntity<SuccessResponse<Void>> logout(HttpServletResponse response);
 
-        ResponseEntity<SuccessResponse<Void>> sendOneTimePassword(EmailRequest emailRequest) throws MessagingException;
+        ResponseEntity<SuccessResponse<Void>> sendOneTimePassword(EmailRequest emailRequest)
+                        throws MessagingException;
 
         ResponseEntity<SuccessResponse<OneTimePassword>> verifyOneTimePassword(
-                        OneTimePasswordRequest oneTimePasswordRequest,
-                        String email, VerificationType verificationType);
+                        OneTimePasswordRequest oneTimePasswordRequest, String email,
+                        VerificationType verificationType);
 
-        ResponseEntity<SuccessResponse<User>> changePassword(UpdatePasswordRequest updatePasswordRequest);
+        ResponseEntity<SuccessResponse<User>> changePassword(
+                        UpdatePasswordRequest updatePasswordRequest);
 
         ResponseEntity<SuccessResponse<User>> findUserbyEmail(String email);
 }

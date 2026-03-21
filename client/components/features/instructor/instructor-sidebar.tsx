@@ -44,7 +44,7 @@ const InstructorSidebar = () => {
           {
             label: "All Courses",
             icon: BookCheck,
-            path: "/instructor/courses",
+            path: "/instructor/course/list",
           },
           {
             label: "Create Course",

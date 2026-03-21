@@ -9,12 +9,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
-
 import com.lerneon.backend.filter.AuthEntryPoint;
 import com.lerneon.backend.filter.JwtAuthenticationFilter;
 import com.lerneon.backend.filter.RateLimitFilter;
 import com.lerneon.backend.handlers.OAuth2SuccessHandler;
-
 import lombok.AllArgsConstructor;
 
 @Configuration
@@ -29,25 +27,22 @@ public class SecurityConfiguration {
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                return http
-                                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                return http.cors(cors -> cors.configurationSource(corsConfigurationSource))
                                 .csrf(AbstractHttpConfigurer::disable)
-                                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))
-                                .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .exceptionHandling(exception -> exception
+                                                .authenticationEntryPoint(authEntryPoint))
+                                .sessionManagement(session -> session.sessionCreationPolicy(
+                                                SessionCreationPolicy.STATELESS))
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers(
-                                                                "/auth/**",
-                                                                "/oauth2/**",
-                                                                "/category/**",
-                                                                "/login/**",
-                                                                "/jwt/**")
-                                                .permitAll()
-                                                .anyRequest().authenticated())
-                                .oauth2Login(oauth2 -> oauth2
-                                                .successHandler(oAuth2SuccessHandler))
-                                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
-                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                                                .requestMatchers("/auth/**", "/oauth2/**",
+                                                                "/category/**", "/login/**",
+                                                                "/uploads/**", "/jwt/**")
+                                                .permitAll().anyRequest().authenticated())
+                                .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler))
+                                .addFilterBefore(rateLimitFilter,
+                                                UsernamePasswordAuthenticationFilter.class)
+                                .addFilterBefore(jwtAuthenticationFilter,
+                                                UsernamePasswordAuthenticationFilter.class)
                                 .build();
         }
 }
