@@ -42,11 +42,17 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Course was not found"));
     }
 
+
+    @Override
+    public Course findCourseBySlug(String slug) {
+        return courseRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResourceNotFoundException("Course was not found"));
+    }
+
     @Override
     public Course createCourse(CourseRequest courseRequest) {
-
-        log.info(courseRequest.toString());
         return courseRepository.save(Course.builder().title(courseRequest.getTitle())
+                .slug(generateSlug(courseRequest.getTitle()))
                 .description(courseRequest.getDescription()).price(courseRequest.getPrice())
                 .category(categoryService.findCategoryById(courseRequest.getCategoryId()))
                 .instructor(userService.getCurrentAuthenticatedUser())
@@ -56,7 +62,7 @@ public class CourseServiceImpl implements CourseService {
                 .outcomes(saveIfPresent(courseRequest.getOutcomes(), outcomeRepository))
                 .faqs(saveIfPresent(courseRequest.getFaqs(), faqRepository))
                 .image(uploadImageService.uploadImage(courseRequest.getImage()))
-                .walpaper(uploadImageService.uploadImage(courseRequest.getWallpaper())).build());
+                .wallpaper(uploadImageService.uploadImage(courseRequest.getWallpaper())).build());
 
     }
 
@@ -73,7 +79,7 @@ public class CourseServiceImpl implements CourseService {
                 .outcomes(saveIfPresent(courseRequest.getOutcomes(), outcomeRepository))
                 .faqs(saveIfPresent(courseRequest.getFaqs(), faqRepository))
                 .image(uploadImageService.uploadImage(courseRequest.getImage()))
-                .walpaper(uploadImageService.uploadImage(courseRequest.getWallpaper())).build());
+                .wallpaper(uploadImageService.uploadImage(courseRequest.getWallpaper())).build());
     }
 
     @Override
@@ -87,6 +93,10 @@ public class CourseServiceImpl implements CourseService {
         if (items == null || items.isEmpty())
             return List.of();
         return items.stream().map(repository::save).toList();
+    }
+
+    private String generateSlug(String title) {
+        return title.toLowerCase().replace(" ", "-");
     }
 
 }

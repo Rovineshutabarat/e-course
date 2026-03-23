@@ -1,7 +1,7 @@
 "use client";
 
 import SearchBar from "@/components/shared/search-bar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/use-auth";
 import { Bell, BookOpen, ShoppingCart } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
@@ -23,10 +24,10 @@ const CourseNavbar = () => {
   const { session, isAuthenticated, logout } = useAuth();
 
   return (
-    <div className="flex justify-between px-10 p-4 shadow-sm sticky top-0 z-50 bg-background items-center">
+    <div className="flex justify-between px-10 p-6 shadow-sm sticky top-0 z-50 bg-background items-center">
       <div className="flex items-center gap-x-3">
         <BookOpen />
-        <h1 className="text-[20px]">Peak LMS</h1>
+        <h1 className="text-[20px] font-bold">Peak LMS</h1>
       </div>
       <SearchBar placeholder="Search any course..." displaySize="large" />
       <div className="flex items-center gap-x-3">
@@ -40,7 +41,12 @@ const CourseNavbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src="" alt="user profile picture" />
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/${session?.user.image?.path}`}
+                    alt={session?.user.image?.name || "avatar"}
+                    fill
+                    className="object-cover"
+                  />
                   <AvatarFallback className="uppercase">
                     {session?.user.username.at(0)}
                   </AvatarFallback>

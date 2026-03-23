@@ -34,11 +34,18 @@ public class CourseControllerImpl implements CourseController {
                 courseService.findAllCourses());
     }
 
-    @GetMapping("/{id}")
+    // @GetMapping("/{id}")
+    // @Override
+    // public ResponseEntity<SuccessResponse<Course>> findCourseById(@PathVariable Integer id) {
+    // return ResponseHandler.buildSuccessResponse(HttpStatus.OK, "Success get course by id",
+    // courseService.findCourseById(id));
+    // }
+
+    @GetMapping("/{slug}")
     @Override
-    public ResponseEntity<SuccessResponse<Course>> findCourseById(Integer id) {
-        return ResponseHandler.buildSuccessResponse(HttpStatus.OK, "Success get course by id",
-                courseService.findCourseById(id));
+    public ResponseEntity<SuccessResponse<Course>> findCourseBySlug(@PathVariable String slug) {
+        return ResponseHandler.buildSuccessResponse(HttpStatus.OK, "Success get course by slug",
+                courseService.findCourseBySlug(slug));
     }
 
 

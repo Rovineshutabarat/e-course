@@ -32,7 +32,7 @@ public class CourseRequest {
         private String title;
 
         @NotBlank(message = "Description cannot be blank.")
-        @Size(min = 20, message = "Description must be at least 20 characters.")
+        @Size(min = 50, message = "Description must be at least 50 characters.")
         private String description;
 
         @NotNull(message = "Price is required.")

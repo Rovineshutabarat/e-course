@@ -33,14 +33,13 @@ public class SecurityConfiguration {
                                                 .authenticationEntryPoint(authEntryPoint))
                                 .sessionManagement(session -> session.sessionCreationPolicy(
                                                 SessionCreationPolicy.STATELESS))
-                                .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/auth/**", "/oauth2/**",
-                                                                "/category/**", "/login/**",
-                                                                "/uploads/**", "/jwt/**")
-                                                .permitAll().anyRequest().authenticated())
+                                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**",
+                                                "/oauth2/**", "/course/**", "/category/**",
+                                                "/login/**", "/uploads/**", "/jwt/**").permitAll()
+                                                .anyRequest().authenticated())
                                 .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler))
-                                .addFilterBefore(rateLimitFilter,
-                                                UsernamePasswordAuthenticationFilter.class)
+                                // .addFilterBefore(rateLimitFilter,
+                                // UsernamePasswordAuthenticationFilter.class)
                                 .addFilterBefore(jwtAuthenticationFilter,
                                                 UsernamePasswordAuthenticationFilter.class)
                                 .build();

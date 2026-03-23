@@ -3,12 +3,16 @@ import { Course } from "@/types/entity/course";
 import { SuccessResponse } from "@/types/payload/response/common/success.response";
 
 export class CourseService {
-    static async getAllCategories() {
+    static async getAllCourses() {
         return ApiClient.get("course").json<SuccessResponse<Course[]>>();
     }
 
-    static async getCourseById(id: number) {
-        return ApiClient.get(`course/${id}`).json<SuccessResponse<Course>>();
+    // static async getCourseById(id: number) {
+    //     return ApiClient.get(`course/${id}`).json<SuccessResponse<Course>>();
+    // }
+
+    static async getCourseBySlug(slug: string) {
+        return ApiClient.get(`course/${slug}`).json<SuccessResponse<Course>>();
     }
 
     static async createCourse(data: FormData) {

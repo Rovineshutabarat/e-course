@@ -32,6 +32,9 @@ public class Course extends BaseEntity {
         @Column(nullable = false, length = 150)
         private String title;
 
+        @Column(nullable = false, unique = true, length = 120)
+        private String slug;
+
         @Column(nullable = false, columnDefinition = "TEXT")
         private String description;
 
@@ -75,5 +78,5 @@ public class Course extends BaseEntity {
 
         @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
         @JoinColumn(name = "walpaper_id", referencedColumnName = "id", nullable = false)
-        private Image walpaper;
+        private Image wallpaper;
 }

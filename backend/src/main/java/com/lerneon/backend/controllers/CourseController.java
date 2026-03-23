@@ -9,7 +9,9 @@ import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 public interface CourseController {
     ResponseEntity<SuccessResponse<List<Course>>> findAllCourses();
 
-    ResponseEntity<SuccessResponse<Course>> findCourseById(Integer id);
+    // ResponseEntity<SuccessResponse<Course>> findCourseById(Integer id);
+
+    ResponseEntity<SuccessResponse<Course>> findCourseBySlug(String slug);
 
     ResponseEntity<SuccessResponse<Course>> createCourse(CourseRequest courseRequest);
 

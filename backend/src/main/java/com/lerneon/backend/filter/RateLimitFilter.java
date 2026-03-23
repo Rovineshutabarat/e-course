@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
 import org.springframework.stereotype.Component;
-
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -22,11 +20,11 @@ public class RateLimitFilter implements Filter {
     private final ConcurrentMap<String, Bucket> buckets = new ConcurrentHashMap<>();
 
     private Bucket getBucket(String clientId) {
-        return buckets.computeIfAbsent(clientId, k -> Bucket.builder()
-                .addLimit(Bandwidth.classic(
-                        10,
-                        Refill.intervally(1, Duration.ofSeconds(1))))
-                .build());
+        return buckets
+                .computeIfAbsent(clientId,
+                        k -> Bucket.builder().addLimit(
+                                Bandwidth.classic(20, Refill.intervally(1, Duration.ofSeconds(1))))
+                                .build());
     }
 
     @Override

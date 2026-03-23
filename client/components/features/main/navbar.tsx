@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/use-auth";
 import { BookOpen } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
@@ -31,6 +32,7 @@ const Navbar = () => {
 
   const { session, isAuthenticated, logout } = useAuth();
   const router = useRouter();
+
   return (
     <header className="p-5 space-x-20 shadow-sm flex justify-around items-center border-b bg-card/20 backdrop-blur-sm sticky top-0 z-50">
       <div className="flex items-center gap-x-3">
@@ -53,7 +55,12 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src="" alt="user profile picture" />
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/${session?.user.image?.path}`}
+                    alt={session?.user.image?.name || "avatar"}
+                    fill
+                    className="object-cover"
+                  />
                   <AvatarFallback className="uppercase">
                     {session?.user.username.at(0)}
                   </AvatarFallback>
