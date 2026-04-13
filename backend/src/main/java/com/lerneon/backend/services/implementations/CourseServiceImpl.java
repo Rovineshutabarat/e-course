@@ -8,6 +8,7 @@ import com.lerneon.backend.models.enums.Difficulty;
 import com.lerneon.backend.models.enums.Visibility;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.models.payload.request.CourseRequest;
+import com.lerneon.backend.models.payload.request.UpdateCourseVisibilityRequest;
 import com.lerneon.backend.repositories.CourseRepository;
 import com.lerneon.backend.repositories.FaqRepository;
 import com.lerneon.backend.repositories.OutcomeRepository;
@@ -80,6 +81,16 @@ public class CourseServiceImpl implements CourseService {
                 .faqs(saveIfPresent(courseRequest.getFaqs(), faqRepository))
                 .image(uploadImageService.uploadImage(courseRequest.getImage()))
                 .wallpaper(uploadImageService.uploadImage(courseRequest.getWallpaper())).build());
+    }
+
+
+
+    @Override
+    public Course updateCourseVisibility(Integer id,
+            UpdateCourseVisibilityRequest updateCourseVisibilityRequest) {
+        Course course = findCourseById(id);
+        course.setVisibility(Visibility.valueOf(updateCourseVisibilityRequest.getVisibility()));
+        return courseRepository.save(course);
     }
 
     @Override

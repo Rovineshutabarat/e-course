@@ -3,9 +3,11 @@ package com.lerneon.backend.utils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
 import com.lerneon.backend.models.entity.Category;
 import com.lerneon.backend.models.entity.Course;
 import com.lerneon.backend.models.entity.Faq;
@@ -19,14 +21,18 @@ import com.lerneon.backend.models.enums.Difficulty;
 import com.lerneon.backend.models.enums.Visibility;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.repositories.CourseRepository;
+import com.lerneon.backend.repositories.ModuleRepository;
 import com.lerneon.backend.repositories.RoleRepository;
 import com.lerneon.backend.repositories.UserRepository;
 import com.lerneon.backend.services.UserService;
 import com.lerneon.backend.services.implementations.CategoryServiceImpl;
+
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class AppInitializer implements CommandLineRunner {
         private final CourseRepository courseRepository;
         private final RoleRepository roleRepository;
@@ -34,9 +40,11 @@ public class AppInitializer implements CommandLineRunner {
         private final UserRepository userRepository;
         private final PasswordEncoder passwordEncoder;
         private final UserService userService;
+        private final ModuleRepository moduleRepository;
 
         @Override
         public void run(String... args) {
+                log.info(moduleRepository.findAll().toString());
                 initializeRoles();
                 initializeCategories();
                 initializeUsers();
@@ -86,7 +94,7 @@ public class AppInitializer implements CommandLineRunner {
                                 .price(new BigDecimal("100000"))
                                 .category(categoryService.findCategoryById(1))
                                 .difficulty(Difficulty.valueOf("BEGINNER"))
-                                .visibility(Visibility.valueOf("DRAFT"))
+                                .visibility(Visibility.valueOf("PRIVATE"))
                                 .requirements(List.of(
                                                 Requirement.builder().name("Basic Java knowledge")
                                                                 .build(),

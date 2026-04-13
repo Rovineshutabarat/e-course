@@ -1,6 +1,7 @@
 "use client";
 
 import DataTablePlaceholder from "@/components/shared/data-table-placeholder";
+import { ImageViewer } from "@/components/shared/image-viewer";
 import SearchBar from "@/components/shared/search-bar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +13,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+
+import ConfirmationDialog from "@/components/shared/confirmation-dialog";
 import {
     Table,
     TableBody,
@@ -28,7 +32,8 @@ import {
 import { cn } from "@/lib/utils";
 import { CourseService } from "@/services/course.service";
 import { Course } from "@/types/entity/course";
-import { useQuery } from "@tanstack/react-query";
+import { Visibility } from "@/types/enums/visibility";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     ColumnDef,
     flexRender,
@@ -36,9 +41,10 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, Download, Edit, MoreHorizontal, Plus } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, Download, Edit3, FolderOpenDot, Globe, Lock, MoreHorizontal, Plus, TrashIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { Fragment, useState } from "react";
+import { toast } from "sonner";
 
 const columns: ColumnDef<Course>[] = [
     { accessorKey: "id", header: "ID" },
@@ -116,34 +122,118 @@ const columns: ColumnDef<Course>[] = [
         cell: ({ row }) => <div className="text-center">{row.getValue("visibility")}</div>,
     },
     {
+        accessorKey: "image",
+        header: "Image",
+        cell: ({ row }) => <ImageViewer
+            src={`${process.env.NEXT_PUBLIC_API_URL}/${row.original.image.path}`}
+            alt={row.original.image.name || "Course image"}
+            height={20}
+        />,
+    },
+    {
         id: "actions",
         header: () => <div className="text-center">Actions</div>,
-        cell: ({ row }) => <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-4 w-4" />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                    <Link
-                        href={`/company/department/update/${row.original.id}`}
-                        className="flex items-center gap-x-2 w-full"
-                    >
-                        <Edit />
-                        <span>Edit</span>
-                    </Link>
-                </DropdownMenuItem>
-                {/*<DropdownMenuItem*/}
-                {/*  className="text-destructive flex items-center cursor-pointer"*/}
-                {/*  onClick={() => setShowDeleteDialog(true)}*/}
-                {/*>*/}
-                {/*  <TrashIcon /> <span>Delete</span>*/}
-                {/*</DropdownMenuItem>*/}
-            </DropdownMenuContent>
-        </DropdownMenu>,
+        cell: ({ row }) => {
+            const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
+            const [showUpdateVisibilityConfirmation, setShowUpdateVisibilityConfirmation] = useState(false)
+            const queryClient = useQueryClient()
+
+            const deleteCourseMutation = useMutation({
+                mutationKey: [`delete_course_${row.original.id}`],
+                mutationFn: () => CourseService.deleteCourse(row.original.id),
+                onSuccess: () => toast.success("Course deleted successfully"),
+                onError: () => toast.error("Failed to delete course"),
+                onSettled: async () => {
+                    return await queryClient.invalidateQueries({ queryKey: ["courses"] });
+                },
+            })
+            const updateCourseVisibilityMutation = useMutation({
+                mutationKey: [`update_course_visibility_${row.original.id}`],
+                mutationFn: (visibility: Visibility) => CourseService.updateCourseVisibility(row.original.id, { visibility }),
+                onSuccess: () => toast.success("Course visibility updated successfully"),
+                onError: () => toast.error("Failed to update course visibility"),
+                onSettled: async () => {
+                    return await queryClient.invalidateQueries({ queryKey: ["courses"] });
+                },
+            })
+
+            return (
+                <Fragment>
+                    <DropdownMenu >
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="cursor-pointer">
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                                <Link
+                                    href={`/company/department/update/${row.original.id}`}
+                                    className="flex items-center gap-x-2 w-full"
+                                >
+                                    <Edit3 />
+                                    <span>Edit Course</span>
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Link
+                                    href={`/instructor/course/${row.original.slug}/content`}
+                                    className="flex items-center gap-x-2 w-full"
+                                >
+                                    <FolderOpenDot />
+                                    <span>Content Editor</span>
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                className="cursor-pointer"
+                                onClick={() => setShowUpdateVisibilityConfirmation(true)}
+                            >
+                                {row.original.visibility === "PRIVATE" ? (
+                                    <>
+                                        <Globe className="h-4 w-4" />
+                                        <span>Publish Course</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Lock className="h-4 w-4" />
+                                        <span>Unpublish Course</span>
+                                    </>
+                                )}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                className="text-destructive flex items-center cursor-pointer"
+                                onClick={() => setShowDeleteConfirmation(true)}
+                            >
+                                <TrashIcon /> <span>Delete Course</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <ConfirmationDialog
+                        title="Delete Course?"
+                        description="This action cannot be undone. The course will be permanently deleted."
+                        open={showDeleteConfirmation}
+                        setOpen={setShowDeleteConfirmation}
+                        onConfirm={() => deleteCourseMutation.mutate()}
+                    />
+                    <ConfirmationDialog
+                        title={row.original.visibility === "PRIVATE" ? "Publish Course?" : "Unpublish Course?"}
+                        description={
+                            row.original.visibility === "PRIVATE"
+                                ? "This course will be published and accessible to all users."
+                                : "This course will be hidden and no longer accessible to users."
+                        }
+                        open={showUpdateVisibilityConfirmation}
+                        setOpen={setShowUpdateVisibilityConfirmation}
+                        onConfirm={() => updateCourseVisibilityMutation.mutate(
+                            row.original.visibility === "PRIVATE" ? "PUBLIC" : "PRIVATE"
+                        )}
+                    />
+                </Fragment>
+            )
+        }
     },
 ];
 
@@ -152,7 +242,7 @@ const CourseListPage = () => {
 
     const { data, isLoading } = useQuery({
         queryKey: ["courses"],
-        queryFn: () => CourseService.getAllCategories(),
+        queryFn: () => CourseService.getAllCourses(),
     });
 
     const courses = data?.data ?? [];
@@ -248,7 +338,7 @@ const CourseListPage = () => {
                                     <TableRow
                                         key={row.id}
                                         className={cn(
-                                            "hover:bg-primary/10 cursor-pointer",
+                                            "hover:bg-primary/10",
                                             row.getIsSelected() && "bg-primary/10 hover:bg-primary/10",
                                         )}
                                     >

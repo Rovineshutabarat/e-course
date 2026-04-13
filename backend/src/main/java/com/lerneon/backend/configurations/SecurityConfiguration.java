@@ -9,10 +9,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
+
 import com.lerneon.backend.filter.AuthEntryPoint;
 import com.lerneon.backend.filter.JwtAuthenticationFilter;
-import com.lerneon.backend.filter.RateLimitFilter;
 import com.lerneon.backend.handlers.OAuth2SuccessHandler;
+
 import lombok.AllArgsConstructor;
 
 @Configuration
@@ -23,7 +24,7 @@ public class SecurityConfiguration {
         private final AuthEntryPoint authEntryPoint;
         private final CorsConfigurationSource corsConfigurationSource;
         private final OAuth2SuccessHandler oAuth2SuccessHandler;
-        private final RateLimitFilter rateLimitFilter;
+        // private final RateLimitFilter rateLimitFilter;
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,8 +36,8 @@ public class SecurityConfiguration {
                                                 SessionCreationPolicy.STATELESS))
                                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**",
                                                 "/oauth2/**", "/course/**", "/category/**",
-                                                "/login/**", "/uploads/**", "/jwt/**").permitAll()
-                                                .anyRequest().authenticated())
+                                                "/login/**", "/uploads/**", "/jwt/**")
+                                                .permitAll().anyRequest().authenticated())
                                 .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler))
                                 // .addFilterBefore(rateLimitFilter,
                                 // UsernamePasswordAuthenticationFilter.class)

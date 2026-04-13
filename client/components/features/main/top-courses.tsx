@@ -1,6 +1,5 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CourseCard from "../course/course-card";
 
 const TopCourses = () => {
   const popularCourses = [
@@ -113,7 +112,8 @@ const TopCourses = () => {
             <ScrollArea className="w-full rounded-md">
               <div className="flex w-max space-x-8">
                 {popularCourses.map((course) => (
-                  <CourseCard key={course.title} course={course} />
+                  // <CourseCard key={course.title} course={course} />
+                  ""
                 ))}
               </div>
               <ScrollBar orientation="horizontal" />

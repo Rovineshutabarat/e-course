@@ -21,6 +21,7 @@ const difficultyConfig: { [key in Difficulty]: { label: string; className: strin
 };
 
 const DifficultyBadge = ({ difficulty }: DifficultyBadgeProps) => {
+  console.log("difficulty value:", difficulty)
   const { label, className } = difficultyConfig[difficulty];
 
   return (

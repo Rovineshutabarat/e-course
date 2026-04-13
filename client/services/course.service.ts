@@ -1,5 +1,6 @@
 import { ApiClient } from "@/services/config/api.client";
 import { Course } from "@/types/entity/course";
+import { UpdateCourseVisibilityRequest } from "@/types/payload/request/update.course.visibility.request";
 import { SuccessResponse } from "@/types/payload/response/common/success.response";
 
 export class CourseService {
@@ -24,6 +25,12 @@ export class CourseService {
     static async updateCourse(id: number, data: FormData) {
         return ApiClient.put(`course/${id}`, {
             body: data,
+        }).json<SuccessResponse<Course>>();
+    }
+
+    static async updateCourseVisibility(id: number, data: UpdateCourseVisibilityRequest) {
+        return ApiClient.put(`course/${id}/update-visibility`, {
+            json: data,
         }).json<SuccessResponse<Course>>();
     }
 

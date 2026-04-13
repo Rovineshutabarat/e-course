@@ -48,7 +48,7 @@ public class CourseRequest {
         private String difficulty;
 
         @ValidEnum(enumClass = Visibility.class,
-                        message = "Course Visibility must be one of: DRAFT, PUBLISHED, SUSPENDED")
+                        message = "Course Visibility must be one of: PRIVATE, PUBLIC, SUSPENDED")
         private String visibility;
 
         @Valid

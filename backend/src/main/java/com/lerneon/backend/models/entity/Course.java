@@ -2,15 +2,16 @@ package com.lerneon.backend.models.entity;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import com.lerneon.backend.models.enums.Difficulty;
 import com.lerneon.backend.models.enums.Visibility;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -58,18 +59,15 @@ public class Course extends BaseEntity {
         private Visibility visibility;
 
         @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-        @JoinTable(name = "course_requirements", joinColumns = @JoinColumn(name = "course_id"),
-                        inverseJoinColumns = @JoinColumn(name = "requirement_id"))
+        @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
         private List<Requirement> requirements;
 
         @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-        @JoinTable(name = "course_outcomes", joinColumns = @JoinColumn(name = "course_id"),
-                        inverseJoinColumns = @JoinColumn(name = "outcome_id"))
+        @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
         private List<Outcome> outcomes;
 
         @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-        @JoinTable(name = "course_faqs", joinColumns = @JoinColumn(name = "course_id"),
-                        inverseJoinColumns = @JoinColumn(name = "faq_id"))
+        @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
         private List<Faq> faqs;
 
         @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

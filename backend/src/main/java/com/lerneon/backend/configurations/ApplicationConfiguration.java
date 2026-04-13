@@ -1,8 +1,6 @@
 package com.lerneon.backend.configurations;
 
-import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
-import com.lerneon.backend.repositories.UserRepository;
-import lombok.AllArgsConstructor;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,8 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
+import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
+import com.lerneon.backend.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 
 @Configuration
 @AllArgsConstructor
@@ -43,13 +42,13 @@ public class ApplicationConfiguration {
 
     @Bean
     UserDetailsService userDetailsService() {
-        return (email) -> userRepository.findByEmail(email).orElseThrow(
-                () -> new ResourceNotFoundException("User was not found.")
-        );
+        return (email) -> userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User was not found."));
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }

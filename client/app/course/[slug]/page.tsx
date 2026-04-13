@@ -34,7 +34,6 @@ import { notFound, useParams } from "next/navigation";
 import { Fragment } from "react";
 
 const CourseDetailPage = () => {
-
   const params = useParams()
 
   const slug: string = params.slug as string

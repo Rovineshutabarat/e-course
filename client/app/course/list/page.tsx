@@ -28,7 +28,9 @@ const CourseListPage = () => {
   })
 
 
+  console.log("jhvhv");
   return (
+
     <div className="flex flex-col">
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-1">Popular Courses</h2>

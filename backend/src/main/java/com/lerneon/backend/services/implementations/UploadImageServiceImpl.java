@@ -4,25 +4,27 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.lerneon.backend.models.entity.Image;
-import com.lerneon.backend.models.exceptions.UploadImageException;
-import com.lerneon.backend.models.properties.UploadImageProperties;
+import com.lerneon.backend.models.exceptions.UploadException;
+import com.lerneon.backend.models.properties.UploadProperties;
 import com.lerneon.backend.repositories.ImageRepository;
 import com.lerneon.backend.services.UploadImageService;
+
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
 public class UploadImageServiceImpl implements UploadImageService {
     private final ImageRepository imageRepository;
-    private final UploadImageProperties uploadImageProperties;
-
+    private final UploadProperties uploadImageProperties;
 
     @Override
     public Image uploadImage(MultipartFile multipartFile) {
-        Path dirPath = Path.of(uploadImageProperties.getDirectory());
+        Path dirPath = Path.of(uploadImageProperties.getImageDirectory());
 
         try {
             if (!Files.exists(dirPath)) {
@@ -35,7 +37,7 @@ public class UploadImageServiceImpl implements UploadImageService {
             Path filePath = dirPath.resolve(UUID.randomUUID().toString().concat(extension));
 
             if (Files.exists(filePath)) {
-                throw new UploadImageException("Image already exist");
+                throw new UploadException("Image already exist");
             }
 
             Files.copy(multipartFile.getInputStream(), filePath,
@@ -45,10 +47,10 @@ public class UploadImageServiceImpl implements UploadImageService {
                     .save(Image.builder().fileName(multipartFile.getOriginalFilename())
                             .path(filePath.toString()).build());
 
-        } catch (UploadImageException e) {
+        } catch (UploadException e) {
             throw e;
         } catch (Exception e) {
-            throw new UploadImageException(
+            throw new UploadException(
                     String.format("Failed to upload image -> %s", e.getMessage()));
         }
     }

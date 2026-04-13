@@ -54,7 +54,7 @@ const CourseDetailForm = () => {
   } = useForm<CourseDetailRequest>({
     resolver: zodResolver(CourseDetailRequest),
     defaultValues: {
-      visibility: data?.visibility ?? "DRAFT",
+      visibility: data?.visibility ?? "PRIVATE",
       difficulty: data?.difficulty ?? "BEGINNER",
       requirements: data?.requirements ?? [{ name: "" }],
       outcomes: data?.outcomes ?? [{ name: "" }],
@@ -151,14 +151,13 @@ const CourseDetailForm = () => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Course Visibility</SelectLabel>
-                      <SelectItem value="DRAFT">Draft</SelectItem>
                       <SelectItem value="PRIVATE">Private</SelectItem>
                       <SelectItem value="PUBLIC">Public</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
                 <p className="text-sm text-muted-foreground">
-                  Decide whether your course is draft, private, or public.
+                  Decide whether your course is private, or public.
                 </p>
                 {errors.visibility && (
                   <p className="text-sm text-destructive">{errors.visibility.message}</p>

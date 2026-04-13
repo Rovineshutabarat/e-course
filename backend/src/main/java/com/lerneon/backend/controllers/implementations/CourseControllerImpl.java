@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.lerneon.backend.controllers.CourseController;
 import com.lerneon.backend.handlers.ResponseHandler;
 import com.lerneon.backend.models.entity.Course;
 import com.lerneon.backend.models.payload.request.CourseRequest;
+import com.lerneon.backend.models.payload.request.UpdateCourseVisibilityRequest;
 import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 import com.lerneon.backend.services.CourseService;
 import jakarta.validation.Valid;
@@ -63,6 +65,17 @@ public class CourseControllerImpl implements CourseController {
             @ModelAttribute @Valid CourseRequest courseRequest) {
         return ResponseHandler.buildSuccessResponse(HttpStatus.OK, "Success updating course",
                 courseService.updateCourse(id, courseRequest));
+    }
+
+
+
+    @PutMapping("/{id}/update-visibility")
+    @Override
+    public ResponseEntity<SuccessResponse<Course>> updateCourseVisibility(@PathVariable Integer id,
+            @RequestBody @Valid UpdateCourseVisibilityRequest updateCourseVisibilityRequest) {
+        return ResponseHandler.buildSuccessResponse(HttpStatus.OK,
+                "Success updating course visibility",
+                courseService.updateCourseVisibility(id, updateCourseVisibilityRequest));
     }
 
     @DeleteMapping("/{id}")
