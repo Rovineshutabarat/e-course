@@ -1,11 +1,16 @@
 package com.lerneon.backend.models.entity;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,4 +39,7 @@ public class Resource extends BaseEntity {
     @JoinColumn(name = "module_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private Module module;
+
+    @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<VideoTranscoderJob> videoTranscoderJobs;
 }

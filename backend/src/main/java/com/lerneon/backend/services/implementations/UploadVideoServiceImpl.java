@@ -86,7 +86,7 @@ public class UploadVideoServiceImpl implements UploadVideoService {
         }
 
         if (contentType == null || !uploadProperties.getAllowedExtension().contains(contentType.toLowerCase())) {
-            throw new UploadException("Invalid video mime type");
+            throw new UploadException("Invalid video mime type" + contentType);
         }
     }
 

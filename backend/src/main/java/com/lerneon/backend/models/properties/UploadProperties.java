@@ -18,4 +18,6 @@ public class UploadProperties {
     private String temporaryVideoDirectory;
     private List<String> allowedExtension;
     private DataSize maxVideoSize;
+    private Integer retryMaxAttempts;
+    private Integer retryDelayMs;
 }

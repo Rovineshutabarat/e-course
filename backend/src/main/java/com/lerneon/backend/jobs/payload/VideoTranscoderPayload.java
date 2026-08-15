@@ -1,7 +1,9 @@
 package com.lerneon.backend.jobs.payload;
 
 import java.io.Serializable;
+
 import com.lerneon.backend.models.enums.Resolution;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VideoTranscoderPayload implements Serializable {
+    private Integer resourceId;
     private String source;
     private String outputDirectory;
     private Resolution resolution;

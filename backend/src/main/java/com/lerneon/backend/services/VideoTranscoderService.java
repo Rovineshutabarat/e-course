@@ -3,15 +3,12 @@ package com.lerneon.backend.services;
 import com.lerneon.backend.jobs.payload.VideoTranscoderPayload;
 
 public interface VideoTranscoderService {
-    String transcode(VideoTranscoderPayload videoTranscoderPayload, String[] commands);
 
-    String transcode360p(VideoTranscoderPayload videoTranscoderPayload);
+    void transcode360p(VideoTranscoderPayload payload);
 
-    String transcode480p(VideoTranscoderPayload videoTranscoderPayload);
+    void transcode480p(VideoTranscoderPayload payload);
 
-    String transcode720p(VideoTranscoderPayload videoTranscoderPayload);
+    void transcode720p(VideoTranscoderPayload payload);
 
-    String createMasterPlaylist(String outputDir);
-
-    void createStreamDirectory(String path);
+    String createMasterPlaylist(String outputDir, String content);
 }

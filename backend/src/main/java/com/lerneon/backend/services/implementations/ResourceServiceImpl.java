@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.lerneon.backend.jobs.payload.VideoTranscoderPayload;
 import com.lerneon.backend.jobs.producer.VideoTranscoderProducer;
 import com.lerneon.backend.models.entity.Resource;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
@@ -49,16 +50,14 @@ public class ResourceServiceImpl implements ResourceService {
                     .url(outputDirectory + "/playlist.m3u8")
                     .module(moduleService.findModuleById(moduleId)).build();
 
-            // Resource savedResource = resourceRepository.save(resource);
-            // VideoTranscoderPayload videoTranscoderPayload =
-            // VideoTranscoderPayload.builder()
-            // .source(uploadVideoService.uploadVideo(resourceRequest.getVideo()))
-            // .outputDirectory(outputDirectory).build();
+            Resource savedResource = resourceRepository.save(resource);
+            VideoTranscoderPayload videoTranscoderPayload = VideoTranscoderPayload.builder()
+                    .resourceId(resource.getId())
+                    .source(uploadVideoService.uploadVideo(resourceRequest.getVideo()))
+                    .outputDirectory(outputDirectory).build();
 
-            // videoTranscoderProducer.transcode(videoTranscoderPayload);
-
-            uploadVideoService.uploadVideo(resourceRequest.getVideo());
-            return null;
+            videoTranscoderProducer.transcode(videoTranscoderPayload);
+            return savedResource;
         } catch (Exception exception) {
             throw new TranscoderException(exception.getMessage());
         }

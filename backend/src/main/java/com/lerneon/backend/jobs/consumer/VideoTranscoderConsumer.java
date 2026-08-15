@@ -21,7 +21,7 @@ public class VideoTranscoderConsumer {
     public void queue360p(String payload) throws JsonProcessingException {
         VideoTranscoderPayload videoTranscoderPayload =
                 objectMapper.readValue(payload, VideoTranscoderPayload.class);
-        videoTranscoderPayload.setResolution(Resolution.RES_360);
+        videoTranscoderPayload.setResolution(Resolution.RESOLUTION_360);
 
         videoTranscoderService.transcode360p(videoTranscoderPayload);
     }
@@ -30,7 +30,7 @@ public class VideoTranscoderConsumer {
     public void queue480p(String payload) throws JsonProcessingException {
         VideoTranscoderPayload videoTranscoderPayload =
                 objectMapper.readValue(payload, VideoTranscoderPayload.class);
-        videoTranscoderPayload.setResolution(Resolution.RES_480);
+        videoTranscoderPayload.setResolution(Resolution.RESOLUTION_480);
 
         videoTranscoderService.transcode480p(videoTranscoderPayload);
     }
@@ -39,7 +39,7 @@ public class VideoTranscoderConsumer {
     public void queue720p(String payload) throws JsonProcessingException {
         VideoTranscoderPayload videoTranscoderPayload =
                 objectMapper.readValue(payload, VideoTranscoderPayload.class);
-        videoTranscoderPayload.setResolution(Resolution.RES_720);
+        videoTranscoderPayload.setResolution(Resolution.RESOLUTION_720);
 
         videoTranscoderService.transcode720p(videoTranscoderPayload);
     }
