@@ -76,5 +76,5 @@ public class Course extends BaseEntity {
 
         @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
         @JoinColumn(name = "walpaper_id", referencedColumnName = "id", nullable = false)
-        private Image wallpaper;
+        private Image banner;
 }

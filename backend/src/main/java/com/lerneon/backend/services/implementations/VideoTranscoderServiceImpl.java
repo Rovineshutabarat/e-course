@@ -1,8 +1,6 @@
 package com.lerneon.backend.services.implementations;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,18 +8,15 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
 
-import com.lerneon.backend.jobs.payload.VideoTranscoderPayload;
 import com.lerneon.backend.models.entity.VideoTranscoderJob;
 import com.lerneon.backend.models.enums.TranscodeStatus;
 import com.lerneon.backend.models.exceptions.TranscoderException;
 import com.lerneon.backend.models.properties.UploadProperties;
 import com.lerneon.backend.repositories.VideoTranscoderJobRepository;
 import com.lerneon.backend.services.ResourceService;
-import com.lerneon.backend.services.VideoTranscoderService;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class VideoTranscoderServiceImpl implements VideoTranscoderService {
+public class VideoTranscoderServiceImpl {
 
     private final UploadProperties uploadProperties;
     // Message
@@ -84,20 +79,20 @@ public class VideoTranscoderServiceImpl implements VideoTranscoderService {
     private static final TranscodeProfile PROFILE_360P = TranscodeProfile.builder()
             .scale("scale=640:360:force_original_aspect_ratio=decrease")
             .pad("pad=640:360:(ow-iw)/2:(oh-ih)/2:color=black").preset("ultrafast")
-            .tune("fastdecode").crf("28").maxrate("700k").bufsize("1400k").profile("baseline")
-            .bfFrames(null).audioKbps("64k").build();
+            .tune("fastdecode").crf("28").maxrate("700k").bufsize("1400k")
+            .profile("baseline").bfFrames(null).audioKbps("64k").build();
 
     private static final TranscodeProfile PROFILE_480P = TranscodeProfile.builder()
             .scale("scale=854:480:force_original_aspect_ratio=decrease")
             .pad("pad=854:480:(ow-iw)/2:(oh-ih)/2:color=black").preset("ultrafast")
-            .tune("fastdecode").crf("26").maxrate("1200k").bufsize("2400k").profile("baseline")
-            .bfFrames(null).audioKbps("96k").build();
+            .tune("fastdecode").crf("26").maxrate("1200k").bufsize("2400k")
+            .profile("baseline").bfFrames(null).audioKbps("96k").build();
 
     private static final TranscodeProfile PROFILE_720P = TranscodeProfile.builder()
             .scale("scale=1280:720:force_original_aspect_ratio=decrease")
-            .pad("pad=1280:720:(ow-iw)/2:(oh-ih)/2:color=black").preset("fast").tune("fastdecode")
-            .crf("24").maxrate("2500k").bufsize("5000k").profile("baseline").bfFrames(null)
-            .audioKbps("128k").build();
+            .pad("pad=1280:720:(ow-iw)/2:(oh-ih)/2:color=black").preset("fast")
+            .tune("fastdecode").crf("24").maxrate("2500k").bufsize("5000k")
+            .profile("baseline").bfFrames(null).audioKbps("128k").build();
 
     private static final String MASTER_ENTRY_360P = "#EXT-X-STREAM-INF:BANDWIDTH=856000,AVERAGE-BANDWIDTH=700000,"
             + "RESOLUTION=640x360,CODECS=\"avc1.42E01E,mp4a.40.2\"\n" + DIR_360P + "/"
@@ -111,63 +106,68 @@ public class VideoTranscoderServiceImpl implements VideoTranscoderService {
             + "RESOLUTION=1280x720,CODECS=\"avc1.4D401F,mp4a.40.2\"\n" + DIR_720P + "/"
             + PLAYLIST_FILENAME + "\n";
 
-    @Override
-    public void transcode360p(VideoTranscoderPayload payload) {
-        transcodeResolution(payload, DIR_360P, PROFILE_360P, MASTER_ENTRY_360P);
-    }
+    // @Override
+    // public void transcode360p(VideoTranscoderPayload payload) {
+    // transcodeResolution(payload, DIR_360P, PROFILE_360P, MASTER_ENTRY_360P);
+    // }
 
-    @Override
-    public void transcode480p(VideoTranscoderPayload payload) {
-        transcodeResolution(payload, DIR_480P, PROFILE_480P, MASTER_ENTRY_480P);
-    }
+    // @Override
+    // public void transcode480p(VideoTranscoderPayload payload) {
+    // transcodeResolution(payload, DIR_480P, PROFILE_480P, MASTER_ENTRY_480P);
+    // }
 
-    @Override
-    public void transcode720p(VideoTranscoderPayload payload) {
-        transcodeResolution(payload, DIR_720P, PROFILE_720P, MASTER_ENTRY_720P);
-    }
+    // @Override
+    // public void transcode720p(VideoTranscoderPayload payload) {
+    // transcodeResolution(payload, DIR_720P, PROFILE_720P, MASTER_ENTRY_720P);
+    // }
 
-    private void transcodeResolution(VideoTranscoderPayload payload, String dirName,
-            TranscodeProfile profile, String masterEntry) {
+    // private void transcodeResolution(VideoTranscoderPayload payload, String
+    // dirName,
+    // TranscodeProfile profile, String masterEntry) {
 
-        String streamPath = Path.of(payload.getOutputDirectory(), dirName).toString();
-        createStreamDirectory(streamPath);
+    // String streamPath = Path.of(payload.getOutputDirectory(),
+    // dirName).toString();
+    // createStreamDirectory(streamPath);
 
-        VideoTranscoderJob job = createAndSaveJob(payload);
+    // VideoTranscoderJob job = createAndSaveJob(payload);
 
-        int maxAttempts = uploadProperties.getRetryMaxAttempts();
-        long delayMs = uploadProperties.getRetryDelayMs();
-        String label = dirName.replace("stream_", "").toUpperCase();
+    // int maxAttempts = uploadProperties.getRetryMaxAttempts();
+    // long delayMs = uploadProperties.getRetryDelayMs();
+    // String label = dirName.replace("stream_", "").toUpperCase();
 
-        TranscoderException lastException = null;
+    // TranscoderException lastException = null;
 
-        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-            try {
-                log.info("[Transcode][{}] Attempt {}/{}", label, attempt, maxAttempts);
+    // for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+    // try {
+    // log.info("[Transcode][{}] Attempt {}/{}", label, attempt, maxAttempts);
 
-                String[] command = buildTranscoderCommand(payload.getSource(), streamPath, profile);
-                runFfmpeg(payload, command, label);
+    // String[] command = buildTranscoderCommand(payload.getSource(), streamPath,
+    // profile);
+    // runFfmpeg(payload, command, label);
 
-                createMasterPlaylist(payload.getOutputDirectory(), masterEntry);
-                markJobComplete(job);
-                log.info("[Transcode][{}] Done ✓", label);
-                return;
+    // createMasterPlaylist(payload.getOutputDirectory(), masterEntry);
+    // markJobComplete(job);
+    // log.info("[Transcode][{}] Done ✓", label);
+    // return;
 
-            } catch (TranscoderException ex) {
-                lastException = ex;
-                log.warn("[Transcode][{}] Attempt {}/{} failed: {}", label, attempt, maxAttempts,
-                        ex.getMessage());
+    // } catch (TranscoderException ex) {
+    // lastException = ex;
+    // log.warn("[Transcode][{}] Attempt {}/{} failed: {}", label, attempt,
+    // maxAttempts,
+    // ex.getMessage());
 
-                if (attempt < maxAttempts) {
-                    log.info("[Transcode][{}] Retrying in {}ms...", label, delayMs);
-                    sleep(delayMs);
-                }
-            }
-        }
+    // if (attempt < maxAttempts) {
+    // log.info("[Transcode][{}] Retrying in {}ms...", label, delayMs);
+    // sleep(delayMs);
+    // }
+    // }
+    // }
 
-        markJobFailed(job);
-        throw new TranscoderException("[" + label + "] All " + maxAttempts + " attempts failed. "
-                + "Last error: " + lastException.getMessage());
-    }
+    // markJobFailed(job);
+    // throw new TranscoderException("[" + label + "] All " + maxAttempts + "
+    // attempts failed. "
+    // + "Last error: " + lastException.getMessage());
+    // }
 
     private static String progressBar(int pct) {
         int filled = pct; // 0–100 blok
@@ -175,92 +175,96 @@ public class VideoTranscoderServiceImpl implements VideoTranscoderService {
         return "[" + "█".repeat(filled) + "░".repeat(empty) + "]";
     }
 
-    private void runFfmpeg(VideoTranscoderPayload payload, String[] commands, String label) {
-        try {
-            ProcessBuilder pb = new ProcessBuilder(commands);
-            pb.redirectErrorStream(true);
-            Process process = pb.start();
+    // private void runFfmpeg(VideoTranscoderPayload payload, String[] commands,
+    // String label) {
+    // try {
+    // ProcessBuilder pb = new ProcessBuilder(commands);
+    // pb.redirectErrorStream(true);
+    // Process process = pb.start();
 
-            long totalUs = 0L;
-            int lastPct = -1;
-            long lastPrintMs = 0L;
+    // long totalUs = 0L;
+    // int lastPct = -1;
+    // long lastPrintMs = 0L;
 
-            System.out.println();
-            System.out.println();
-            System.out.println();
+    // System.out.println();
+    // System.out.println();
+    // System.out.println();
 
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+    // try (BufferedReader reader = new BufferedReader(
+    // new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
 
-                String line;
-                while ((line = reader.readLine()) != null) {
+    // String line;
+    // while ((line = reader.readLine()) != null) {
 
-                    if (totalUs == 0 && line.contains("Duration:")) {
-                        totalUs = parseDurationLine(line);
-                        log.info("[Transcode][{}] Total duration: {}µs", label, totalUs);
-                        continue;
-                    }
+    // if (totalUs == 0 && line.contains("Duration:")) {
+    // totalUs = parseDurationLine(line);
+    // log.info("[Transcode][{}] Total duration: {}µs", label, totalUs);
+    // continue;
+    // }
 
-                    if (line.startsWith("out_time_ms=")) {
-                        if (totalUs <= 0)
-                            continue;
+    // if (line.startsWith("out_time_ms=")) {
+    // if (totalUs <= 0)
+    // continue;
 
-                        long nowMs = System.currentTimeMillis();
-                        if (nowMs - lastPrintMs < 500)
-                            continue;
+    // long nowMs = System.currentTimeMillis();
+    // if (nowMs - lastPrintMs < 500)
+    // continue;
 
-                        long elapsedUs = parseMicros(line, "out_time_ms=");
-                        int pct = (int) Math.min(100, elapsedUs * 100 / totalUs);
-                        int bucket = (pct / PROGRESS_LOG_STEP) * PROGRESS_LOG_STEP;
+    // long elapsedUs = parseMicros(line, "out_time_ms=");
+    // int pct = (int) Math.min(100, elapsedUs * 100 / totalUs);
+    // int bucket = (pct / PROGRESS_LOG_STEP) * PROGRESS_LOG_STEP;
 
-                        if (bucket > lastPct) {
-                            lastPct = bucket;
-                            lastPrintMs = nowMs;
+    // if (bucket > lastPct) {
+    // lastPct = bucket;
+    // lastPrintMs = nowMs;
 
-                            Integer row = PROGRESS_LINES.get(label);
-                            if (row != null) {
-                                System.out.print("\033[s" + "\033[" + row + "A" + "\r\033[2K" + "["
-                                        + label + "] " + progressBar(bucket) + " " + bucket + "%"
-                                        + "\033[u");
-                                System.out.flush();
-                            }
+    // Integer row = PROGRESS_LINES.get(label);
+    // if (row != null) {
+    // System.out.print("\033[s" + "\033[" + row + "A" + "\r\033[2K" + "["
+    // + label + "] " + progressBar(bucket) + " " + bucket + "%"
+    // + "\033[u");
+    // System.out.flush();
+    // }
 
-                            if (bucket >= 100) {
-                                log.info("[Transcode][{}] Done ✓", label);
-                            }
-                        }
-                    }
-                }
-            }
+    // if (bucket >= 100) {
+    // log.info("[Transcode][{}] Done ✓", label);
+    // }
+    // }
+    // }
+    // }
+    // }
 
-            boolean finished = process.waitFor(payload.getResolution().getTimeout(), TimeUnit.MINUTES);
+    // boolean finished =
+    // process.waitFor(payload.getResolution().getTimeout(), TimeUnit.MINUTES);
 
-            if (!finished) {
-                process.destroyForcibly();
-                throw new TranscoderException(
-                        "FFmpeg timeout for resolution: " + payload.getResolution());
-            }
+    // if (!finished) {
+    // process.destroyForcibly();
+    // throw new TranscoderException(
+    // "FFmpeg timeout for resolution: " + payload.getResolution());
+    // }
 
-            int exitCode = process.exitValue();
-            if (exitCode != 0) {
-                throw new TranscoderException(
-                        "FFmpeg exited with code " + exitCode + " for [" + label + "]");
-            }
+    // int exitCode = process.exitValue();
+    // if (exitCode != 0) {
+    // throw new TranscoderException(
+    // "FFmpeg exited with code " + exitCode + " for [" + label + "]");
+    // }
 
-        } catch (TranscoderException ex) {
-            throw ex;
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new TranscoderException("FFmpeg interrupted [" + label + "]: " + ex.getMessage());
-        } catch (IOException ex) {
-            throw new TranscoderException("FFmpeg I/O error [" + label + "]: " + ex.getMessage());
-        } catch (Exception ex) {
-            throw new TranscoderException(
-                    "Unexpected FFmpeg error [" + label + "]: " + ex.getMessage());
-        }
-    }
+    // } catch (TranscoderException ex) {
+    // throw ex;
+    // } catch (InterruptedException ex) {
+    // Thread.currentThread().interrupt();
+    // throw new TranscoderException("FFmpeg interrupted [" + label + "]: " +
+    // ex.getMessage());
+    // } catch (IOException ex) {
+    // throw new TranscoderException("FFmpeg I/O error [" + label + "]: " +
+    // ex.getMessage());
+    // } catch (Exception ex) {
+    // throw new TranscoderException(
+    // "Unexpected FFmpeg error [" + label + "]: " + ex.getMessage());
+    // }
+    // }
 
-    @Override
+    // @Override
     public synchronized String createMasterPlaylist(String outputDir, String content) {
         try {
             Path path = Paths.get(outputDir, MASTER_FILENAME);
@@ -290,13 +294,14 @@ public class VideoTranscoderServiceImpl implements VideoTranscoderService {
         }
     }
 
-    private VideoTranscoderJob createAndSaveJob(VideoTranscoderPayload payload) {
-        VideoTranscoderJob job = VideoTranscoderJob.builder().source(payload.getSource())
-                .outputDir(payload.getOutputDirectory()).resolution(payload.getResolution())
-                .status(TranscodeStatus.PROCESSING)
-                .resource(resourceService.findResourceById(payload.getResourceId())).build();
-        return videoTranscoderJobRepository.save(job);
-    }
+    // private VideoTranscoderJob createAndSaveJob(VideoTranscoderPayload payload) {
+    // VideoTranscoderJob job =
+    // VideoTranscoderJob.builder().source(payload.getSource())
+    // .outputDir(payload.getOutputDirectory()).resolution(payload.getResolution())
+    // .status(TranscodeStatus.PROCESSING)
+    // .resource(resourceService.findResourceById(payload.getResourceId())).build();
+    // return videoTranscoderJobRepository.save(job);
+    // }
 
     private void markJobComplete(VideoTranscoderJob job) {
         job.setFinishedAt(LocalDateTime.now());

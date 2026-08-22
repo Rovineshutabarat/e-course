@@ -2,11 +2,9 @@ package com.lerneon.backend.controllers.implementations;
 
 import java.util.List;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,6 +16,7 @@ import com.lerneon.backend.controllers.ModuleController;
 import com.lerneon.backend.handlers.ResponseHandler;
 import com.lerneon.backend.models.entity.Module;
 import com.lerneon.backend.models.payload.request.ModuleRequest;
+import com.lerneon.backend.models.payload.request.UpdateModuleOrderNumberRequest;
 import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 import com.lerneon.backend.services.ModuleService;
 
@@ -30,27 +29,13 @@ import lombok.AllArgsConstructor;
 public class ModuleControllerImpl implements ModuleController {
         private final ModuleService moduleService;
 
-        @GetMapping
-        @Override
-        public ResponseEntity<SuccessResponse<List<Module>>> findAllModuleByCourseId(
-                        @Param("courseId") Integer courseId) {
-                return ResponseHandler.buildSuccessResponse(HttpStatus.OK,
-                                "Success get all module by course id",
-                                moduleService.findAllModuleByCourseId(courseId));
-        }
-
-        @GetMapping("/{id}")
-        @Override
-        public ResponseEntity<SuccessResponse<Module>> findModuleById(@PathVariable Integer id) {
-                return ResponseHandler.buildSuccessResponse(HttpStatus.OK, "Success get module by id",
-                                moduleService.findModuleById(id));
-        }
-
         @PostMapping
         @Override
         public ResponseEntity<SuccessResponse<Module>> createModule(
                         @RequestBody @Valid ModuleRequest moduleRequest) {
-                return ResponseHandler.buildSuccessResponse(HttpStatus.CREATED, "Success creating module",
+                return ResponseHandler.buildSuccessResponse(
+                                HttpStatus.CREATED,
+                                "Success creating module",
                                 moduleService.createModule(moduleRequest));
         }
 
@@ -58,22 +43,29 @@ public class ModuleControllerImpl implements ModuleController {
         @Override
         public ResponseEntity<SuccessResponse<Module>> updateModule(@PathVariable Integer id,
                         @RequestBody @Valid ModuleRequest moduleRequest) {
-                return ResponseHandler.buildSuccessResponse(HttpStatus.OK, "Success updating module",
+                return ResponseHandler.buildSuccessResponse(
+                                HttpStatus.OK,
+                                "Success updating module",
                                 moduleService.updateModule(id, moduleRequest));
         }
 
-        @PutMapping("/update-order/{id}")
+        @PutMapping("/{id}/update-order")
         @Override
-        public ResponseEntity<SuccessResponse<Module>> updateOrderNumber(@PathVariable Integer id,
-                        @Param("target") Integer target) {
-                return ResponseHandler.buildSuccessResponse(HttpStatus.OK, "Success updating module",
-                                moduleService.updateOrderNumber(id, target));
+        public ResponseEntity<SuccessResponse<List<Module>>> updateModuleOrderNumber(
+                        @PathVariable Integer id,
+                        @RequestBody UpdateModuleOrderNumberRequest updateModuleOrderNumberRequest) {
+                return ResponseHandler.buildSuccessResponse(
+                                HttpStatus.OK,
+                                "Success updating module order number",
+                                moduleService.updateModuleOrderNumber(id, updateModuleOrderNumberRequest));
         }
 
         @DeleteMapping("/{id}")
         @Override
         public ResponseEntity<SuccessResponse<Module>> deleteModule(@PathVariable Integer id) {
-                return ResponseHandler.buildSuccessResponse(HttpStatus.OK, "Success deleting module",
+                return ResponseHandler.buildSuccessResponse(
+                                HttpStatus.OK,
+                                "Success deleting module",
                                 moduleService.deleteModule(id));
         }
 

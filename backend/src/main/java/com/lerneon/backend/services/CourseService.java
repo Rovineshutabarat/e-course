@@ -1,12 +1,16 @@
 package com.lerneon.backend.services;
 
 import java.util.List;
+
 import com.lerneon.backend.models.entity.Course;
+import com.lerneon.backend.models.entity.Module;
 import com.lerneon.backend.models.payload.request.CourseRequest;
 import com.lerneon.backend.models.payload.request.UpdateCourseVisibilityRequest;
 
 public interface CourseService {
     List<Course> findAllCourses();
+
+    List<Module> findAllModules(String slug);
 
     Course findCourseById(Integer id);
 
@@ -16,8 +20,7 @@ public interface CourseService {
 
     Course updateCourse(Integer id, CourseRequest courseRequest);
 
-    Course updateCourseVisibility(Integer id,
-            UpdateCourseVisibilityRequest updateCourseVisibilityRequest);
+    Course updateCourseVisibility(Integer id, UpdateCourseVisibilityRequest updateCourseVisibilityRequest);
 
     Course deleteCourse(Integer id);
 }

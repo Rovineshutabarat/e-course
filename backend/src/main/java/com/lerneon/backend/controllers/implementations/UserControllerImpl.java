@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.lerneon.backend.controllers.UserController;
 import com.lerneon.backend.handlers.ResponseHandler;
 import com.lerneon.backend.models.entity.User;
 import com.lerneon.backend.models.payload.request.UpdateProfileRequest;
 import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 import com.lerneon.backend.services.UserService;
+
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -26,7 +28,8 @@ public class UserControllerImpl implements UserController {
     @Override
     public ResponseEntity<SuccessResponse<User>> updateUser(@PathVariable Integer id,
             @RequestBody @Valid UpdateProfileRequest updateProfileRequest) {
-        return ResponseHandler.buildSuccessResponse(HttpStatus.OK,
+        return ResponseHandler.buildSuccessResponse(
+                HttpStatus.OK,
                 "User account has been updated successfully.",
                 userService.updateUser(id, updateProfileRequest));
     }

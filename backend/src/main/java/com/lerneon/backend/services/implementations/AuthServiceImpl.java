@@ -67,10 +67,16 @@ public class AuthServiceImpl implements AuthService {
             String accessToken = jwtService.generateAccessToken(user);
             RefreshToken refreshToken = refreshTokenService.generateRefreshToken(user);
 
-            CookieUtil.setCookie(response, refreshTokenProperties.getCookieName(),
-                    refreshToken.getToken(), refreshTokenProperties.getExpiration().toMillis());
+            CookieUtil.setCookie(
+                    response,
+                    refreshTokenProperties.getCookieName(),
+                    refreshToken.getToken(),
+                    refreshTokenProperties.getExpiration().toMillis());
 
-            return AuthResponse.builder().accessToken(accessToken).user(user).build();
+            return AuthResponse.builder()
+                    .accessToken(accessToken)
+                    .user(user)
+                    .build();
 
         } catch (BadCredentialsException exception) {
             throw new AuthException("Invalid email or password.");
@@ -96,8 +102,7 @@ public class AuthServiceImpl implements AuthService {
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword())).isVerified(false)
                 .canChangePassword(false).provider(AccountProvider.LOCAL).roles(defaultRoles)
-                .ipAddress(request.getRemoteAddr())
-                .userAgent(request.getHeader("User-Agent"))
+                .ipAddress(request.getRemoteAddr()).userAgent(request.getHeader("User-Agent"))
                 .build());
     }
 
@@ -109,7 +114,10 @@ public class AuthServiceImpl implements AuthService {
                 .ifPresent(refreshToken -> refreshTokenService
                         .deletePreviousTokenByUser(refreshToken.getUser()));
 
-        CookieUtil.removeCookie(response, refreshTokenProperties.getCookieName());
+        CookieUtil.removeCookie(
+                response,
+                refreshTokenProperties.getCookieName());
+
         SecurityContextHolder.clearContext();
     }
 }

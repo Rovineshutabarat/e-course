@@ -1,7 +1,7 @@
 package com.lerneon.backend.services;
 
-import jakarta.mail.MessagingException;
+import com.lerneon.backend.models.event.MailEvent;
 
 public interface MailService {
-    void sendMail(String to, String subject, String content) throws MessagingException;
+    void sendMail(MailEvent mailEvent);
 }

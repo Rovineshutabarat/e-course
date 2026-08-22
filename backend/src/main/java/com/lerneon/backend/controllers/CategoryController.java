@@ -17,5 +17,4 @@ public interface CategoryController {
     ResponseEntity<SuccessResponse<Category>> updateCategory(Integer id, Category category);
 
     ResponseEntity<SuccessResponse<Category>> deleteCategory(Integer id);
-
 }

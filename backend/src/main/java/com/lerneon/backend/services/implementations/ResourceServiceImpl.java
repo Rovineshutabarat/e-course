@@ -7,8 +7,6 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.lerneon.backend.jobs.payload.VideoTranscoderPayload;
-import com.lerneon.backend.jobs.producer.VideoTranscoderProducer;
 import com.lerneon.backend.models.entity.Resource;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.models.exceptions.TranscoderException;
@@ -17,7 +15,6 @@ import com.lerneon.backend.models.properties.UploadProperties;
 import com.lerneon.backend.repositories.ResourceRepository;
 import com.lerneon.backend.services.ModuleService;
 import com.lerneon.backend.services.ResourceService;
-import com.lerneon.backend.services.UploadVideoService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ResourceServiceImpl implements ResourceService {
     private final ResourceRepository resourceRepository;
-    private final VideoTranscoderProducer videoTranscoderProducer;
-    private final UploadVideoService uploadVideoService;
+    // private final UploadVideoService uploadVideoService;
     private final UploadProperties uploadProperties;
     private final ModuleService moduleService;
 
@@ -51,12 +47,7 @@ public class ResourceServiceImpl implements ResourceService {
                     .module(moduleService.findModuleById(moduleId)).build();
 
             Resource savedResource = resourceRepository.save(resource);
-            VideoTranscoderPayload videoTranscoderPayload = VideoTranscoderPayload.builder()
-                    .resourceId(resource.getId())
-                    .source(uploadVideoService.uploadVideo(resourceRequest.getVideo()))
-                    .outputDirectory(outputDirectory).build();
 
-            videoTranscoderProducer.transcode(videoTranscoderPayload);
             return savedResource;
         } catch (Exception exception) {
             throw new TranscoderException(exception.getMessage());

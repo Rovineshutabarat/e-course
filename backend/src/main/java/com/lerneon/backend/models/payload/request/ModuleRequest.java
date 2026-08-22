@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ModuleRequest {
-    private String title;
     private Integer courseId;
+    private String title;
 }

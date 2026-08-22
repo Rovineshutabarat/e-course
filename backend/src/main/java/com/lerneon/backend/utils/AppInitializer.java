@@ -112,7 +112,7 @@ public class AppInitializer implements CommandLineRunner {
                                 .image(Image.builder().fileName("course-thumbnail.jpg").path(
                                                 "uploads/7759cdb8-e877-4af3-b92d-987a3c17644b.png")
                                                 .build())
-                                .wallpaper(Image.builder().fileName("course-wallpaper.jpg").path(
+                                .banner(Image.builder().fileName("course-wallpaper.jpg").path(
                                                 "uploads/7759cdb8-e877-4af3-b92d-987a3c17644b.png")
                                                 .build())
                                 .build();

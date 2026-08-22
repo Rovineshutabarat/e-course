@@ -4,17 +4,16 @@ import java.util.List;
 
 import com.lerneon.backend.models.entity.Module;
 import com.lerneon.backend.models.payload.request.ModuleRequest;
+import com.lerneon.backend.models.payload.request.UpdateModuleOrderNumberRequest;
 
 public interface ModuleService {
-    List<Module> findAllModuleByCourseId(Integer courseId);
-
     Module findModuleById(Integer id);
 
     Module createModule(ModuleRequest moduleRequest);
 
     Module updateModule(Integer id, ModuleRequest moduleRequest);
 
-    Module updateOrderNumber(Integer id, Integer target);
+    List<Module> updateModuleOrderNumber(Integer id, UpdateModuleOrderNumberRequest updateModuleOrderNumberRequest);
 
     Module deleteModule(Integer id);
 }

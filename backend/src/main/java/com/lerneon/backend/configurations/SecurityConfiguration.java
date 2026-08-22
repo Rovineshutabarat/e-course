@@ -9,9 +9,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
+
 import com.lerneon.backend.filter.AuthEntryPoint;
 import com.lerneon.backend.filter.JwtAuthenticationFilter;
 import com.lerneon.backend.handlers.OAuth2SuccessHandler;
+
 import lombok.AllArgsConstructor;
 
 @Configuration

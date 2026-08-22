@@ -7,7 +7,6 @@ import com.lerneon.backend.models.payload.request.ResourceRequest;
 import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 
 public interface ResourceController {
-
     ResponseEntity<SuccessResponse<Resource>> findResourceById(Integer id);
 
     ResponseEntity<SuccessResponse<Resource>> createResource(Integer moduleId, ResourceRequest resourceRequest);
