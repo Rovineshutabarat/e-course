@@ -9,15 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.lerneon.backend.events.producer.MailEventProducer;
 import com.lerneon.backend.models.entity.OneTimePassword;
 import com.lerneon.backend.models.entity.User;
 import com.lerneon.backend.models.enums.VerificationType;
+import com.lerneon.backend.models.event.MailEvent;
 import com.lerneon.backend.models.exceptions.AuthException;
 import com.lerneon.backend.models.payload.request.EmailRequest;
 import com.lerneon.backend.models.payload.request.OneTimePasswordRequest;
 import com.lerneon.backend.models.properties.OneTimePasswordProperties;
 import com.lerneon.backend.repositories.OneTimePasswordRepository;
-import com.lerneon.backend.services.MailService;
 import com.lerneon.backend.services.OneTimePasswordService;
 import com.lerneon.backend.services.UserService;
 
@@ -28,7 +29,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class OneTimePasswordServiceImpl implements OneTimePasswordService {
     private final OneTimePasswordRepository oneTimePasswordRepository;
-    private final MailService mailService;
+    private final MailEventProducer mailEventProducer;
     private final OneTimePasswordProperties oneTimePasswordProperties;
     private final TemplateEngine templateEngine;
     private final UserService userService;
@@ -48,12 +49,14 @@ public class OneTimePasswordServiceImpl implements OneTimePasswordService {
     public void sendOneTimePassword(EmailRequest emailRequest) throws MessagingException {
         User user = userService.findUserByEmail(emailRequest.getEmail());
         OneTimePassword oneTimePassword = oneTimePasswordRepository
-                .findByUserAndVerificationType(user, VerificationType.valueOf(emailRequest.getVerificationType()))
+                .findByUserAndVerificationType(
+                        user,
+                        VerificationType.valueOf(emailRequest.getVerificationType()))
                 .orElse(null);
 
-        if (oneTimePassword != null && oneTimePassword.getLastOtpRequest() != null
-                && oneTimePassword.getLastOtpRequest()
-                        .isAfter(LocalDateTime.now().minusMinutes(2))) {
+        if (oneTimePassword != null &&
+                oneTimePassword.getLastOtpRequest() != null &&
+                oneTimePassword.getLastOtpRequest().isAfter(LocalDateTime.now().minusMinutes(2))) {
             throw new AuthException("Please wait before requesting another OTP.");
         }
 
@@ -71,14 +74,19 @@ public class OneTimePasswordServiceImpl implements OneTimePasswordService {
                 .lastOtpRequest(LocalDateTime.now())
                 .build());
 
-        mailService.sendMail(emailRequest.getEmail(), "Verify Your Identity",
-                loadOneTimePasswordTemplate(code, user.getEmail()));
+        MailEvent mailEvent = MailEvent.builder()
+                .to(emailRequest.getEmail())
+                .subject("Verify Your Identity")
+                .content(loadOneTimePasswordTemplate(code, user.getEmail()))
+                .build();
+        mailEventProducer.sendOneTimePasswordEvent(mailEvent);
     }
 
     @Override
     @Transactional
-    public OneTimePassword verifyOneTimePassword(OneTimePasswordRequest oneTimePasswordRequest, String email,
-            VerificationType verificationType) {
+    public OneTimePassword verifyOneTimePassword(
+            OneTimePasswordRequest oneTimePasswordRequest,
+            String email, VerificationType verificationType) {
 
         User user = userService.findUserByEmail(email);
 
@@ -111,7 +119,8 @@ public class OneTimePasswordServiceImpl implements OneTimePasswordService {
 
     @Transactional
     @Override
-    public void deletePreviousOtpByUserAndVerificationType(User user, VerificationType verificationType) {
+    public void deletePreviousOtpByUserAndVerificationType(User user,
+            VerificationType verificationType) {
         oneTimePasswordRepository.deleteAllByUserAndVerificationType(user, verificationType);
     }
 }

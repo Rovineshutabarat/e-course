@@ -54,7 +54,8 @@ public class AuthControllerImpl implements AuthController {
 
         @PostMapping("/register")
         @Override
-        public ResponseEntity<SuccessResponse<User>> register(@RequestBody @Valid RegisterRequest registerRequest) {
+        public ResponseEntity<SuccessResponse<User>> register(
+                        @RequestBody @Valid RegisterRequest registerRequest) {
                 return ResponseHandler.buildSuccessResponse(
                                 HttpStatus.CREATED,
                                 "User account has been created successfully.",
@@ -63,7 +64,8 @@ public class AuthControllerImpl implements AuthController {
 
         @PostMapping("/refresh-token")
         @Override
-        public ResponseEntity<SuccessResponse<AuthResponse>> refreshToken(@Nonnull HttpServletResponse response) {
+        public ResponseEntity<SuccessResponse<AuthResponse>> refreshToken(
+                        @Nonnull HttpServletResponse response) {
                 return ResponseHandler.buildSuccessResponse(
                                 HttpStatus.OK,
                                 "token refreshed successfully.",
@@ -82,8 +84,8 @@ public class AuthControllerImpl implements AuthController {
 
         @PostMapping("/send-otp")
         @Override
-        public ResponseEntity<SuccessResponse<Void>> sendOneTimePassword(@RequestBody @Valid EmailRequest emailRequest)
-                        throws MessagingException {
+        public ResponseEntity<SuccessResponse<Void>> sendOneTimePassword(
+                        @RequestBody @Valid EmailRequest emailRequest) throws MessagingException {
                 oneTimePasswordService.sendOneTimePassword(emailRequest);
                 return ResponseHandler.buildSuccessResponse(
                                 HttpStatus.OK,
@@ -101,6 +103,7 @@ public class AuthControllerImpl implements AuthController {
                                 userService.changePassword(updatePasswordRequest));
         }
 
+        // move this to use controller
         @GetMapping("/user")
         @Override
         public ResponseEntity<SuccessResponse<User>> findUserbyEmail(@RequestParam String email) {
@@ -119,7 +122,7 @@ public class AuthControllerImpl implements AuthController {
                 return ResponseHandler.buildSuccessResponse(
                                 HttpStatus.OK,
                                 "Account has been successfully verified.",
-                                oneTimePasswordService.verifyOneTimePassword(oneTimePasswordRequest, email,
-                                                verificationType));
+                                oneTimePasswordService.verifyOneTimePassword(oneTimePasswordRequest,
+                                                email, verificationType));
         }
 }

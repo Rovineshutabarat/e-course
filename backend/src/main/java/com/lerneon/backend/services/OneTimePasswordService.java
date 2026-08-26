@@ -14,7 +14,9 @@ public interface OneTimePasswordService {
 
     void sendOneTimePassword(EmailRequest emailRequest) throws MessagingException;
 
-    OneTimePassword verifyOneTimePassword(OneTimePasswordRequest oneTimePasswordRequest, String email,
+    OneTimePassword verifyOneTimePassword(
+            OneTimePasswordRequest oneTimePasswordRequest,
+            String email,
             VerificationType verificationType);
 
     void deletePreviousOtpByUserAndVerificationType(User user, VerificationType verificationType);

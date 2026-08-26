@@ -1,26 +1,33 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { formatPrice } from "@/lib/price.formatter";
+import { Course } from "@/types/entity/course";
 import { Star } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import DifficultyBadge from "./difficulty-badge";
 
 type CourseCardProps = {
-  course: any;
+  course: Course;
 };
 
 const CourseCard = ({ course }: CourseCardProps) => {
   return (
-    <div
+    <Link href={course.slug ?? ""}
       className="group w-[20rem] shrink-0 cursor-pointer flex flex-col"
-      key={course.title}
+      key={course.id}
     >
-      <div className="overflow-hidden rounded-xl mb-4 relative">
-        <img
-          src={course.image}
-          alt={course.title}
-          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-        />
 
+      <div className="overflow-hidden rounded-xl mb-4 relative">
+        <div className="relative w-full h-48">
+          <Image
+            src={`${process.env.NEXT_PUBLIC_API_URL}/${course.image.path}`}
+            alt={course.image.name || "Course image"}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
         <DifficultyBadge difficulty={course.difficulty} />
       </div>
 
@@ -30,7 +37,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
         </h3>
 
         {course.description && (
-          <p className="text-muted-foreground text-sm line-clamp-1 mb-3">
+          <p className="text-muted-foreground text-sm line-clamp-2 mb-3 pr-2">
             {course.description}
           </p>
         )}
@@ -38,26 +45,28 @@ const CourseCard = ({ course }: CourseCardProps) => {
 
       <div className="flex items-center text-sm text-muted-foreground mb-2">
         <Avatar className="w-5 h-5 mr-1.5 border">
-          <AvatarImage
-            src={course.instructor.avatar}
-            alt={course.instructor.name}
+          <Image
+            src={`${process.env.NEXT_PUBLIC_API_URL}/${course.instructor.image?.path}`}
+            alt={course.instructor.image?.name || "avatar"}
+            fill
+            className="rounded-full object-cover border"
           />
           <AvatarFallback className="text-xs">
-            {course.instructor.name.charAt(0)}
+            {course.instructor.username?.charAt(0)}
           </AvatarFallback>
         </Avatar>
 
-        <span>By {course.instructor.name}</span>
+        <span>By {course.instructor.username}</span>
         <span className="mx-2">•</span>
 
         <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 mr-1" />
-        <p>{course.rating} (120)</p>
+        <p>4.5 (120)</p>
       </div>
 
       <div className="text-lg font-bold text-foreground mt-auto">
-        {course.price}
+        {formatPrice(course.price)}
       </div>
-    </div>
+    </Link>
   );
 };
 

@@ -14,8 +14,8 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
-      <body className="dark">
+    <html lang="en">
+      <body className="dark" suppressHydrationWarning>
         <Fragment>
           <AppLayout>{children}</AppLayout>
         </Fragment>

@@ -42,7 +42,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         private final RefreshTokenProperties refreshTokenProperties;
 
         @Override
-        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+        public void onAuthenticationSuccess(
+                        HttpServletRequest request,
+                        HttpServletResponse response,
                         Authentication authentication) throws IOException {
                 CookieUtil.removeCookie(response, refreshTokenProperties.getCookieName());
 

@@ -12,7 +12,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -22,6 +22,7 @@ const LoginPage = () => {
   const router = useRouter();
 
   const { signIn, isLoading } = useAuth();
+  
 
   useEffect(() => {
     const error = searchParams.get("error");
@@ -71,6 +72,7 @@ const LoginPage = () => {
                   placeholder="Enter Your Email"
                   {...register("email")}
                 />
+
                 {errors.email && (
                   <p className="mt-1 text-destructive text-sm">
                     *{errors.email.message}

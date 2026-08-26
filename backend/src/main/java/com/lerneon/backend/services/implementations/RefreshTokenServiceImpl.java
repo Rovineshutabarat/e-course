@@ -53,8 +53,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             throw new AuthException("Request does not contain Refresh token.");
         }
 
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenCookie.get()).orElseThrow(
-                () -> new AuthException("Refresh token was not found."));
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenCookie.get())
+                .orElseThrow(() -> new AuthException("Refresh token was not found."));
 
         if (refreshToken.getExpireAt().isBefore(LocalDateTime.now())) {
             throw new AuthException("Refresh token is already expired.");

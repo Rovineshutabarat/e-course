@@ -30,8 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 public class CategoryControllerImpl implements CategoryController {
     private final CategoryServiceImpl categoryService;
 
-    @Override
     @GetMapping
+    @Override
     public ResponseEntity<SuccessResponse<List<Category>>> findAllCategories() {
         return ResponseHandler.buildSuccessResponse(
                 HttpStatus.OK,
@@ -39,8 +39,8 @@ public class CategoryControllerImpl implements CategoryController {
                 categoryService.findAllCategories());
     }
 
-    @Override
     @GetMapping("/{id}")
+    @Override
     public ResponseEntity<SuccessResponse<Category>> findCategoryById(@PathVariable Integer id) {
         return ResponseHandler.buildSuccessResponse(
                 HttpStatus.OK,
@@ -48,17 +48,18 @@ public class CategoryControllerImpl implements CategoryController {
                 categoryService.findCategoryById(id));
     }
 
-    @Override
     @PostMapping
-    public ResponseEntity<SuccessResponse<Category>> createCategory(@RequestBody @Valid Category category) {
+    @Override
+    public ResponseEntity<SuccessResponse<Category>> createCategory(
+            @RequestBody @Valid Category category) {
         return ResponseHandler.buildSuccessResponse(
                 HttpStatus.CREATED,
                 "Category created successfully.",
                 categoryService.createCategory(category));
     }
 
-    @Override
     @PutMapping("/{id}")
+    @Override
     public ResponseEntity<SuccessResponse<Category>> updateCategory(@PathVariable Integer id,
             @RequestBody @Valid Category category) {
         return ResponseHandler.buildSuccessResponse(
@@ -67,8 +68,8 @@ public class CategoryControllerImpl implements CategoryController {
                 categoryService.updateCategory(id, category));
     }
 
-    @Override
     @DeleteMapping("/{id}")
+    @Override
     public ResponseEntity<SuccessResponse<Category>> deleteCategory(@PathVariable Integer id) {
         return ResponseHandler.buildSuccessResponse(
                 HttpStatus.OK,

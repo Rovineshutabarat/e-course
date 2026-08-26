@@ -17,10 +17,7 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface AuthController {
-
-        ResponseEntity<SuccessResponse<AuthResponse>> login(
-                        HttpServletResponse response,
-                        LoginRequest loginRequest);
+        ResponseEntity<SuccessResponse<AuthResponse>> login(HttpServletResponse response, LoginRequest loginRequest);
 
         ResponseEntity<SuccessResponse<User>> register(RegisterRequest registerRequest);
 
@@ -32,7 +29,8 @@ public interface AuthController {
 
         ResponseEntity<SuccessResponse<OneTimePassword>> verifyOneTimePassword(
                         OneTimePasswordRequest oneTimePasswordRequest,
-                        String email, VerificationType verificationType);
+                        String email,
+                        VerificationType verificationType);
 
         ResponseEntity<SuccessResponse<User>> changePassword(UpdatePasswordRequest updatePasswordRequest);
 

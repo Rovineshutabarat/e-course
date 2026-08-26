@@ -1,8 +1,11 @@
 export const formatPrice = (price: number) => {
-  if (price === 0.0) return "Free";
-  return new Intl.NumberFormat("en-US", {
+  if (price === 0) return "Free";
+  return new Intl.NumberFormat("id-ID", {
     style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(price);
 };
+
+// en-US USD 

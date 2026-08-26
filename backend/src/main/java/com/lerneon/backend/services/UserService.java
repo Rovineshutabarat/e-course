@@ -1,10 +1,9 @@
 package com.lerneon.backend.services;
 
+import java.util.Optional;
 import com.lerneon.backend.models.entity.User;
 import com.lerneon.backend.models.payload.request.UpdatePasswordRequest;
 import com.lerneon.backend.models.payload.request.UpdateProfileRequest;
-
-import java.util.Optional;
 
 public interface UserService {
     Optional<User> findOptionalUserByEmail(String email);
@@ -18,4 +17,6 @@ public interface UserService {
     User changePassword(UpdatePasswordRequest updatePasswordRequest);
 
     User updateUser(Integer id, UpdateProfileRequest updateProfileRequest);
+
+    User getCurrentAuthenticatedUser();
 }
