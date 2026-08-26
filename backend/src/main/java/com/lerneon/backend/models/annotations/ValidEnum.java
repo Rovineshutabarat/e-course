@@ -18,9 +18,12 @@ import jakarta.validation.Payload;
 public @interface ValidEnum {
     String message() default "must be any of enum {enumClass}";
 
-    Class<? extends Enum> enumClass() default Enum.class;
+    Class<? extends Enum<?>> enumClass() default DefaultEnum.class;
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    enum DefaultEnum {
+    }
 }

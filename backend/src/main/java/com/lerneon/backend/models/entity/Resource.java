@@ -35,11 +35,13 @@ public class Resource extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String url;
 
+    private Boolean isAvailabe;
+
     @ManyToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private Module module;
 
     @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<VideoTranscoderJob> videoTranscoderJobs;
+    private List<TranscodeEvent> transcodeEvents;
 }

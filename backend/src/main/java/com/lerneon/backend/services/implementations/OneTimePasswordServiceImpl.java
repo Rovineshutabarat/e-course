@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import com.lerneon.backend.events.producer.MailProducer;
+import com.lerneon.backend.events.producer.MailEventProducer;
 import com.lerneon.backend.models.entity.OneTimePassword;
 import com.lerneon.backend.models.entity.User;
 import com.lerneon.backend.models.enums.VerificationType;
@@ -29,7 +29,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class OneTimePasswordServiceImpl implements OneTimePasswordService {
     private final OneTimePasswordRepository oneTimePasswordRepository;
-    private final MailProducer mailProducer;
+    private final MailEventProducer mailEventProducer;
     private final OneTimePasswordProperties oneTimePasswordProperties;
     private final TemplateEngine templateEngine;
     private final UserService userService;
@@ -79,7 +79,7 @@ public class OneTimePasswordServiceImpl implements OneTimePasswordService {
                 .subject("Verify Your Identity")
                 .content(loadOneTimePasswordTemplate(code, user.getEmail()))
                 .build();
-        mailProducer.sendEmail(mailEvent);
+        mailEventProducer.sendOneTimePasswordEvent(mailEvent);
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.lerneon.backend.models.entity;
 
 import java.time.LocalDateTime;
 
-import com.lerneon.backend.models.enums.Resolution;
 import com.lerneon.backend.models.enums.TranscodeStatus;
+import com.lerneon.backend.models.enums.VideoResolution;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -25,16 +24,15 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "video_transcoder_job")
-public class VideoTranscoderJob extends BaseEntity {
+public class TranscodeEvent extends BaseEntity {
     private String source;
-    private String outputDir;
+    private String destination;
 
     @Enumerated(EnumType.STRING)
-    private Resolution resolution;
+    private VideoResolution videoResolution;
 
-    @Default
     @Enumerated(EnumType.STRING)
-    private TranscodeStatus status = TranscodeStatus.PENDING;
+    private TranscodeStatus transcodeStatus;
 
     private LocalDateTime finishedAt;
 

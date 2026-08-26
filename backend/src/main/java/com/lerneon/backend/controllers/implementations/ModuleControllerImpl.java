@@ -54,10 +54,11 @@ public class ModuleControllerImpl implements ModuleController {
         public ResponseEntity<SuccessResponse<List<Module>>> updateModuleOrderNumber(
                         @PathVariable Integer id,
                         @RequestBody UpdateModuleOrderNumberRequest updateModuleOrderNumberRequest) {
+                moduleService.updateModuleOrderNumber(id, updateModuleOrderNumberRequest);
                 return ResponseHandler.buildSuccessResponse(
                                 HttpStatus.OK,
                                 "Success updating module order number",
-                                moduleService.updateModuleOrderNumber(id, updateModuleOrderNumberRequest));
+                                null);
         }
 
         @DeleteMapping("/{id}")

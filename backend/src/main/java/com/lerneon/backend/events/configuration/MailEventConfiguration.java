@@ -12,10 +12,9 @@ import org.springframework.context.annotation.Configuration;
 public class MailEventConfiguration {
     private static final String MAIL_EXCHANGE = "mail.exchange";
 
-    private static final String MAIL_ACCOUNT_VERIFICATION_QUEUE = "mail.account.verification.queue";
+    private static final String MAIL_OTP_QUEUE = "mail.otp-queue";
 
-    private static final String MAIL_ACCOUNT_VERIFICATION_ROUTING_KEY = "mail.account.verification";
-
+    private static final String MAIL_OTP_ROUTING_KEY = "mail.otp";
 
     @Bean
     TopicExchange mailExchange() {
@@ -23,14 +22,14 @@ public class MailEventConfiguration {
     }
 
     @Bean
-    Queue mailAccountVerificationQueue() {
-        return QueueBuilder.durable(MAIL_ACCOUNT_VERIFICATION_QUEUE).build();
+    Queue mailOneTimePasswordQueue() {
+        return QueueBuilder.durable(MAIL_OTP_QUEUE).build();
     }
 
     @Bean
-    Binding mailAccountVerificationBinding() {
-        return BindingBuilder.bind(mailAccountVerificationQueue()).to(mailExchange())
-                .with(MAIL_ACCOUNT_VERIFICATION_ROUTING_KEY);
+    Binding mailOneTimePasswordBinding() {
+        return BindingBuilder.bind(mailOneTimePasswordQueue()).to(mailExchange())
+                .with(MAIL_OTP_ROUTING_KEY);
     }
 
 }

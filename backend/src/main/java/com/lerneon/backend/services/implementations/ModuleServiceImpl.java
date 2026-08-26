@@ -1,7 +1,5 @@
 package com.lerneon.backend.services.implementations;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import com.lerneon.backend.models.entity.Course;
@@ -49,12 +47,11 @@ public class ModuleServiceImpl implements ModuleService {
         return moduleRepository.save(module);
     }
 
-    // should return void
     @Override
     @Transactional
-    public List<Module> updateModuleOrderNumber(Integer id, UpdateModuleOrderNumberRequest request) {
+    public void updateModuleOrderNumber(Integer id, UpdateModuleOrderNumberRequest request) {
         if (request.getCurrent().equals(request.getTarget())) {
-            return moduleRepository.findAllByCourseId(request.getCourseId());
+            return;
         }
 
         if (request.getTarget() < request.getCurrent()) {
@@ -64,8 +61,6 @@ public class ModuleServiceImpl implements ModuleService {
         }
 
         moduleRepository.updateOrderNumber(id, request.getTarget());
-
-        return moduleRepository.findAllByCourseId(request.getCourseId());
     }
 
     @Override

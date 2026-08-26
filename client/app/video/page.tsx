@@ -8,7 +8,7 @@ const Page = () => {
             <MuxPlayer
                 streamType="on-demand"
 
-                src="http://localhost:4000/api/uploads/stream/3dd6aa2f-cce7-4b54-bd6b-5fda58aee022/master.m3u8"
+                src="http://localhost:4000/api/uploads/stream/736ff7c5-e67b-4a10-9f43-6f98f8cc456f/master.m3u8"
                 primaryColor="#ffa31a"
                 // secondaryColor="#000000"
                 accentColor="#FFFFFF"

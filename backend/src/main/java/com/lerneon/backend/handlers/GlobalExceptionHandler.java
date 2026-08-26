@@ -10,7 +10,7 @@ import com.lerneon.backend.models.exceptions.AuthException;
 import com.lerneon.backend.models.exceptions.DuplicateElementException;
 import com.lerneon.backend.models.exceptions.MailDeliveryException;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
-import com.lerneon.backend.models.exceptions.TranscoderException;
+import com.lerneon.backend.models.exceptions.TranscodeException;
 import com.lerneon.backend.models.exceptions.UploadException;
 import com.lerneon.backend.models.payload.response.common.ErrorResponse;
 import com.lerneon.backend.models.payload.response.common.ValidationErrorResponse;
@@ -80,9 +80,9 @@ public class GlobalExceptionHandler {
                                 request);
         }
 
-        @ExceptionHandler(TranscoderException.class)
+        @ExceptionHandler(TranscodeException.class)
         public ResponseEntity<ErrorResponse> handleTranscoderException(
-                        TranscoderException exception,
+                        TranscodeException exception,
                         HttpServletRequest request) {
                 return ResponseHandler.buildErrorResponse(
                                 HttpStatus.INTERNAL_SERVER_ERROR,

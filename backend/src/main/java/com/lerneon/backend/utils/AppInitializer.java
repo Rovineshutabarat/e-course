@@ -21,7 +21,6 @@ import com.lerneon.backend.models.enums.Difficulty;
 import com.lerneon.backend.models.enums.Visibility;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.repositories.CourseRepository;
-import com.lerneon.backend.repositories.ModuleRepository;
 import com.lerneon.backend.repositories.RoleRepository;
 import com.lerneon.backend.repositories.UserRepository;
 import com.lerneon.backend.services.UserService;
@@ -40,11 +39,9 @@ public class AppInitializer implements CommandLineRunner {
         private final UserRepository userRepository;
         private final PasswordEncoder passwordEncoder;
         private final UserService userService;
-        private final ModuleRepository moduleRepository;
 
         @Override
         public void run(String... args) {
-                log.info(moduleRepository.findAll().toString());
                 initializeRoles();
                 initializeCategories();
                 initializeUsers();
