@@ -1,7 +1,7 @@
 package com.lerneon.backend.services;
 
-import com.lerneon.backend.models.event.MailEvent;
+import com.lerneon.backend.models.event.OneTimePasswordEvent;
 
 public interface MailService {
-    void sendMail(MailEvent mailEvent);
+    void sendMail(OneTimePasswordEvent oneTimePasswordEvent);
 }

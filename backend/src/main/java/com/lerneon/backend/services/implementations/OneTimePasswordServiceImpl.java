@@ -13,7 +13,7 @@ import com.lerneon.backend.events.producer.MailEventProducer;
 import com.lerneon.backend.models.entity.OneTimePassword;
 import com.lerneon.backend.models.entity.User;
 import com.lerneon.backend.models.enums.VerificationType;
-import com.lerneon.backend.models.event.MailEvent;
+import com.lerneon.backend.models.event.OneTimePasswordEvent;
 import com.lerneon.backend.models.exceptions.AuthException;
 import com.lerneon.backend.models.payload.request.EmailRequest;
 import com.lerneon.backend.models.payload.request.OneTimePasswordRequest;
@@ -74,12 +74,12 @@ public class OneTimePasswordServiceImpl implements OneTimePasswordService {
                 .lastOtpRequest(LocalDateTime.now())
                 .build());
 
-        MailEvent mailEvent = MailEvent.builder()
+        OneTimePasswordEvent oneTimePasswordEvent = OneTimePasswordEvent.builder()
                 .to(emailRequest.getEmail())
                 .subject("Verify Your Identity")
                 .content(loadOneTimePasswordTemplate(code, user.getEmail()))
                 .build();
-        mailEventProducer.sendOneTimePasswordEvent(mailEvent);
+        mailEventProducer.sendOneTimePasswordEvent(oneTimePasswordEvent);
     }
 
     @Override

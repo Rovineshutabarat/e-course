@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.lerneon.backend.events.producer.TranscodeEventProducer;
 import com.lerneon.backend.models.entity.Resource;
-import com.lerneon.backend.models.entity.TranscodeEvent;
 import com.lerneon.backend.models.enums.VideoResolution;
+import com.lerneon.backend.models.event.TranscodeEvent;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.models.payload.request.ResourceRequest;
 import com.lerneon.backend.models.payload.request.UpdateResourceOrderNumberRequest;
@@ -43,20 +43,19 @@ public class ResourceServiceImpl implements ResourceService {
                 .concat("/")
                 .concat(UUID.randomUUID().toString());
 
-        Resource resource = resourceRepository.save(
-                Resource.builder()
-                        .title(resourceRequest.getTitle())
-                        .orderNumber(resourceRepository.getLastOrderNumber(resourceRequest.getModuleId()) + 1)
-                        .url(destination)
-                        .isAvailabe(false)
-                        .module(moduleService.findModuleById(resourceRequest.getModuleId()))
-                        .build());
+        Resource resource = resourceRepository.save(Resource.builder()
+                .title(resourceRequest.getTitle())
+                .orderNumber(resourceRepository.getLastOrderNumber(resourceRequest.getModuleId()) + 1)
+                .url(destination)
+                .isAvailabe(false)
+                .module(moduleService.findModuleById(resourceRequest.getModuleId()))
+                .build());
 
         transcodeEventProducer.sendLowResolutionEvent(TranscodeEvent.builder()
                 .source(source)
                 .destination(destination)
                 .videoResolution(VideoResolution.LOW)
-                .resource(resource)
+                .resourceId(resource.getId())
                 .build());
     }
 

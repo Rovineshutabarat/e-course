@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                                 .sessionManagement(session -> session.sessionCreationPolicy(
                                                 SessionCreationPolicy.STATELESS))
                                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**",
+                                                "/resource/progress/1",
                                                 "/oauth2/**", "/course/**", "/category/**",
                                                 "/queue/**", "/login/**", "/uploads/**", "/jwt/**")
                                                 .permitAll().anyRequest().authenticated())

@@ -16,6 +16,8 @@ import com.lerneon.backend.services.UploadVideoService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+// implement chunk upload
+
 @Service
 @AllArgsConstructor
 @Slf4j

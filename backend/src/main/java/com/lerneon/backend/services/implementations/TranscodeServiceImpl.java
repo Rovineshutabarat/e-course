@@ -1,6 +1,7 @@
 package com.lerneon.backend.services.implementations;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -8,15 +9,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import com.lerneon.backend.models.entity.TranscodeEvent;
 import com.lerneon.backend.models.entity.TranscodeProfileBuilder;
 import com.lerneon.backend.models.enums.TranscodeStatus;
 import com.lerneon.backend.models.enums.VideoResolution;
+import com.lerneon.backend.models.event.TranscodeEvent;
 import com.lerneon.backend.models.exceptions.TranscodeException;
 import com.lerneon.backend.models.properties.UploadProperties;
+import com.lerneon.backend.services.TranscodeLogService;
 import com.lerneon.backend.services.TranscodeService;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TranscodeServiceImpl implements TranscodeService {
     private final UploadProperties uploadProperties;
+    private final TranscodeLogService transcodeLogService;
 
     private static final String AUDIO_CODEC = "aac";
     private static final String VIDEO_CODEC = "libx264";
@@ -43,9 +49,13 @@ public class TranscodeServiceImpl implements TranscodeService {
     private static final String MEDIUM_RES_DIRECTORY = "stream_480p";
     private static final String HIGH_RES_DIRECTORY = "stream_720p";
 
+    private final Map<Integer, SseEmitter> emitters = new ConcurrentHashMap<>();
+
     @Override
     public TranscodeStatus transcode(TranscodeEvent transcodeEvent) {
         String destination = getDestination(transcodeEvent);
+
+        Long videoDuration = getVideoDuration(transcodeEvent);
 
         log.info("Starting transcode | resolution={} destination={}",
                 transcodeEvent.getVideoResolution(), destination);
@@ -53,8 +63,6 @@ public class TranscodeServiceImpl implements TranscodeService {
         try {
             Files.createDirectories(Paths.get(destination));
             String[] commands = buildCommand(transcodeEvent);
-
-            log.debug("FFmpeg command: {}", String.join(" ", commands));
 
             ProcessBuilder processBuilder = new ProcessBuilder(commands);
             processBuilder.redirectErrorStream(true);
@@ -65,6 +73,15 @@ public class TranscodeServiceImpl implements TranscodeService {
                     new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
+                    if (line.startsWith("out_time_us=")) {
+                        long outTimeUs = Long.parseLong(line.substring("out_time_us=".length()));
+
+                        double current = outTimeUs / 1_000_000.0;
+
+                        int percentage = (int) Math.round((current / videoDuration) * 100);
+
+                        sendProgress(1, percentage);
+                    }
                     log.debug("[ffmpeg] {}", line);
                     outputBuilder.append(line).append(System.lineSeparator());
                 }
@@ -86,10 +103,65 @@ public class TranscodeServiceImpl implements TranscodeService {
         }
     }
 
+    public void registerEmitter(Integer transcodeLogId, SseEmitter emitter) {
+        TranscodeStatus status = transcodeLogService
+                .findTranscodeLogById(transcodeLogId)
+                .getTranscodeStatus();
+
+        if (TranscodeStatus.COMPLETE.equals(status)) {
+            emitter.complete();
+            return;
+        }
+
+        emitters.put(transcodeLogId, emitter);
+
+        emitter.onCompletion(() -> emitters.remove(transcodeLogId));
+        emitter.onTimeout(() -> emitters.remove(transcodeLogId));
+    }
+
+    private void sendProgress(Integer transcodeLogId, int percentage) {
+        SseEmitter emitter = emitters.get(transcodeLogId);
+        if (emitter == null)
+            return;
+        try {
+            emitter.send(SseEmitter.event().data(percentage));
+            if (percentage >= 100) {
+                emitter.complete();
+                emitters.remove(transcodeLogId);
+            }
+        } catch (IOException e) {
+            emitters.remove(transcodeLogId);
+        }
+    }
+
+    private Long getVideoDuration(TranscodeEvent transcodeEvent) {
+        try {
+            ProcessBuilder pb = new ProcessBuilder(
+                    "ffprobe",
+                    "-v", "error",
+                    "-show_entries", "format=duration",
+                    "-of", "default=noprint_wrappers=1:nokey=1",
+                    transcodeEvent.getSource());
+
+            Process process = pb.start();
+            String output = new String(process.getInputStream().readAllBytes()).trim();
+            process.waitFor();
+
+            return Math.round(Double.parseDouble(output));
+
+        } catch (Exception exception) {
+            log.error(
+                    "Failed to get video duration | source={}",
+                    transcodeEvent.getSource(),
+                    exception);
+            return 0L;
+        }
+    }
+
     private String[] buildCommand(TranscodeEvent transcodeEvent) {
         TranscodeProfileBuilder profile = buildProfile(transcodeEvent.getVideoResolution());
 
-        List<List<String>> argGroups = List.of(
+        List<List<String>> args = List.of(
                 inputArgs(transcodeEvent.getSource()),
                 streamMappingArgs(),
                 videoArgs(profile),
@@ -98,7 +170,7 @@ public class TranscodeServiceImpl implements TranscodeService {
 
         List<String> command = new ArrayList<>();
         command.add(uploadProperties.getFfmpegDirectory());
-        argGroups.forEach(command::addAll);
+        args.forEach(command::addAll);
 
         return command.toArray(new String[0]);
     }
@@ -220,7 +292,6 @@ public class TranscodeServiceImpl implements TranscodeService {
 
             Files.writeString(path, updated, StandardCharsets.UTF_8);
             return path.toString();
-
         } catch (Exception ex) {
             throw new TranscodeException(
                     "Failed to update master playlist at '" + transcodeEvent.getDestination() + "': "
