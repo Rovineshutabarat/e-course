@@ -1,6 +1,7 @@
 package com.lerneon.backend.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.lerneon.backend.models.entity.Resource;
 import com.lerneon.backend.models.payload.request.ResourceRequest;
@@ -9,6 +10,8 @@ import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 
 public interface ResourceController {
     ResponseEntity<SuccessResponse<Resource>> findResourceById(Integer id);
+
+    SseEmitter streamTranscodeProgress(Integer transcodeLogId);
 
     ResponseEntity<SuccessResponse<Void>> createResource(ResourceRequest resourceRequest);
 

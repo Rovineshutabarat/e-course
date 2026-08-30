@@ -23,8 +23,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "video_transcoder_job")
-public class TranscodeEvent extends BaseEntity {
+@Table(name = "transcode_log")
+public class TranscodeLog extends BaseEntity {
     private String source;
     private String destination;
 

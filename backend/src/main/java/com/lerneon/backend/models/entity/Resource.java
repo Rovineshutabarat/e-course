@@ -43,5 +43,5 @@ public class Resource extends BaseEntity {
     private Module module;
 
     @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<TranscodeEvent> transcodeEvents;
+    private List<TranscodeLog> transcodeLogs;
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MailEvent {
+public class OneTimePasswordEvent {
     private String to;
     private String subject;
     private String content;

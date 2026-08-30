@@ -3,7 +3,7 @@ package com.lerneon.backend.events.consumer;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
-import com.lerneon.backend.models.event.MailEvent;
+import com.lerneon.backend.models.event.OneTimePasswordEvent;
 import com.lerneon.backend.services.MailService;
 
 import lombok.AllArgsConstructor;
@@ -16,8 +16,7 @@ public class MailEventConsumer {
     private final MailService mailService;
 
     @RabbitListener(queues = "mail.otp-queue")
-    public void receiveAccountVerificationEvent(MailEvent mailEvent) {
-        // call service
-        mailService.sendMail(mailEvent);
+    public void receiveAccountVerificationEvent(OneTimePasswordEvent oneTimePasswordEvent) {
+        mailService.sendMail(oneTimePasswordEvent);
     }
 }

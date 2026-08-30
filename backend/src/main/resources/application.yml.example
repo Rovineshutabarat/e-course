@@ -1,3 +1,6 @@
+logging:
+  level:
+    '[com.lerneon.backend]': DEBUG
 server:
   port: 4000
   servlet:
