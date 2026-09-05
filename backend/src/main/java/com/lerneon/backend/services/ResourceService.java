@@ -10,11 +10,11 @@ public interface ResourceService {
 
     void createResource(ResourceRequest resourceRequest);
 
-    Resource saveResource(Resource resource);
-
     Resource updateResource(Integer id, ResourceRequest resourceRequest);
 
     void updateResourceOrderNumber(Integer id, UpdateResourceOrderNumberRequest updateResourceOrderNumberRequest);
 
     Resource deleteResource(Integer id);
+
+    Resource activateResource(Integer id);
 }

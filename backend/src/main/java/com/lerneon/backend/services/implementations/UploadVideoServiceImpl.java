@@ -1,5 +1,7 @@
 package com.lerneon.backend.services.implementations;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.lerneon.backend.models.exceptions.UploadException;
@@ -17,7 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 // implement chunk upload
-
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -55,6 +57,8 @@ public class UploadVideoServiceImpl implements UploadVideoService {
         }
     }
 
+    // consider to using method overloading so this method can accept file or folder
+    // path
     @Override
     public void deleteVideo(String path) {
         try {
@@ -100,4 +104,16 @@ public class UploadVideoServiceImpl implements UploadVideoService {
         }
         return clean.substring(idx).toLowerCase();
     }
+
+    @Override
+    public void cleanDirectory(String destination) throws FileNotFoundException {
+        File dir = new File(destination);
+        boolean deleted = FileSystemUtils.deleteRecursively(dir);
+
+        if (!deleted) {
+            log.error("Failed to delete directory: {}", dir.getAbsolutePath());
+            throw new FileNotFoundException("Video source tidak ditemukan: ");
+        }
+    }
+
 }

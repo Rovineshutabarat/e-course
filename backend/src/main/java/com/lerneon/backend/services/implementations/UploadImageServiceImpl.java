@@ -15,9 +15,11 @@ import com.lerneon.backend.repositories.ImageRepository;
 import com.lerneon.backend.services.UploadImageService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UploadImageServiceImpl implements UploadImageService {
     private final ImageRepository imageRepository;
     private final UploadProperties uploadImageProperties;
@@ -54,4 +56,5 @@ public class UploadImageServiceImpl implements UploadImageService {
                     String.format("Failed to upload image -> %s", e.getMessage()));
         }
     }
+
 }

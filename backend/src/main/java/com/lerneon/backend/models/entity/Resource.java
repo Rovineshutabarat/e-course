@@ -35,7 +35,7 @@ public class Resource extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String url;
 
-    private Boolean isAvailabe;
+    private Boolean isAvailable;
 
     @ManyToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", nullable = false)

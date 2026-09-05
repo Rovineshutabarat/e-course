@@ -1,6 +1,7 @@
 package com.lerneon.backend.configurations;
 
 import java.util.List;
+
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -15,12 +16,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.repositories.UserRepository;
+
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @AllArgsConstructor
+@Slf4j
 public class ApplicationConfiguration {
     private final UserRepository userRepository;
 
@@ -66,6 +71,9 @@ public class ApplicationConfiguration {
             MessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(messageConverter);
+        rabbitTemplate.setReturnsCallback(returned -> {
+            log.warn("Message returned: {} - reason: {}", returned.getMessage(), returned.getReplyText());
+        });
         return rabbitTemplate;
     }
 }
