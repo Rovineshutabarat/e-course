@@ -11,6 +11,8 @@ import com.lerneon.backend.models.exceptions.DuplicateElementException;
 import com.lerneon.backend.models.exceptions.MailDeliveryException;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.models.exceptions.TranscodeException;
+import com.lerneon.backend.models.exceptions.TranscodeFatalException;
+import com.lerneon.backend.models.exceptions.TranscodeRetryableException;
 import com.lerneon.backend.models.exceptions.UploadException;
 import com.lerneon.backend.models.payload.response.common.ErrorResponse;
 import com.lerneon.backend.models.payload.response.common.ValidationErrorResponse;
@@ -80,6 +82,16 @@ public class GlobalExceptionHandler {
                                 request);
         }
 
+        @ExceptionHandler(MailDeliveryException.class)
+        public ResponseEntity<ErrorResponse> handleMailDeliveryException(
+                        MailDeliveryException exception,
+                        HttpServletRequest request) {
+                return ResponseHandler.buildErrorResponse(
+                                HttpStatus.BAD_GATEWAY,
+                                exception.getMessage(),
+                                request);
+        }
+
         @ExceptionHandler(TranscodeException.class)
         public ResponseEntity<ErrorResponse> handleTranscoderException(
                         TranscodeException exception,
@@ -90,12 +102,22 @@ public class GlobalExceptionHandler {
                                 request);
         }
 
-        @ExceptionHandler(MailDeliveryException.class)
-        public ResponseEntity<ErrorResponse> handleMailDeliveryException(
-                        MailDeliveryException exception,
+        @ExceptionHandler(TranscodeRetryableException.class)
+        public ResponseEntity<ErrorResponse> handleTranscodeRetryableException(
+                        TranscodeRetryableException exception,
                         HttpServletRequest request) {
                 return ResponseHandler.buildErrorResponse(
-                                HttpStatus.BAD_GATEWAY,
+                                HttpStatus.INTERNAL_SERVER_ERROR, // update this
+                                exception.getMessage(),
+                                request);
+        }
+
+        @ExceptionHandler(TranscodeFatalException.class)
+        public ResponseEntity<ErrorResponse> handleTranscodeFatalException(
+                        TranscodeFatalException exception,
+                        HttpServletRequest request) {
+                return ResponseHandler.buildErrorResponse(
+                                HttpStatus.INTERNAL_SERVER_ERROR,
                                 exception.getMessage(),
                                 request);
         }

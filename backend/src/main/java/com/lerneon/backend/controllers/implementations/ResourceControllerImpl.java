@@ -21,7 +21,7 @@ import com.lerneon.backend.models.payload.request.ResourceRequest;
 import com.lerneon.backend.models.payload.request.UpdateResourceOrderNumberRequest;
 import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 import com.lerneon.backend.services.ResourceService;
-import com.lerneon.backend.services.implementations.TranscodeServiceImpl;
+import com.lerneon.backend.services.TranscodeService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -31,7 +31,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ResourceControllerImpl implements ResourceController {
         private final ResourceService resourceService;
-        private final TranscodeServiceImpl transcodeService;
+        private final TranscodeService transcodeService;
 
         @GetMapping("/{id}")
         @Override
@@ -42,11 +42,11 @@ public class ResourceControllerImpl implements ResourceController {
                                 resourceService.findResourceById(id));
         }
 
-        @GetMapping(path = "/progress/{id}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+        @GetMapping(path = "/progress/{transcodeLogId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
         @Override
-        public SseEmitter streamTranscodeProgress(Integer transcodeLogId) {
+        public SseEmitter streamTranscodeProgress(@PathVariable Integer transcodeLogId) {
                 SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-                transcodeService.registerEmitter(1, emitter);
+                transcodeService.registerEmitter(transcodeLogId, emitter);
                 return emitter;
         }
 

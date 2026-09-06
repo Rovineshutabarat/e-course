@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.lerneon.backend.events.producer.TranscodeEventProducer;
 import com.lerneon.backend.models.entity.Resource;
-import com.lerneon.backend.models.enums.VideoResolution;
 import com.lerneon.backend.models.event.TranscodeEvent;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.models.payload.request.ResourceRequest;
@@ -47,20 +46,34 @@ public class ResourceServiceImpl implements ResourceService {
                 .title(resourceRequest.getTitle())
                 .orderNumber(resourceRepository.getLastOrderNumber(resourceRequest.getModuleId()) + 1)
                 .url(destination)
-                .isAvailabe(false)
+                .isAvailable(false)
                 .module(moduleService.findModuleById(resourceRequest.getModuleId()))
                 .build());
 
-        transcodeEventProducer.sendLowResolutionEvent(TranscodeEvent.builder()
+        TranscodeEvent transcodeEvent = TranscodeEvent.builder()
                 .source(source)
                 .destination(destination)
-                .videoResolution(VideoResolution.LOW)
                 .resourceId(resource.getId())
-                .build());
+                .retryCount(0)
+                .build();
+
+        transcodeEventProducer.publishLowResolutionEvent(transcodeEvent);
+        transcodeEventProducer.publishMediumResolutionEvent(transcodeEvent);
+        transcodeEventProducer.publishHighResolutionEvent(transcodeEvent);
+
     }
 
     @Override
-    public Resource saveResource(Resource resource) {
+    public Resource activateResource(Integer id) {
+        Resource resource = findResourceById(id);
+
+        if (resource.getIsAvailable()) {
+            return resource;
+        }
+
+        String url = resource.getUrl().concat("/").concat("master.m3u8");
+        resource.setUrl(url);
+        resource.setIsAvailable(true);
         return resourceRepository.save(resource);
     }
 

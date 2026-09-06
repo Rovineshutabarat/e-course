@@ -1,14 +1,12 @@
 package com.lerneon.backend.filter;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import org.springframework.stereotype.Component;
-import io.github.bucket4j.Bucket;
 
 @Component
 public class RateLimitFilter {
     // implement Filter
-    private final ConcurrentMap<String, Bucket> buckets = new ConcurrentHashMap<>();
+    // private final ConcurrentMap<String, Bucket> buckets = new
+    // ConcurrentHashMap<>();
 
     // private Bucket getBucket(String clientId) {
     // return buckets

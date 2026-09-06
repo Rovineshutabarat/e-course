@@ -1,14 +1,16 @@
 package com.lerneon.backend.services.implementations;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.lerneon.backend.models.entity.Resource;
 import com.lerneon.backend.models.entity.TranscodeLog;
 import com.lerneon.backend.models.enums.TranscodeStatus;
+import com.lerneon.backend.models.event.TranscodeEvent;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.repositories.TranscodeLogRepository;
+import com.lerneon.backend.services.ResourceService;
 import com.lerneon.backend.services.TranscodeLogService;
 
 import lombok.AllArgsConstructor;
@@ -16,22 +18,33 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class TranscodeLogServiceImpl implements TranscodeLogService {
-    private final TranscodeLogRepository TranscodeLogRepository;
+    private final TranscodeLogRepository transcodeLogRepository;
+    private final ResourceService resourceService;
 
     @Override
     public TranscodeLog findTranscodeLogById(Integer id) {
-        return TranscodeLogRepository.findById(id).orElseThrow(
+        return transcodeLogRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Transcode Log was not found"));
     }
 
     @Override
-    public List<TranscodeLog> findAllTranscodeLogByResource(Integer resourceId) {
-        return TranscodeLogRepository.findAllByResource(resourceId);
+    public TranscodeLog createTranscodeLog(TranscodeLog transcodeLog) {
+        return transcodeLogRepository.save(transcodeLog);
     }
 
     @Override
-    public TranscodeLog createTranscodeLog(TranscodeLog transcodeLog) {
-        return TranscodeLogRepository.save(transcodeLog);
+    public TranscodeLog initTranscodeLog(TranscodeEvent transcodeEvent) {
+        Resource resource = resourceService.findResourceById(transcodeEvent.getResourceId());
+
+        TranscodeLog transcodeLog = TranscodeLog.builder()
+                .source(transcodeEvent.getSource())
+                .destination(transcodeEvent.getDestination())
+                .videoResolution(transcodeEvent.getVideoResolution())
+                .transcodeStatus(TranscodeStatus.PROCESSING)
+                .resource(resource)
+                .build();
+
+        return createTranscodeLog(transcodeLog);
     }
 
     @Override
@@ -44,12 +57,11 @@ public class TranscodeLogServiceImpl implements TranscodeLogService {
             TranscodeLog.setFinishedAt(LocalDateTime.now());
         }
 
-        return TranscodeLogRepository.save(TranscodeLog);
+        return transcodeLogRepository.save(TranscodeLog);
     }
 
     @Override
-    public Boolean checkTranscodeLogStatus(Integer id) {
-        return findAllTranscodeLogByResource(id).stream()
-                .allMatch(l -> l.getTranscodeStatus().equals(TranscodeStatus.COMPLETE));
+    public Boolean isAllTranscodeCompleted(Integer id) {
+        return transcodeLogRepository.isAllTranscodeCompleted(id);
     }
 }

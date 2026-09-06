@@ -42,6 +42,10 @@ public class AppInitializer implements CommandLineRunner {
 
         @Override
         public void run(String... args) {
+                if (roleRepository.count() > 0) {
+                        log.info("Seed data already exists, skipping initialization.");
+                        return;
+                }
                 initializeRoles();
                 initializeCategories();
                 initializeUsers();
