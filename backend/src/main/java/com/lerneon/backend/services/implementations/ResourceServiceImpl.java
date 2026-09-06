@@ -45,7 +45,7 @@ public class ResourceServiceImpl implements ResourceService {
         Resource resource = resourceRepository.save(Resource.builder()
                 .title(resourceRequest.getTitle())
                 .orderNumber(resourceRepository.getLastOrderNumber(resourceRequest.getModuleId()) + 1)
-                .url(destination.concat("/").concat(destination))
+                .url(destination)
                 .isAvailable(false)
                 .module(moduleService.findModuleById(resourceRequest.getModuleId()))
                 .build());
@@ -66,6 +66,11 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public Resource activateResource(Integer id) {
         Resource resource = findResourceById(id);
+
+        if (resource.getIsAvailable()) {
+            return resource;
+        }
+
         String url = resource.getUrl().concat("/").concat("master.m3u8");
         resource.setUrl(url);
         resource.setIsAvailable(true);
