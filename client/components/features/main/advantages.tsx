@@ -1,13 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Clock, GraduationCap, TrendingUp } from "lucide-react";
+import { CalendarCheck, ChartLine, GraduationCap } from "lucide-react";
 
-type Image = {
+type GalleryImage = {
   src: string;
   alt: string;
 };
 const Advantages = () => {
-  const images: Image[] = [
+  const images: GalleryImage[] = [
     {
       src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZjrHJ7etMn2x06FgG4AFV5bE4owz4u7cpCw&s",
       alt: "Student studying",
@@ -27,21 +26,19 @@ const Advantages = () => {
   ];
 
   return (
-    <section className="relative pt-28 pb-16 overflow-hidden lg:pt-16 lg:pb-16">
+    <section className="relative py-10 md:py-14 lg:py-28 overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl"></div>
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-400/10 rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-75 h-75 md:w-100 md:h-100 lg:w-150 lg:h-150 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-75 h-75 md:w-100 md:h-100 lg:w-150 lg:h-150 bg-teal-400/10 rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl"></div>
       </div>
-      <section className="py-20 ">
-        <div className="container px-16 mx-auto">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+      <div>
+        <div className="container px-4 md:px-8 lg:px-20 mx-auto">
+          <div className="grid grid-cols-1 gap-8 lg:gap-10 lg:grid-cols-2">
             <div className="max-w-xl">
-              <h2 className="mb-6 text-3xl font-bold md:text-4xl">
-                Why Wahyedu is the{" "}
-                <span className="text-blue-500">#1921737 Choice</span> for
-                Students?
+              <h2 className="mb-4 text-lg font-bold md:text-2xl">
+                Why students choose Wahyedu
               </h2>
-              <p className="mb-8 text-muted-foreground">
+              <p className="mb-6 text-muted-foreground">
                 Our instructors are professional in their skills, they have
                 years of experience and good at explaining. We at Wahyedu,
                 always care our instructors and students to gain more knowledge
@@ -49,18 +46,18 @@ const Advantages = () => {
               </p>
 
               <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex items-center justify-center w-8 h-8 mt-1 rounded-full bg-green-100">
-                    <Clock className="w-4 h-4 text-green-600" />
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-8 h-8 shrink-0 rounded-full bg-primary/10 dark:bg-primary/10">
+                    <CalendarCheck className="w-4 h-4 text-primary" />
                   </div>
                   <div>
                     <p className="font-medium">Flexible Learning Schedules</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="flex items-center justify-center w-8 h-8 mt-1 rounded-full bg-yellow-100">
-                    <TrendingUp className="w-4 h-4 text-yellow-600" />
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-8 h-8 shrink-0 rounded-full bg-primary/10 dark:bg-primary/10">
+                    <ChartLine className="w-4 h-4 text-primary" />
                   </div>
                   <div>
                     <p className="font-medium">
@@ -69,9 +66,9 @@ const Advantages = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="flex items-center justify-center w-8 h-8 mt-1 rounded-full bg-blue-100">
-                    <GraduationCap className="w-4 h-4 text-blue-600" />
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-8 h-8 shrink-0 rounded-full bg-primary/10 dark:bg-primary/10">
+                    <GraduationCap className="w-4 h-4 text-primary" />
                   </div>
                   <div>
                     <p className="font-medium">
@@ -81,29 +78,40 @@ const Advantages = () => {
                 </div>
               </div>
 
-              <Button className="mt-8 bg-blue-500 hover:bg-blue-600 text-white rounded-full px-8">
+              <Button className="mt-6 bg-blue-500 hover:bg-blue-600 text-white rounded-full px-6">
                 Start Learning Today
               </Button>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              {images.map((image: Image, index: number) => {
-                return (
-                  <img
-                    key={index}
-                    src={image.src}
-                    alt={image.alt}
-                    className={cn(
-                      "rounded-2xl w-full h-auto object-cover",
-                      (index === 1 || index === 3) && "mt-8",
-                    )}
-                  />
-                );
-              })}
+              <div className="space-y-4">
+                {[images[0], images[2]].map((image: GalleryImage) => {
+                  return (
+                    <img
+                      key={image.src}
+                      src={image.src}
+                      alt={image.alt}
+                      className="rounded-2xl w-full h-auto object-cover"
+                    />
+                  );
+                })}
+              </div>
+              <div className="space-y-4 mt-10">
+                {[images[1], images[3]].map((image: GalleryImage) => {
+                  return (
+                    <img
+                      key={image.src}
+                      src={image.src}
+                      alt={image.alt}
+                      className="rounded-2xl w-full h-auto object-cover"
+                    />
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </section>
   );
 };
