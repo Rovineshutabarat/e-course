@@ -34,10 +34,7 @@ public class SecurityConfiguration {
                                                 .authenticationEntryPoint(authEntryPoint))
                                 .sessionManagement(session -> session.sessionCreationPolicy(
                                                 SessionCreationPolicy.STATELESS))
-                                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**",
-                                                "/resource/progress/**",
-                                                "/oauth2/**", "/course/**", "/category/**",
-                                                "/queue/**", "/login/**", "/uploads/**", "/jwt/**")
+                                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/user/update-password")
                                                 .permitAll().anyRequest().authenticated())
                                 .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler))
                                 // .addFilterBefore(rateLimitFilter,

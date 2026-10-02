@@ -65,13 +65,14 @@ public class AppInitializer implements CommandLineRunner {
                 List<Role> roles = new ArrayList<>();
                 roles.add(roleRepository.findByName("ROLE_USER").orElseThrow(
                                 () -> new ResourceNotFoundException("Role was not found.")));
-                userRepository.save(User.builder().email("rovineshutabarat23@gmail.com")
-                                .username("rovines").password(passwordEncoder.encode("rovines"))
-                                .isVerified(true).roles(roles).provider(AccountProvider.LOCAL)
-                                .canChangePassword(false)
-                                .image(Image.builder().fileName("profile-picture.jpg").path(
-                                                "uploads/7759cdb8-e877-4af3-b92d-987a3c17644b.png")
-                                                .build())
+                userRepository.save(User.builder()
+                                .email("rovineshutabarat23@gmail.com")
+                                .username("rovines")
+                                .password(passwordEncoder.encode("rovines"))
+                                .isVerified(true)
+                                .roles(roles)
+                                .accountProvider(AccountProvider.LOCAL)
+                                .canUpdatePassword(false)
                                 .build());
 
                 // userRepository.save(User.builder()
