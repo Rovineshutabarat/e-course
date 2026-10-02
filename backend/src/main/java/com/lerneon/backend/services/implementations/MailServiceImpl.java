@@ -3,11 +3,13 @@ package com.lerneon.backend.services.implementations;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
-import com.lerneon.backend.models.event.OneTimePasswordEvent;
-import com.lerneon.backend.models.exceptions.MailDeliveryException;
+import com.lerneon.backend.events.message.OneTimePasswordMailEvent;
 import com.lerneon.backend.services.MailService;
 
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,24 +19,30 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MailServiceImpl implements MailService {
     private final JavaMailSender mailSender;
+    private final TemplateEngine templateEngine;
 
     @Override
-    public void sendMail(OneTimePasswordEvent oneTimePasswordEvent) {
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+    public void sendOTPMail(OneTimePasswordMailEvent oneTimePasswordMailEvent) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
-            mimeMessageHelper.setTo(oneTimePasswordEvent.getTo());
-            mimeMessageHelper.setSubject(oneTimePasswordEvent.getSubject());
-            mimeMessageHelper.setText(oneTimePasswordEvent.getContent(), true);
+        String content = loadOneTimePasswordTemplate(oneTimePasswordMailEvent.getCode(),
+                oneTimePasswordMailEvent.getEmail());
 
-            mailSender.send(mimeMessage);
+        mimeMessageHelper.setTo(oneTimePasswordMailEvent.getEmail());
+        mimeMessageHelper.setSubject("Verify Your Identity!");
+        mimeMessageHelper.setText(content, true);
 
-            log.info("Email berhasil dikirim ke {}", oneTimePasswordEvent.getTo());
-        } catch (Exception exception) {
-            log.error("Gagal kirim email ke {}", oneTimePasswordEvent.getTo(), exception);
-            throw new MailDeliveryException("Gagal mengirim email ke " + oneTimePasswordEvent.getTo(),
-                    exception);
-        }
+        log.info("Sending email to {}", oneTimePasswordMailEvent.getEmail());
+
+        mailSender.send(mimeMessage);
+    }
+
+    private String loadOneTimePasswordTemplate(String code, String email) {
+        Context context = new Context();
+        context.setVariable("otp_code", code);
+        context.setVariable("user_email", email);
+
+        return templateEngine.process("otp_template.html", context);
     }
 }

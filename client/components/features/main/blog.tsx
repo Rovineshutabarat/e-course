@@ -5,7 +5,6 @@ const Blogs = () => {
       title: "Top 10 Study Hacks for Online Learners",
       image:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5RSUtGdQTfbl53Pwtl3iqLqMpYKBM6WONQQ&s",
-      categories: "Education Tips",
       readTime: 8,
       writer: "Emily Harper",
     },
@@ -14,7 +13,6 @@ const Blogs = () => {
       title: "Top 10 Study Hacks for Online Learners",
       image:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5RSUtGdQTfbl53Pwtl3iqLqMpYKBM6WONQQ&s",
-      categories: "Education Tips",
       readTime: 8,
       writer: "Emily Harper",
     },
@@ -23,7 +21,6 @@ const Blogs = () => {
       title: "Top 10 Study Hacks for Online Learners",
       image:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5RSUtGdQTfbl53Pwtl3iqLqMpYKBM6WONQQ&s",
-      categories: "Education Tips",
       readTime: 8,
       writer: "Emily Harper",
     },
@@ -32,41 +29,36 @@ const Blogs = () => {
       title: "Top 10 Study Hacks for Online Learners",
       image:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5RSUtGdQTfbl53Pwtl3iqLqMpYKBM6WONQQ&s",
-      categories: "Education Tips",
       readTime: 8,
       writer: "Emily Harper",
     },
   ];
 
   return (
-    <section className="py-20">
-      <div className="container px-16 mx-auto">
-        <div className="max-w-3xl mx-auto mb-16 text-center">
-          <h2 className="mb-2 text-3xl font-bold md:text-4xl">
-            Our <span className="text-blue-500">Blogs</span>
+    <section className="py-10 md:py-14 lg:py-28">
+      <div className="container px-4 md:px-8 lg:px-20 mx-auto">
+        <div className="max-w-2xl mb-8 md:mb-10">
+          <h2 className="mb-2 text-lg font-bold md:text-2xl">
+            Stories & Study Tips
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Stay in touch with daily newsletter
+          <p className="text-muted-foreground">
+            Study tips, learning strategies, and platform updates from our team.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {blogs.map((blog) => {
             return (
               <div className="group" key={blog.id}>
-                <div className="overflow-hidden rounded-xl mb-4">
+                <div className="relative overflow-hidden rounded-xl mb-4">
                   <img
                     src={blog.image}
                     alt={blog.title}
-                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-36 object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
 
-                <div className="inline-flex items-center px-3 py-1 mb-3 text-sm font-medium rounded-full bg-blue-100 text-blue-700">
-                  {blog.categories}
-                </div>
-
-                <h3 className="mb-2 text-xl font-semibold group-hover:text-blue-500 transition-colors">
+                <h3 className="mb-2 text-base font-semibold group-hover:text-blue-500 transition-colors">
                   <a href="#">{blog.title}</a>
                 </h3>
 

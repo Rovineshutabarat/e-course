@@ -1,7 +1,9 @@
 package com.lerneon.backend.services;
 
-import com.lerneon.backend.models.event.OneTimePasswordEvent;
+import com.lerneon.backend.events.message.OneTimePasswordMailEvent;
+
+import jakarta.mail.MessagingException;
 
 public interface MailService {
-    void sendMail(OneTimePasswordEvent oneTimePasswordEvent);
+    void sendOTPMail(OneTimePasswordMailEvent oneTimePasswordMailEvent) throws MessagingException;
 }

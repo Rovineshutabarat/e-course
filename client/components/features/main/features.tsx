@@ -1,97 +1,74 @@
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Bell,
-  BookOpen,
-  Briefcase,
-  Globe,
-  Laptop,
-  Newspaper,
-} from "lucide-react";
-import React from "react";
 
 type Feature = {
-  icon: React.ReactNode;
   title: string;
   description: string;
 };
 
-const Features = () => {
-  const features: Feature[] = [
-    {
-      icon: <BookOpen />,
-      title: "Courses & Workshops",
-      description:
-        "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.\n" +
-        "Et magna sit morbi lobortis.",
-    },
-    {
-      icon: <Newspaper />,
-      title: "Industry Leading Certification",
-      description:
-        "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.\n" +
-        "Et magna sit morbi lobortis.",
-    },
-    {
-      icon: <Laptop />,
-      title: "Track your Learning",
-      description:
-        "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.\n" +
-        "Et magna sit morbi lobortis.",
-    },
-    {
-      icon: <Globe />,
-      title: "Community Professionals",
-      description:
-        "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.\n" +
-        "Et magna sit morbi lobortis.",
-    },
-    {
-      icon: <Briefcase />,
-      title: "Get Job Ready Skills",
-      description:
-        "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.\n" +
-        "Et magna sit morbi lobortis.",
-    },
-    {
-      icon: <Bell />,
-      title: "Subscription Based",
-      description:
-        "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.\n" +
-        "Et magna sit morbi lobortis.",
-    },
-  ];
+const features: Feature[] = [
+  {
+    title: "Expert-Led Courses & Workshops",
+    description:
+      "Learn from practitioners through structured video courses and interactive live workshops.",
+  },
+  {
+    title: "Track Your Progress",
+    description:
+      "Monitor course completion, study streaks, and deadlines from a single dashboard.",
+  },
+  {
+    title: "Learn with a Community",
+    description:
+      "Ask questions, share work, and get feedback from peers and mentors.",
+  },
+  {
+    title: "Build Job-Ready Skills",
+    description:
+      "Follow curated learning paths aligned with real hiring requirements.",
+  },
+  {
+    title: "Get Certified",
+    description:
+      "Earn verifiable certificates to showcase to employers on completion.",
+  },
+  {
+    title: "Simple Subscription",
+    description:
+      "Access the full course catalog with flexible monthly or yearly billing.",
+  },
+];
 
+const Features = () => {
   return (
-    <section className="py-20">
-      <div className="container px-16 mx-auto">
-        <div className="max-w-3xl mx-auto mb-16 text-center">
-          <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-            Get <span className="text-blue-500">Career Ready</span> Skills
+    <section className="relative py-10 md:py-14 lg:py-28 overflow-hidden">
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_1px_1px,var(--color-border)_1px,transparent_1px)] bg-size-[24px_24px] opacity-60 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,black,transparent)]"
+      />
+
+      <div className="relative container px-4 md:px-8 lg:px-20 mx-auto">
+        <div className="max-w-2xl mb-16">
+          <h2 className="mb-3 text-lg font-bold md:text-2xl">
+            Everything you need to learn and grow
           </h2>
-          <p className="text-muted-foreground">
-            What are the benefits you'll get learning with us?
+          <p className="max-w-xl text-muted-foreground text-balance">
+            Courses, progress tracking, and certification in one platform.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature: Feature, index: number) => {
+
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature: Feature) => {
             return (
-              <Card
-                key={index}
-                className="border-transparent dark:hover:bg-accent/10 hover:shadow-sm hover:shadow-primary/20 shadow-sm transition-all duration-300 rounded-lg overflow-hidden"
-              >
-                <CardContent className="p-8 text-center">
-                  <div className="flex items-center justify-center w-12 h-12 mx-auto mb-6 rounded-lg bg-blue-500 text-white">
-                    {feature.icon}
-                  </div>
-                  <h3 className="mb-3 text-xl font-semibold">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
-                </CardContent>
-              </Card>
+              <div key={feature.title}>
+                <h3 className="mb-2 text-base font-semibold">
+                  {feature.title}
+                </h3>
+                <p className="max-w-100 text-sm text-muted-foreground text-balance">{feature.description}</p>
+              </div>
             );
           })}
         </div>
+
+
       </div>
     </section>
   );

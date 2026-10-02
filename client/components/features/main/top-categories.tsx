@@ -21,19 +21,16 @@ const TopCategories = () => {
   ];
 
   return (
-    <section className="relative pt-28 pb-16 overflow-hidden lg:pt-16 lg:pb-16">
+    <section className="relative py-10 md:py-14 lg:py-28 overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-teal-400/5 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-75 h-75 md:w-100 md:h-100 lg:w-150 lg:h-150 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-75 h-75 md:w-100 md:h-100 lg:w-150 lg:h-150 bg-teal-400/5 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl"></div>
       </div>
-      <section className="py-20">
-        <div className="container px-16 mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-16">
-            <div className="max-w-2xl mb-8 md:mb-0">
-              <div className="inline-flex items-center px-3 py-1 mb-4 text-sm font-medium rounded-full bg-primary/10 text-primary">
-                Top Categories
-              </div>
-              <h2 className="mb-4 text-2xl font-bold md:text-3xl">
+      <div>
+        <div className="container px-4 md:px-8 lg:px-20 mx-auto">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-10 md:mb-12">
+            <div className="max-w-2xl mb-6 md:mb-0">
+              <h2 className="mb-3 text-lg font-bold md:text-2xl">
                 Browse Top Categories
               </h2>
               <p className="text-muted-foreground">
@@ -53,14 +50,14 @@ const TopCategories = () => {
                 key={index}
                 className="overflow-hidden transition-all cursor-pointer dark:bg-secondary/20 dark:hover:bg-background/50 hover:scale-105 duration-300 border-transparent rounded-2xl"
               >
-                <CardContent className="p-8">
+                <CardContent className="p-5">
                   <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-6">
-                      <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-primary/10 dark:bg-transparent transition-colors duration-300">
-                        <category.icon className="w-6 h-6 text-primary transition-colors duration-300" />
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center justify-center w-9 h-9 rounded-2xl bg-primary/10 dark:bg-transparent transition-colors duration-300">
+                        <category.icon className="w-5 h-5 text-primary transition-colors duration-300" />
                       </div>
                       <div>
-                        <h3 className="text-xl transition-colors duration-300">
+                        <h3 className="text-base transition-colors duration-300">
                           {category.title}
                         </h3>
                         <p className="text-muted-foreground">
@@ -75,7 +72,7 @@ const TopCategories = () => {
             ))}
           </div>
         </div>
-      </section>
+      </div>
     </section>
   );
 };

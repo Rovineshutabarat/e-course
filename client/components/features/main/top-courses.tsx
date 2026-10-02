@@ -83,11 +83,11 @@ const TopCourses = () => {
   ];
 
   return (
-    <section className="py-20">
-      <div className="container px-16 mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="mb-2 text-2xl font-bold md:text-3xl">
-            Our Most <span className="text-blue-500">Popular Courses</span>
+    <section className="py-10 md:py-14 lg:py-28">
+      <div className="container px-4 md:px-8 lg:px-20 mx-auto">
+        <div className="text-center mb-6 md:mb-8">
+          <h2 className="mb-2 text-lg font-bold md:text-2xl">
+            Our Most Popular Courses
           </h2>
           <p className="text-muted-foreground">
             Looking for a quick go through? here are the most popular that
@@ -95,8 +95,8 @@ const TopCourses = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="design" className="mb-12">
-          <TabsList className="flex flex-wrap justify-center mb-8 bg-transparent w-full h-auto p-0 space-x-4 md:space-x-8">
+        <Tabs defaultValue="design" className="mb-6">
+          <TabsList className="flex flex-wrap justify-center mb-6 bg-transparent w-full h-auto p-0 space-x-4 md:space-x-8">
             {categories.map((category) => (
               <TabsTrigger
                 key={category.name}
@@ -110,7 +110,7 @@ const TopCourses = () => {
 
           <TabsContent value="design" className="mt-0">
             <ScrollArea className="w-full rounded-md">
-              <div className="flex w-max space-x-8">
+              <div className="flex w-max space-x-6">
                 {popularCourses.map((course) => (
                   // <CourseCard key={course.title} course={course} />
                   ""
@@ -126,7 +126,7 @@ const TopCourses = () => {
               value={category.name.toLowerCase().replace(" ", "-")}
               className="mt-0"
             >
-              <div className="flex justify-center items-center p-16">
+              <div className="flex justify-center items-center p-8">
                 <p className="text-center text-muted-foreground">
                   More {category.name} courses coming soon!
                 </p>
