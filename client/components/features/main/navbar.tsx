@@ -5,13 +5,11 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/use-auth";
 import { BookOpen } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
@@ -55,10 +53,9 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer">
-                  <Image
+                  <img
                     src={`${process.env.NEXT_PUBLIC_API_URL}/${session?.user.image?.path}`}
-                    alt={session?.user.image?.name || "avatar"}
-                    fill
+                    alt=""
                     className="object-cover"
                   />
                   <AvatarFallback className="uppercase">
@@ -68,7 +65,6 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuGroup>
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onClick={() => router.push("profile")}

@@ -1,11 +1,14 @@
 import { ApiClient } from "@/services/config/api.client";
 import { Course } from "@/types/entity/course";
+import { CourseModule } from "@/types/entity/module";
 import { UpdateCourseVisibilityRequest } from "@/types/payload/request/update.course.visibility.request";
 import { SuccessResponse } from "@/types/payload/response/common/success.response";
+import { CourseDetailResponse } from "@/types/payload/response/course.detail.response";
+import { CourseResponse } from "@/types/payload/response/course.response";
 
 export class CourseService {
     static async getAllCourses() {
-        return ApiClient.get("course").json<SuccessResponse<Course[]>>();
+        return ApiClient.get("course").json<SuccessResponse<CourseResponse[]>>();
     }
 
     // static async getCourseById(id: number) {
@@ -13,7 +16,11 @@ export class CourseService {
     // }
 
     static async getCourseBySlug(slug: string) {
-        return ApiClient.get(`course/${slug}`).json<SuccessResponse<Course>>();
+        return ApiClient.get(`course/${slug}`).json<SuccessResponse<CourseDetailResponse>>();
+    }
+
+    static async getCourseModules(slug: string) {
+        return ApiClient.get(`course/${slug}/modules`).json<SuccessResponse<CourseModule[]>>();
     }
 
     static async createCourse(data: FormData) {

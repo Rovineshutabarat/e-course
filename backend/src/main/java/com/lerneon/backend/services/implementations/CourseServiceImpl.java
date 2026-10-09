@@ -6,27 +6,28 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import com.lerneon.backend.models.entity.Course;
-import com.lerneon.backend.models.entity.Module;
 import com.lerneon.backend.models.enums.Difficulty;
 import com.lerneon.backend.models.enums.Visibility;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.models.payload.request.CourseRequest;
 import com.lerneon.backend.models.payload.request.UpdateCourseVisibilityRequest;
+import com.lerneon.backend.models.payload.response.CourseDetailResponse;
+import com.lerneon.backend.models.payload.response.CourseResponse;
 import com.lerneon.backend.repositories.CourseRepository;
 import com.lerneon.backend.repositories.FaqRepository;
-import com.lerneon.backend.repositories.ModuleRepository;
 import com.lerneon.backend.repositories.OutcomeRepository;
 import com.lerneon.backend.repositories.RequirementRepository;
+import com.lerneon.backend.repositories.jdbi.CourseJDBIRepository;
 import com.lerneon.backend.services.CategoryService;
 import com.lerneon.backend.services.CourseService;
 import com.lerneon.backend.services.UploadImageService;
 import com.lerneon.backend.services.UserService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
@@ -36,45 +37,42 @@ public class CourseServiceImpl implements CourseService {
     private final CategoryService categoryService;
     private final UserService userService;
     private final UploadImageService uploadImageService;
-    private final ModuleRepository moduleRepository;
+    private final CourseJDBIRepository courseJDBIRepository;
 
     @Override
-    public List<Course> findAllCourses() {
-        return courseRepository.findAll();
+    public List<CourseResponse> getAllCourses() {
+        return courseJDBIRepository.getAllCourses();
     }
 
-    @Override
-    public List<Module> findAllModules(String slug) {
-        return moduleRepository.findAllByCourseSlug(slug);
-    }
-
-    @Override
-    public Course findCourseById(Integer id) {
+    private Course findCourseById(Integer id) {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course was not found"));
     }
 
     @Override
-    public Course findCourseBySlug(String slug) {
-        return courseRepository.findBySlug(slug)
+    public CourseDetailResponse getCourseBySlug(String slug) {
+        return courseJDBIRepository.getCourseBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException("Course was not found"));
     }
 
     @Override
     public Course createCourse(CourseRequest courseRequest) {
+        log.info("{}", courseRequest);
+        log.info("{}", userService.getCurrentAuthenticatedUser());
         return courseRepository.save(Course.builder()
                 .title(courseRequest.getTitle())
                 .slug(generateSlug(courseRequest.getTitle()))
                 .description(courseRequest.getDescription()).price(courseRequest.getPrice())
-                .category(categoryService.findCategoryById(courseRequest.getCategoryId()))
+                .category(categoryService.getCategoryById(courseRequest.getCategoryId()))
                 .instructor(userService.getCurrentAuthenticatedUser())
                 .difficulty(Difficulty.valueOf(courseRequest.getDifficulty()))
                 .visibility(Visibility.valueOf(courseRequest.getVisibility()))
-                .requirements(saveIfPresent(courseRequest.getRequirements(), requirementRepository))
-                .outcomes(saveIfPresent(courseRequest.getOutcomes(), outcomeRepository))
-                .faqs(saveIfPresent(courseRequest.getFaqs(), faqRepository))
+                .requirements(courseRequest.getRequirements())
+                .outcomes(courseRequest.getOutcomes())
+                .faqs(courseRequest.getFaqs())
                 .image(uploadImageService.uploadImage(courseRequest.getImage()))
-                .banner(uploadImageService.uploadImage(courseRequest.getBanner())).build());
+                .banner(uploadImageService.uploadImage(courseRequest.getBanner()))
+                .build());
 
     }
 
@@ -85,7 +83,7 @@ public class CourseServiceImpl implements CourseService {
                 .id(id)
                 .title(courseRequest.getTitle())
                 .description(courseRequest.getDescription()).price(courseRequest.getPrice())
-                .category(categoryService.findCategoryById(courseRequest.getCategoryId()))
+                .category(categoryService.getCategoryById(courseRequest.getCategoryId()))
                 .instructor(userService.getCurrentAuthenticatedUser())
                 .difficulty(Difficulty.valueOf(courseRequest.getDifficulty()))
                 .visibility(Visibility.valueOf(courseRequest.getVisibility()))

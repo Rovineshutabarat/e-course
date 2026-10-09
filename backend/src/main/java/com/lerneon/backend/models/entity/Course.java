@@ -1,6 +1,7 @@
 package com.lerneon.backend.models.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.lerneon.backend.models.enums.Difficulty;
@@ -11,25 +12,25 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Data
-@SuperBuilder
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity
 @Table(name = "courses")
 public class Course extends BaseEntity {
-
         @Column(nullable = false, length = 150)
         private String title;
 
@@ -42,11 +43,11 @@ public class Course extends BaseEntity {
         @Column(nullable = false, precision = 10, scale = 2)
         private BigDecimal price;
 
-        @OneToOne
+        @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
         private Category category;
 
-        @OneToOne
+        @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name = "instructor_id", referencedColumnName = "id", nullable = false)
         private User instructor;
 
@@ -58,23 +59,26 @@ public class Course extends BaseEntity {
         @Column(nullable = false)
         private Visibility visibility;
 
-        @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+        @Builder.Default
+        @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
         @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
-        private List<Requirement> requirements;
+        private List<Requirement> requirements = new ArrayList<>();
 
-        @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+        @Builder.Default
+        @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
         @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
-        private List<Outcome> outcomes;
+        private List<Outcome> outcomes = new ArrayList<>();
 
-        @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+        @Builder.Default
+        @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
         @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
-        private List<Faq> faqs;
+        private List<Faq> faqs = new ArrayList<>();
 
-        @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-        @JoinColumn(name = "image_id", referencedColumnName = "id", nullable = false)
+        @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+        @JoinColumn(name = "image_id", referencedColumnName = "id", nullable = false, unique = true)
         private Image image;
 
-        @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-        @JoinColumn(name = "walpaper_id", referencedColumnName = "id", nullable = false)
+        @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+        @JoinColumn(name = "banner_id", referencedColumnName = "id", nullable = false, unique = true)
         private Image banner;
 }

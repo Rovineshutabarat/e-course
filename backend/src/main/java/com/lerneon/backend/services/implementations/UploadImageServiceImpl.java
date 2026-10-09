@@ -11,17 +11,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lerneon.backend.models.entity.Image;
 import com.lerneon.backend.models.exceptions.UploadException;
 import com.lerneon.backend.models.properties.UploadProperties;
-import com.lerneon.backend.repositories.ImageRepository;
 import com.lerneon.backend.services.UploadImageService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class UploadImageServiceImpl implements UploadImageService {
-    private final ImageRepository imageRepository;
     private final UploadProperties uploadImageProperties;
 
     @Override
@@ -45,9 +43,10 @@ public class UploadImageServiceImpl implements UploadImageService {
             Files.copy(multipartFile.getInputStream(), filePath,
                     StandardCopyOption.REPLACE_EXISTING);
 
-            return imageRepository
-                    .save(Image.builder().fileName(multipartFile.getOriginalFilename())
-                            .path(filePath.toString()).build());
+            return Image.builder()
+                    .fileName(multipartFile.getOriginalFilename())
+                    .path(filePath.toString())
+                    .build();
 
         } catch (UploadException e) {
             throw e;

@@ -50,28 +50,32 @@ const CourseReview = () => {
   });
 
   return (
-    <div className="mt-6">
-      <div>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium">Student Reviews</h3>
-          <Select defaultValue="newest" onValueChange={setSortBy}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">Newest</SelectItem>
-              <SelectItem value="highest">Highest Rated</SelectItem>
-              <SelectItem value="lowest">Lowest Rated</SelectItem>
-            </SelectContent>
-          </Select>
+    <section className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="space-y-1">
+          <h3 className="text-lg font-semibold tracking-tight">Student reviews</h3>
+          <p className="text-sm text-muted-foreground">
+            What learners say after taking this course.
+          </p>
         </div>
+        <Select defaultValue="newest" onValueChange={setSortBy}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Newest</SelectItem>
+            <SelectItem value="highest">Highest Rated</SelectItem>
+            <SelectItem value="lowest">Lowest Rated</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-        <div className="space-y-6">
+      <div className="space-y-4 pt-1">
           {sortedReviews.map((review) => (
             <Card key={review.id}>
-              <CardContent>
-                <div className="flex items-start gap-4">
-                  <Avatar>
+              <CardContent className="pt-5">
+                <div className="flex items-start gap-3.5">
+                  <Avatar className="h-10 w-10 shrink-0">
                     <AvatarImage
                       src={review.user.avatar || "/placeholder.svg"}
                     />
@@ -79,25 +83,25 @@ const CourseReview = () => {
                       {review.user.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1.5 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <h4 className="font-medium">{review.user.name}</h4>
-                        <div className="flex items-center">
-                          <div className="flex mr-2">
+                        <h4 className="text-sm font-semibold">{review.user.name}</h4>
+                        <div className="mt-0.5 flex items-center gap-2">
+                          <div className="flex">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <Star
                                 key={star}
                                 className={cn(
-                                  "h-4 w-4",
+                                  "h-3.5 w-3.5",
                                   star <= review.rating
-                                    ? "text-yellow-400 fill-yellow-400"
-                                    : "text-gray-300",
+                                    ? "fill-amber-400 text-amber-400"
+                                    : "text-muted-foreground/30",
                                 )}
                               />
                             ))}
                           </div>
-                          <span className="text-sm text-muted-foreground">
+                          <span className="text-xs text-muted-foreground">
                             {new Date(review.date).toLocaleDateString("id-ID", {
                               year: "numeric",
                               month: "long",
@@ -107,16 +111,14 @@ const CourseReview = () => {
                         </div>
                       </div>
                     </div>
-                    <p className="text-sm mb-3">{review.content}</p>
-                    <div className="flex items-center gap-4 mb-3">
-                      <div className="flex items-center gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
-                          <ThumbsUp className={cn("h-4 w-4")} />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
-                          <ThumbsDown className="h-4 w-4" />
-                        </Button>
-                      </div>
+                    <p className="mb-2 text-sm leading-6 text-foreground/80">{review.content}</p>
+                    <div className="flex items-center gap-1">
+                      <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Mark review helpful">
+                        <ThumbsUp className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Mark review not helpful">
+                        <ThumbsDown className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -124,8 +126,7 @@ const CourseReview = () => {
             </Card>
           ))}
         </div>
-      </div>
-    </div>
+      </section>
   );
 };
 

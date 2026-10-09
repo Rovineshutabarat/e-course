@@ -31,11 +31,11 @@ import com.lerneon.backend.models.properties.UploadProperties;
 import com.lerneon.backend.services.TranscodeLogService;
 import com.lerneon.backend.services.TranscodeService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class TranscodeServiceImpl implements TranscodeService {
     private final UploadProperties uploadProperties;
@@ -151,7 +151,7 @@ public class TranscodeServiceImpl implements TranscodeService {
 
     @Override
     public void registerEmitter(Integer transcodeLogId, SseEmitter emitter) {
-        TranscodeLog transcodeLog = transcodeLogService.findTranscodeLogById(transcodeLogId);
+        TranscodeLog transcodeLog = transcodeLogService.getTranscodeLogById(transcodeLogId);
 
         if (transcodeLog.getTranscodeStatus().equals(TranscodeStatus.COMPLETE)) {
             emitter.complete();

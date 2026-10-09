@@ -1,23 +1,25 @@
 package com.lerneon.backend.models.entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Data
-@SuperBuilder
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity
 @Table(name = "outcomes")
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Outcome extends BaseEntity {
     @NotBlank(message = "Outcome name cannot be blank.")
     @Size(min = 5, message = "Outcome name must be at least 5 characters long.")

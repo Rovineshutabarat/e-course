@@ -18,7 +18,11 @@ import { ArrowLeft, Heart, Share2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const CourseDetailNavbar = () => {
+const CourseDetailNavbar = ({
+  courseTitle,
+}: {
+  courseTitle?: string;
+}) => {
   const router = useRouter();
   const { session, isAuthenticated, logout } = useAuth();
 
@@ -35,7 +39,7 @@ const CourseDetailNavbar = () => {
         </Button>
         <span className="text-muted-foreground mx-2 shrink-0">|</span>
         <span className="text-muted-foreground truncate font-medium">
-          Advanced Figma Techniques
+          {courseTitle ?? "Advanced Figma Techniques"}
         </span>
       </div>
 

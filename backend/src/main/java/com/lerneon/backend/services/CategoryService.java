@@ -1,12 +1,13 @@
 package com.lerneon.backend.services;
 
 import java.util.List;
+
 import com.lerneon.backend.models.entity.Category;
 
 public interface CategoryService {
-    List<Category> findAllCategories();
+    List<Category> getAllCategories();
 
-    Category findCategoryById(Integer id);
+    Category getCategoryById(Integer id);
 
     Category createCategory(Category category);
 

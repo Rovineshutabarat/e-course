@@ -1,5 +1,6 @@
 package com.lerneon.backend.configurations;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -7,6 +8,8 @@ import javax.sql.DataSource;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.spi.JdbiPlugin;
+import org.jdbi.v3.core.statement.SqlLogger;
+import org.jdbi.v3.core.statement.StatementContext;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -75,6 +78,13 @@ public class ApplicationConfiguration {
     @Bean
     Jdbi jdbi(DataSource dataSource, List<JdbiPlugin> jdbiPlugins, List<RowMapper<?>> rowMappers) {
         Jdbi jdbi = Jdbi.create(new TransactionAwareDataSourceProxy(dataSource));
+        jdbi.setSqlLogger(new SqlLogger() {
+            @Override
+            public void logAfterExecution(StatementContext ctx) {
+                log.info("SQL: {} ({} ms)", ctx.getRenderedSql(),
+                        ctx.getElapsedTime(ChronoUnit.MILLIS));
+            }
+        });
         return jdbi;
     }
 

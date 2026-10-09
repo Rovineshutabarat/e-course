@@ -83,7 +83,7 @@ const CourseDiscussion = () => {
   });
 
   return (
-    <div className="m-4">
+    <div className="pt-2">
       <div className="w-full mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-2xl font-bold tracking-tight">

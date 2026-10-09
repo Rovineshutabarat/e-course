@@ -1,311 +1,291 @@
 "use client";
 
+import MuxPlayer from "@mux/mux-player-react";
+import { useQuery } from "@tanstack/react-query";
 import {
-  BookOpen,
-  Check,
-  Clock,
+  ChevronLeft,
+  ChevronRight,
   FileText,
-  Globe,
+  ListVideo,
+  MessagesSquare,
   PlayCircle,
-  Star,
-  Users,
+  Sparkles,
 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import { notFound, useParams, useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
 
+import AiQuizPanel from "@/components/features/course/ai-quiz-panel";
+import AiSummaryPanel from "@/components/features/course/ai-summary-panel";
 import CourseCurriculum from "@/components/features/course/course-curriculum";
 import CourseDetailNavbar from "@/components/features/course/course-detail-navbar";
+import CourseDetailPageSkeleton from "@/components/features/course/course-detail-page-skeleton";
 import CourseDiscussion from "@/components/features/course/course-discussion";
-import Footer from "@/components/features/main/footer";
+import { Button } from "@/components/ui/button";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-const CourseResourcePage = () => {
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState("description");
+import { CourseService } from "@/services/course.service";
+import { CourseModule } from "@/types/entity/module";
+import { Resource } from "@/types/entity/resource";
 
+function resolveMediaSrc(url: string | undefined): string | null {
+  if (!url) return null;
+  if (/^https?:\/\//.test(url)) return url;
+  const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+  if (!base) return url;
+  return `${base}/${url.replace(/^\//, "")}`;
+}
+
+const CourseResourcePage = () => {
   const params = useParams();
-  const courseId = Number(params?.id);
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState("discussions");
+
+  const slug = params.slug as string;
+  const resourceId = Number(params.id);
+
+  const {
+    data: course,
+    isLoading: isCourseLoading,
+    isError,
+  } = useQuery({
+    queryKey: [`course_${slug}`],
+    queryFn: () => CourseService.getCourseBySlug(slug!),
+  });
+
+  const { data: modulesResponse, isLoading: areModulesLoading } = useQuery({
+    queryKey: [`course_${slug}_modules`],
+    queryFn: () => CourseService.getCourseModules(slug!),
+  });
+
+  if (isError) notFound();
+
+  if (isCourseLoading || areModulesLoading) {
+    return (
+      <Fragment>
+        <CourseDetailPageSkeleton />
+      </Fragment>
+    );
+  }
+
+  const modules: CourseModule[] = [...(modulesResponse?.data ?? [])].sort(
+    (a, b) => a.order_number - b.order_number,
+  );
+
+  const flatLessons: { module: CourseModule; resource: Resource }[] =
+    modules.flatMap((module) =>
+      [...module.resources]
+        .sort((a, b) => a.order_number - b.order_number)
+        .map((resource) => ({ module, resource })),
+    );
+
+  const currentIndex = flatLessons.findIndex(
+    (lesson) => lesson.resource.id === resourceId,
+  );
+  const currentLesson =
+    currentIndex >= 0 ? flatLessons[currentIndex] : (flatLessons[0] ?? null);
+  const currentModule = currentLesson?.module ?? null;
+  const currentResource = currentLesson?.resource ?? null;
+  const prevLesson = currentIndex > 0 ? flatLessons[currentIndex - 1] : null;
+  const nextLesson =
+    currentIndex >= 0 && currentIndex < flatLessons.length - 1
+      ? flatLessons[currentIndex + 1]
+      : null;
+
+  const goToLesson = (id: number) =>
+    router.push(`/course/${slug}/resource/${id}`);
+
+  const wallpaperPath =
+    (
+      course?.data as unknown as {
+        wallpaper?: { path?: string; name?: string };
+      }
+    )?.wallpaper?.path ?? course?.data.image?.path;
+  const wallpaperSrc = wallpaperPath
+    ? `${process.env.NEXT_PUBLIC_API_URL}/${wallpaperPath}`
+    : "/placeholder.svg";
+  const mediaSrc = resolveMediaSrc(currentResource?.url);
+  const lessonTitle = currentResource?.title ?? course?.data.title ?? "";
+
+  const curriculum = (
+    <CourseCurriculum
+      modules={modules}
+      currentResourceId={currentResource?.id ?? null}
+      onSelectResource={(resource) => goToLesson(resource.id)}
+    />
+  );
 
   return (
     <Fragment>
-      <div className="bg-muted border-b shadow-sm">
-        <CourseDetailNavbar />
+      <div className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+        <CourseDetailNavbar courseTitle={course?.data.title} />
       </div>
 
-      <main className="container mx-auto px-4 py-10">
-        <div className="flex flex-col lg:flex-row gap-16">
-          <div className="lg:w-2/3 space-y-6">
-            <div className="w-full">
-              <div className="relative w-full h-[200px] md:h-[300px] lg:h-[400px] overflow-hidden rounded-xl">
-                <img
-                  src="https://media.geeksforgeeks.org/wp-content/uploads/20240628161854/Best-courses-for-Java-Backend.webp"
-                  alt="Course Background"
-                  className="w-full h-full object-cover object-center transition-transform duration-1000 hover:scale-105"
-                />
-              </div>
-            </div>
-
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-4 bg-card">
-                <TabsTrigger value="description">Description</TabsTrigger>
-                <TabsTrigger value="discussions">Discussions</TabsTrigger>
-                <TabsTrigger value="quiz">Generate Quiz</TabsTrigger>
-                <TabsTrigger value="summary">Generate Summary</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="description" className="p-4">
-                <div className="space-y-10">
-                  <div className="space-y-4">
-                    <h2 className="text-2xl font-bold">
-                      Advanced Figma Techniques
-                    </h2>
-
-                    <section className="flex flex-wrap gap-3">
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        <Clock className="h-3 w-3" />
-                        20 hours
-                      </Badge>
-
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        <BookOpen className="h-3 w-3" />
-                        12 modules
-                      </Badge>
-
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        <PlayCircle className="h-3 w-3" />
-                        48 lessons
-                      </Badge>
-
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        <Users className="h-3 w-3" />
-                        3,214 students
-                      </Badge>
-
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        <Star className="h-3 w-3" />
-                        120 Review
-                      </Badge>
-
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        <Star className="h-3 w-3" />
-                        4.8 rating
-                      </Badge>
-                    </section>
-
-                    <section className="flex flex-wrap gap-3">
-                      <Badge variant="secondary">Programming</Badge>
-
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        <Globe className="h-3 w-3" />
-                        English
-                      </Badge>
-
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        <Globe className="h-3 w-3" />
-                        Beginner
-                      </Badge>
-
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        <FileText className="h-3 w-3" />
-                        Certificate
-                      </Badge>
-                    </section>
-                  </div>
-
-                  <section className="prose prose-sm max-w-none dark:prose-invert">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Alias nesciunt nam iusto officia quisquam sit dicta
-                    corporis, magnam corrupti quia dolorem quasi provident ut
-                    sapiente, ipsam sequi unde ea molestiae odit mollitia eos
-                    sunt soluta, repellat suscipit. Ullam, quidem. Reiciendis
-                    voluptatum ad temporibus cumque possimus itaque, aliquam
-                    perferendis tenetur ipsum!
-                  </section>
-
-                  <section className="p-6 border rounded-xl bg-slate-50/50 dark:bg-slate-900/20 space-y-4">
-                    <h3 className="text-xl font-bold tracking-tight">
-                      What You'll Learn
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                      {[
-                        "Understand the core concepts of the topic",
-                        "Apply the knowledge through practical examples",
-                        "Build real-world skills step by step",
-                        "Best practices and industry standards",
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-start gap-3">
-                          <Check className="h-5 w-5 text-emerald-600 mt-0.5 shrink-0" />
-                          <span className="text-sm text-muted-foreground leading-relaxed">
-                            {item}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
-                  <section className="space-y-4">
-                    <h3 className="text-xl font-bold tracking-tight">
-                      Requirements
-                    </h3>
-                    <ul className="grid gap-2">
-                      {[
-                        "Basic understanding of the subject",
-                        "A computer with internet access",
-                        "Willingness to learn and practice",
-                      ].map((req, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center gap-3 text-muted-foreground"
-                        >
-                          <div className="h-1.5 w-1.5 rounded-full bg-slate-400" />
-                          {req}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-
-                  <section className="space-y-4">
-                    <h3 className="text-xl font-bold tracking-tight">
-                      Instructor
-                    </h3>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 p-1">
-                      <Avatar className="h-20 w-20 ring-2 ring-offset-2 ring-primary/10">
-                        <AvatarImage
-                          src="/placeholder.svg"
-                          className="object-cover"
-                        />
-                        <AvatarFallback className="bg-primary text-primary-foreground text-xl">
-                          RH
-                        </AvatarFallback>
-                      </Avatar>
-
-                      <div className="space-y-3">
-                        <div>
-                          <h4 className="text-lg font-bold text-primary underline-offset-4 hover:underline cursor-pointer">
-                            Rovines Hutabarat
-                          </h4>
-                          <p className="text-sm text-muted-foreground font-medium">
-                            Senior Software Engineer & Educator
-                          </p>
-                        </div>
-
-                        <div className="flex flex-wrap gap-y-2 gap-x-6 text-sm">
-                          <div className="flex items-center gap-1.5 font-medium">
-                            <Star className="h-4 w-4 text-orange-500 fill-orange-500" />
-                            <span>
-                              4.8{" "}
-                              <span className="text-muted-foreground font-normal">
-                                (1.2k ratings)
-                              </span>
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1.5 font-medium">
-                            <Users className="h-4 w-4 text-slate-300" />
-                            <span>200 Students</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 font-medium">
-                            <BookOpen className="h-4 w-4 text-slate-300" />
-                            <span>14 Courses</span>
-                          </div>
-                        </div>
+      <main className="mx-auto w-full max-w-10/12 px-4 py-6 md:px-6">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-10">
+          <div className="min-w-0">
+            <div className="space-y-6">
+              {/* Player */}
+              <section className="space-y-4">
+                <div className="overflow-hidden rounded-xl border bg-black">
+                  {mediaSrc && currentResource ? (
+                    <MuxPlayer
+                      key={mediaSrc}
+                      streamType="on-demand"
+                      src={mediaSrc}
+                      poster={wallpaperSrc}
+                      title={currentResource.title}
+                      style={{ aspectRatio: "16 / 9", width: "100%" }}
+                    />
+                  ) : (
+                    <div className="relative aspect-video w-full">
+                      <Image
+                        src={wallpaperSrc}
+                        alt={course?.data.title || "Course cover"}
+                        fill
+                        priority
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/55 p-6 text-center">
+                        <PlayCircle className="h-10 w-10 text-white/80" />
+                        <p className="font-semibold text-white">
+                          Video isn&apos;t available yet
+                        </p>
+                        <p className="max-w-md text-sm text-white/70">
+                          {modules.length === 0
+                            ? "Lessons will appear here once the instructor publishes them."
+                            : "This lesson has no playable video attached."}
+                        </p>
                       </div>
                     </div>
-                  </section>
-
-                  <section className="space-y-4">
-                    <h3 className="text-xl font-bold tracking-tight">
-                      Frequently Asked Questions
-                    </h3>
-                    <Accordion
-                      type="single"
-                      collapsible
-                      className="w-full border rounded-lg overflow-hidden"
-                    >
-                      {[
-                        {
-                          q: "Who is this course for?",
-                          a: "This course is suitable for beginners who want to learn the fundamentals as well as learners who want to strengthen their existing knowledge.",
-                        },
-                        {
-                          q: "Do I need prior experience?",
-                          a: "No prior experience is required. The material starts from the basics and gradually moves to more advanced concepts.",
-                        },
-                        {
-                          q: "Will I get practical examples?",
-                          a: "Yes. The course includes practical examples and exercises to help you apply what you learn in real situations.",
-                        },
-                      ].map((item, idx) => (
-                        <AccordionItem
-                          key={idx}
-                          value={`item-${idx}`}
-                          className="px-4 border-b last:border-0"
-                        >
-                          <AccordionTrigger className="hover:no-underline hover:text-primary py-4 text-left font-semibold">
-                            {item.q}
-                          </AccordionTrigger>
-                          <AccordionContent className="text-muted-foreground leading-relaxed pb-4">
-                            {item.a}
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-                  </section>
+                  )}
                 </div>
-              </TabsContent>
 
-              <TabsContent value="discussions" className="space-y-6">
-                <CourseDiscussion />
-              </TabsContent>
+                <div className="space-y-1">
+                  {currentModule && (
+                    <p className="text-[13px] font-medium text-muted-foreground">
+                      {currentModule.title}
+                    </p>
+                  )}
+                  <h1 className="text-2xl font-bold tracking-tight md:text-[28px] md:leading-[1.25]">
+                    {lessonTitle}
+                  </h1>
+                  {currentIndex >= 0 && (
+                    <p className="text-[13px] tabular-nums text-muted-foreground">
+                      Lesson {currentIndex + 1} of {flatLessons.length}
+                    </p>
+                  )}
+                </div>
 
-              <TabsContent value="quiz" className="space-y-6"></TabsContent>
-              <TabsContent value="summary" className="space-y-6"></TabsContent>
-            </Tabs>
-          </div>
+                {/* Prev / Next */}
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    variant="outline"
+                    disabled={!prevLesson}
+                    onClick={() =>
+                      prevLesson && goToLesson(prevLesson.resource.id)
+                    }
+                    className="h-auto min-h-11 justify-start gap-2 px-3 py-2"
+                  >
+                    <ChevronLeft className="h-4 w-4 shrink-0" />
+                    <span className="min-w-0 text-left">
+                      <span className="block text-[11px] font-normal text-muted-foreground">
+                        Previous
+                      </span>
+                      <span className="block truncate text-sm font-medium">
+                        {prevLesson?.resource.title ?? "—"}
+                      </span>
+                    </span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    disabled={!nextLesson}
+                    onClick={() =>
+                      nextLesson && goToLesson(nextLesson.resource.id)
+                    }
+                    className="h-auto min-h-11 justify-end gap-2 px-3 py-2"
+                  >
+                    <span className="min-w-0 text-right">
+                      <span className="block text-[11px] font-normal text-muted-foreground">
+                        Up next
+                      </span>
+                      <span className="block truncate text-sm font-medium">
+                        {nextLesson?.resource.title ?? "—"}
+                      </span>
+                    </span>
+                    <ChevronRight className="h-4 w-4 shrink-0" />
+                  </Button>
+                </div>
 
-          <div className="lg:w-1/3">
-            <div className="sticky top-12">
-              <CourseCurriculum />
+                {/* Mobile curriculum drawer */}
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" className="w-full lg:hidden">
+                      <ListVideo className="h-4 w-4" />
+                      Course content &bull; {flatLessons.length} lessons
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent
+                    side="right"
+                    className="flex w-[90vw] flex-col gap-0 sm:max-w-md"
+                  >
+                    <SheetHeader className="pb-3 text-left">
+                      <SheetTitle>Course content</SheetTitle>
+                      <SheetDescription>
+                        {modules.length} modules &bull; {flatLessons.length}{" "}
+                        lessons
+                      </SheetDescription>
+                    </SheetHeader>
+                    <div className="-mx-1 flex-1 overflow-y-auto px-1 pb-4">
+                      {curriculum}
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </section>
+
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="w-full max-w-full justify-start overflow-x-auto bg-card">
+                  <TabsTrigger value="discussions" className="shrink-0 gap-1.5">
+                    <MessagesSquare className="h-3.5 w-3.5" />
+                    Discussion
+                  </TabsTrigger>
+                  <TabsTrigger value="quiz" className="shrink-0 gap-1.5">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    AI Quiz
+                  </TabsTrigger>
+                  <TabsTrigger value="summary" className="shrink-0 gap-1.5">
+                    <FileText className="h-3.5 w-3.5" />
+                    AI Summary
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="discussions">
+                  <CourseDiscussion />
+                </TabsContent>
+
+                <TabsContent value="quiz">
+                  <AiQuizPanel lessonTitle={lessonTitle} />
+                </TabsContent>
+
+                <TabsContent value="summary">
+                  <AiSummaryPanel lessonTitle={lessonTitle} />
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
+
+          <aside className="hidden lg:block lg:w-[340px] lg:shrink-0">
+            <div className="lg:sticky lg:top-20">{curriculum}</div>
+          </aside>
         </div>
       </main>
-
-      {/* Footer */}
-      <Footer />
     </Fragment>
   );
 };

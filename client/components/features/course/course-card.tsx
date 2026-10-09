@@ -1,70 +1,105 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatPrice } from "@/lib/price.formatter";
-import { Course } from "@/types/entity/course";
+import { CourseResponse } from "@/types/payload/response/course.response";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import DifficultyBadge from "./difficulty-badge";
 
 type CourseCardProps = {
-  course: Course;
+  course: CourseResponse;
 };
 
+function resolveImageSrc(path?: string | null) {
+  if (!path) return undefined;
+  if (/^https?:\/\//.test(path)) return path;
+  return `${process.env.NEXT_PUBLIC_API_URL}/${path}`;
+}
+
 const CourseCard = ({ course }: CourseCardProps) => {
+  const instructorImageSrc = resolveImageSrc(course.instructor?.image?.path);
+  // DUMMY rating & jumlah modul, ganti dengan data asli saat API menyediakannya.
+  const dummyRating = ((43 + ((course.id ?? 1) * 7) % 7) / 10).toFixed(1);
+  const dummyReviews = 40 + ((course.id ?? 1) * 37) % 300;
+
   return (
-    <Link href={course.slug ?? ""}
-      className="group w-[20rem] shrink-0 cursor-pointer flex flex-col"
+    <Link href={`/course/${course.slug ?? ""}`}
+      className="group w-full min-w-0 cursor-pointer flex flex-col"
       key={course.id}
     >
 
-      <div className="overflow-hidden rounded-xl mb-4 relative">
-        <div className="relative w-full h-48">
+      <div className="overflow-hidden rounded-lg relative">
+        <div className="relative w-full aspect-video">
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_URL}/${course.image.path}`}
+            src={resolveImageSrc(course.image.path) ?? ""}
             alt={course.image.name || "Course image"}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </div>
-        <DifficultyBadge difficulty={course.difficulty} />
       </div>
 
-      <div className="flex flex-col space-y-1 items-start">
-        <h3 className="mb-2 text-lg font-semibold group-hover:text-blue-500 transition-colors line-clamp-2">
+      <div className="flex flex-1 flex-col pt-3 mr-1.5">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
+            {course.category}
+          </p>
+          <p className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+            <span className="relative inline-flex">
+              <span className="flex gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-3 w-3 text-border" fill="currentColor" strokeWidth={0} />
+                ))}
+              </span>
+              <span
+                className="absolute inset-y-0 left-0 overflow-hidden"
+                style={{ width: `${(Number(dummyRating) / 5) * 100}%` }}
+              >
+                <span className="flex w-max gap-0.5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </span>
+              </span>
+            </span>
+            <span className="font-medium text-foreground">{dummyRating}</span>
+            <span>({dummyReviews})</span>
+          </p>
+        </div>
+
+        <h3 className="mb-1 text-[15px] font-semibold leading-snug line-clamp-2">
           {course.title}
         </h3>
 
         {course.description && (
-          <p className="text-muted-foreground text-sm line-clamp-2 mb-3 pr-2">
+          <p className="text-muted-foreground text-[13px] leading-relaxed line-clamp-2">
             {course.description}
           </p>
         )}
-      </div>
 
-      <div className="flex items-center text-sm text-muted-foreground mb-2">
-        <Avatar className="w-5 h-5 mr-1.5 border">
-          <Image
-            src={`${process.env.NEXT_PUBLIC_API_URL}/${course.instructor.image?.path}`}
-            alt={course.instructor.image?.name || "avatar"}
-            fill
-            className="rounded-full object-cover border"
-          />
-          <AvatarFallback className="text-xs">
-            {course.instructor.username?.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
+        <div className="flex items-center justify-between gap-2 my-3">
+          <div className="flex min-w-0 items-center text-[13px] text-muted-foreground">
+            <Avatar className="w-8 h-8 mr-1.5 border">
+              {instructorImageSrc && (
+                <AvatarImage
+                  src={instructorImageSrc}
+                  alt={course.instructor.username}
+                  className="object-cover"
+                />
+              )}
+              <AvatarFallback className="">
+                {course.instructor.username?.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
 
-        <span>By {course.instructor.username}</span>
-        <span className="mx-2">•</span>
+            <span>By {course.instructor.username}</span>
+          </div>
 
-        <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 mr-1" />
-        <p>4.5 (120)</p>
-      </div>
-
-      <div className="text-lg font-bold text-foreground mt-auto">
-        {formatPrice(course.price)}
+          <span className={`shrink-0 font-extrabold ${course.price === 0 ? "text-emerald-600" : "text-foreground"}`}>
+            {course.price === 0 ? "Free" : formatPrice(course.price)}
+          </span>
+        </div>
       </div>
     </Link>
   );

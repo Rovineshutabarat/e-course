@@ -13,16 +13,16 @@ import com.lerneon.backend.repositories.TranscodeLogRepository;
 import com.lerneon.backend.services.ResourceService;
 import com.lerneon.backend.services.TranscodeLogService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TranscodeLogServiceImpl implements TranscodeLogService {
     private final TranscodeLogRepository transcodeLogRepository;
     private final ResourceService resourceService;
 
     @Override
-    public TranscodeLog findTranscodeLogById(Integer id) {
+    public TranscodeLog getTranscodeLogById(Integer id) {
         return transcodeLogRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Transcode Log was not found"));
     }
@@ -34,7 +34,7 @@ public class TranscodeLogServiceImpl implements TranscodeLogService {
 
     @Override
     public TranscodeLog initTranscodeLog(TranscodeEvent transcodeEvent) {
-        Resource resource = resourceService.findResourceById(transcodeEvent.getResourceId());
+        Resource resource = resourceService.getResourceById(transcodeEvent.getResourceId());
 
         TranscodeLog transcodeLog = TranscodeLog.builder()
                 .source(transcodeEvent.getSource())
@@ -49,7 +49,7 @@ public class TranscodeLogServiceImpl implements TranscodeLogService {
 
     @Override
     public TranscodeLog updateStatus(Integer id, TranscodeStatus transcodeStatus) {
-        TranscodeLog TranscodeLog = findTranscodeLogById(id);
+        TranscodeLog TranscodeLog = getTranscodeLogById(id);
 
         TranscodeLog.setTranscodeStatus(transcodeStatus);
 

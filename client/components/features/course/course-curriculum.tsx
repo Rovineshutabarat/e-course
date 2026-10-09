@@ -15,69 +15,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { Bookmark, Download, PlayIcon, Plus } from "lucide-react";
-import React from "react";
+import { CourseModule } from "@/types/entity/module";
+import { Resource } from "@/types/entity/resource";
+import { Check, Download, ListVideo, Lock, PlayCircle } from "lucide-react";
 
-type Resource = {
-  id: number;
-  title: string;
-  url: string;
-  resourceType: "VIDEO";
+type CourseCurriculumProps = {
+  modules: CourseModule[];
+  currentResourceId: number | null;
+  completedResourceIds?: number[];
+  onSelectResource?: (resource: Resource) => void;
 };
 
-type Module = {
-  id: number;
-  title: string;
-  resources: Resource[];
-};
-
-const dummyModules: Module[] = [
-  {
-    id: 1,
-    title: "Introduction",
-    resources: [
-      {
-        id: 1,
-        title: "Welcome to the Course",
-        url: "/video1.mp4",
-        resourceType: "VIDEO",
-      },
-      {
-        id: 2,
-        title: "Course Overview",
-        url: "/video2.mp4",
-        resourceType: "VIDEO",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "Core Concepts",
-    resources: [
-      {
-        id: 3,
-        title: "Understanding Basics",
-        url: "/video3.mp4",
-        resourceType: "VIDEO",
-      },
-      {
-        id: 4,
-        title: "First Practical Example",
-        url: "/video4.mp4",
-        resourceType: "VIDEO",
-      },
-      { id: 5, title: "Deep Dive", url: "/video5.mp4", resourceType: "VIDEO" },
-    ],
-  },
-];
-
-const CourseCurriculum = () => {
-  const [currentResource, setCurrentResource] = React.useState<Resource | null>(
-    dummyModules[0].resources[0],
+const CourseCurriculum = ({
+  modules,
+  currentResourceId,
+  completedResourceIds = [],
+  onSelectResource,
+}: CourseCurriculumProps) => {
+  const sortedModules = [...modules].sort(
+    (a, b) => a.order_number - b.order_number,
   );
-
-  const modules = dummyModules;
+  const totalLessons = sortedModules.reduce(
+    (acc, m) => acc + m.resources.length,
+    0,
+  );
+  const completedCount = completedResourceIds.length;
+  const progress =
+    totalLessons === 0 ? 0 : Math.round((completedCount / totalLessons) * 100);
 
   return (
     <Card>
@@ -85,71 +51,108 @@ const CourseCurriculum = () => {
         <CardTitle>Course Content</CardTitle>
         <div className="flex items-center justify-between">
           <CardDescription>
-            {modules.length} modules •{" "}
-            {modules.reduce((acc, m) => acc + m.resources.length, 0)} lessons
+            {sortedModules.length} modules &bull; {totalLessons} lessons
           </CardDescription>
           <div className="text-sm">
-            <span className="font-medium">10%</span> complete
+            <span className="font-medium">
+              {completedCount > 0 ? `${progress}%` : "Not started"}
+            </span>
           </div>
         </div>
+        {totalLessons > 0 && <Progress value={progress} className="mt-2" />}
       </CardHeader>
 
       <CardContent className="max-h-[calc(100vh-200px)] overflow-y-auto">
-        <Accordion type="multiple" className="w-full">
-          {modules.map((module) => (
-            <AccordionItem
-              key={module.id}
-              value={module.id.toString()}
-              className="border-b"
-            >
-              <AccordionTrigger className="hover:no-underline py-3">
-                <div className="flex flex-col items-start text-left">
-                  <span className="text-sm font-medium">{module.title}</span>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {module.resources.length} lessons
-                  </div>
-                </div>
-              </AccordionTrigger>
-
-              <AccordionContent>
-                <div className="space-y-1 py-1">
-                  {module.resources.map((resource) => (
-                    <div
-                      key={resource.id}
-                      className={cn(
-                        "flex items-center gap-2 p-2 rounded-md text-sm hover:bg-muted/50 cursor-pointer",
-                        currentResource?.id === resource.id && "bg-muted",
-                      )}
-                      onClick={() => setCurrentResource(resource)}
-                    >
-                      <PlayIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      <span className="flex-1 truncate">{resource.title}</span>
+        {sortedModules.length === 0 ? (
+          <div className="flex flex-col items-center gap-2 py-8 text-center">
+            <ListVideo className="h-8 w-8 text-muted-foreground" />
+            <p className="text-sm font-medium">No lessons yet</p>
+            <p className="text-xs text-muted-foreground">
+              Lessons will appear here once the instructor publishes them.
+            </p>
+          </div>
+        ) : (
+          <Accordion
+            type="multiple"
+            defaultValue={
+              sortedModules.length > 0 ? [String(sortedModules[0].id)] : []
+            }
+            className="w-full"
+          >
+            {sortedModules.map((module) => (
+              <AccordionItem
+                key={module.id}
+                value={module.id.toString()}
+                className="border-b"
+              >
+                <AccordionTrigger className="hover:no-underline py-3">
+                  <div className="flex flex-col items-start text-left">
+                    <span className="text-sm font-medium">{module.title}</span>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {module.resources.length} lessons
                     </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+                  </div>
+                </AccordionTrigger>
+
+                <AccordionContent>
+                  <div className="space-y-1 py-1">
+                    {[...module.resources]
+                      .sort((a, b) => a.order_number - b.order_number)
+                      .map((resource) => {
+                        const isCurrent = currentResourceId === resource.id;
+                        const isCompleted = completedResourceIds.includes(
+                          resource.id,
+                        );
+                        const isLocked = resource.is_available === false;
+
+                        return (
+                          <button
+                            key={resource.id}
+                            type="button"
+                            disabled={isLocked}
+                            aria-current={isCurrent}
+                            aria-label={`${resource.title}${isCurrent ? " (currently playing)" : ""}${isLocked ? " (locked)" : ""}`}
+                            className={cn(
+                              "flex min-h-[44px] w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-sm transition-colors outline-none hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                              isCurrent && "bg-muted font-medium",
+                            )}
+                            onClick={() => onSelectResource?.(resource)}
+                          >
+                            {isCompleted ? (
+                              <span className="grid size-4 shrink-0 place-items-center rounded-full bg-emerald-600 text-white">
+                                <Check className="size-3" />
+                              </span>
+                            ) : isLocked ? (
+                              <Lock className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            ) : (
+                              <PlayCircle
+                                className={cn(
+                                  "h-4 w-4 shrink-0",
+                                  isCurrent
+                                    ? "text-primary"
+                                    : "text-muted-foreground",
+                                )}
+                              />
+                            )}
+                            <span className="flex-1 truncate">
+                              {resource.title}
+                            </span>
+                          </button>
+                        );
+                      })}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        )}
       </CardContent>
 
-      <CardFooter className="flex-col gap-4 pt-2">
-        <div className="w-full flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-1" />
-              Resources
-            </Button>
-            <Button variant="outline" size="sm">
-              <Bookmark className="h-4 w-4 mr-1" />
-              Bookmarks
-            </Button>
-          </div>
-          <Button variant="outline" size="sm">
-            <Plus className="h-4 w-4 mr-1" />
-            Notes
-          </Button>
-        </div>
+      <CardFooter className="pt-2">
+        <Button variant="outline" size="sm" className="w-full">
+          <Download className="h-4 w-4 mr-1" />
+          Download resources
+        </Button>
       </CardFooter>
     </Card>
   );

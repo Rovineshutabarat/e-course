@@ -16,11 +16,11 @@ import com.lerneon.backend.services.ModuleService;
 import com.lerneon.backend.services.ResourceService;
 import com.lerneon.backend.services.UploadVideoService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class ResourceServiceImpl implements ResourceService {
     private final ResourceRepository resourceRepository;
@@ -30,7 +30,7 @@ public class ResourceServiceImpl implements ResourceService {
     private final TranscodeEventProducer transcodeEventProducer;
 
     @Override
-    public Resource findResourceById(Integer id) {
+    public Resource getResourceById(Integer id) {
         return resourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource was not found."));
     }
@@ -47,7 +47,7 @@ public class ResourceServiceImpl implements ResourceService {
                 .orderNumber(resourceRepository.getLastOrderNumber(resourceRequest.getModuleId()) + 1)
                 .url(destination)
                 .isAvailable(false)
-                .module(moduleService.findModuleById(resourceRequest.getModuleId()))
+                .module(moduleService.getModuleById(resourceRequest.getModuleId()))
                 .build());
 
         TranscodeEvent transcodeEvent = TranscodeEvent.builder()
@@ -65,7 +65,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public Resource activateResource(Integer id) {
-        Resource resource = findResourceById(id);
+        Resource resource = getResourceById(id);
 
         if (resource.getIsAvailable()) {
             return resource;
@@ -99,7 +99,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public Resource deleteResource(Integer id) {
-        Resource resource = findResourceById(id);
+        Resource resource = getResourceById(id);
         resourceRepository.delete(resource);
         return resource;
     }

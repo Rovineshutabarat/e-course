@@ -3,18 +3,15 @@ package com.lerneon.backend.services;
 import java.util.List;
 
 import com.lerneon.backend.models.entity.Course;
-import com.lerneon.backend.models.entity.Module;
 import com.lerneon.backend.models.payload.request.CourseRequest;
 import com.lerneon.backend.models.payload.request.UpdateCourseVisibilityRequest;
+import com.lerneon.backend.models.payload.response.CourseDetailResponse;
+import com.lerneon.backend.models.payload.response.CourseResponse;
 
 public interface CourseService {
-    List<Course> findAllCourses();
+    List<CourseResponse> getAllCourses();
 
-    List<Module> findAllModules(String slug);
-
-    Course findCourseById(Integer id);
-
-    Course findCourseBySlug(String slug);
+    CourseDetailResponse getCourseBySlug(String slug);
 
     Course createCourse(CourseRequest courseRequest);
 

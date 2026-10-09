@@ -9,7 +9,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { CategoryService } from "@/services/category.service";
 import { CourseService } from "@/services/course.service";
 import { Category } from "@/types/entity/category";
-import { Course } from "@/types/entity/course";
+import { CourseResponse } from "@/types/payload/response/course.response";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, SearchX } from "lucide-react";
 import { Fragment, useState } from "react";
@@ -27,23 +27,14 @@ const CourseListPage = () => {
     queryFn: () => CourseService.getAllCourses()
   })
 
-
-  console.log("jhvhv");
   return (
 
     <div className="flex flex-col">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-1">Popular Courses</h2>
-        <p className="text-sm text-muted-foreground">
-          Discover our top-rated courses for your learning journey.
-        </p>
-      </div>
-
       <ScrollArea>
         <div className="flex items-center gap-2">
           <Badge
             variant={activeCategory === null ? "default" : "secondary"}
-            className="whitespace-nowrap cursor-pointer"
+            className="whitespace-nowrap cursor-pointer rounded-md px-4 py-1.5 text-sm font-medium"
             onClick={() => setActiveCategory(null)}
           >
             All
@@ -56,7 +47,7 @@ const CourseListPage = () => {
                   ? "default"
                   : "secondary"
               }
-              className="whitespace-nowrap cursor-pointer text-sm"
+              className="whitespace-nowrap cursor-pointer rounded-md px-4 py-1.5 text-sm font-medium"
               onClick={() =>
                 setActiveCategory(category.id!)
               }
@@ -83,10 +74,10 @@ const CourseListPage = () => {
           </Button>
         </EmptyList>
       ) : (
-        <div className="grid gap-4 gap-y-6 my-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 gap-y-6 my-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {isLoading ? <CourseCardSkeleton /> :
             <Fragment>
-              {courses?.data.map((course: Course) => (
+              {courses?.data.map((course: CourseResponse) => (
                 <CourseCard key={course.id} course={course} />
               ))}
             </Fragment>}

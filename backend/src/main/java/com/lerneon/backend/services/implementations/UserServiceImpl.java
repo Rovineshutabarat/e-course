@@ -2,6 +2,8 @@ package com.lerneon.backend.services.implementations;
 
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +15,23 @@ import com.lerneon.backend.models.payload.request.UpdateProfileRequest;
 import com.lerneon.backend.repositories.UserRepository;
 import com.lerneon.backend.services.UserService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public User getCurrentAuthenticatedUser() {
-        // TODO Auto-generated method stub
-        return null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!authentication.isAuthenticated()) {
+            throw new AuthException("Request is not authenticated");
+        }
+
+        return (User) authentication.getPrincipal();
     }
 
     public Optional<User> findOptionalUserByEmail(String email) {

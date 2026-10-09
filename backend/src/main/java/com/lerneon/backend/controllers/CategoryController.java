@@ -8,9 +8,9 @@ import com.lerneon.backend.models.entity.Category;
 import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 
 public interface CategoryController {
-    ResponseEntity<SuccessResponse<List<Category>>> findAllCategories();
+    ResponseEntity<SuccessResponse<List<Category>>> getAllCategories();
 
-    ResponseEntity<SuccessResponse<Category>> findCategoryById(Integer id);
+    ResponseEntity<SuccessResponse<Category>> getCategoryById(Integer id);
 
     ResponseEntity<SuccessResponse<Category>> createCategory(Category category);
 

@@ -1,11 +1,16 @@
 package com.lerneon.backend.services;
 
+import java.util.List;
+
 import com.lerneon.backend.models.entity.Module;
 import com.lerneon.backend.models.payload.request.ModuleRequest;
 import com.lerneon.backend.models.payload.request.UpdateModuleOrderNumberRequest;
+import com.lerneon.backend.models.payload.response.ModuleResponse;
 
 public interface ModuleService {
-    Module findModuleById(Integer id);
+    Module getModuleById(Integer id);
+
+    List<ModuleResponse> getAllModuleByCourseSlug(String slug);
 
     Module createModule(ModuleRequest moduleRequest);
 

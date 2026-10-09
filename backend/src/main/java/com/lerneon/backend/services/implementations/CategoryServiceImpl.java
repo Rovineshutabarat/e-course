@@ -9,20 +9,20 @@ import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.repositories.CategoryRepository;
 import com.lerneon.backend.services.CategoryService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> findAllCategories() {
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
     @Override
-    public Category findCategoryById(Integer id) {
+    public Category getCategoryById(Integer id) {
         return categoryRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Category was not found."));
     }
@@ -34,14 +34,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(Integer id, Category category) {
-        findCategoryById(id);
+        getCategoryById(id);
         category.setId(id);
         return categoryRepository.save(category);
     }
 
     @Override
     public Category deleteCategory(Integer id) {
-        Category category = findCategoryById(id);
+        Category category = getCategoryById(id);
         categoryRepository.delete(category);
         return category;
     }

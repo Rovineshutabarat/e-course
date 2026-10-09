@@ -8,7 +8,7 @@ type CourseListLayoutProps = {
 
 export default function CourseListLayout({ children }: CourseListLayoutProps) {
   return (
-    <section className="flex flex-col">
+    <section className="flex flex-col mx-8">
       <CourseNavbar />
       <div className="flex flex-1 mt-5 mx-4 md:mx-10 gap-10">
         <div className="hidden md:block w-64 shrink-0">
