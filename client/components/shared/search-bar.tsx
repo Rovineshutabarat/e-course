@@ -9,6 +9,8 @@ import React from "react";
 interface SearchBarProps extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder: string;
   displaySize: "small" | "medium" | "large";
+  defaultValue?: string;
+  onSearch?: (keyword: string) => void;
 }
 
 const sizeClasses = {
@@ -17,16 +19,28 @@ const sizeClasses = {
   large: "w-[30rem]",
 };
 
-const SearchBar = ({ placeholder, displaySize, ...props }: SearchBarProps) => {
-  const [searchKeyword, setSearchKeyword] = React.useState<string>("");
+const SearchBar = ({
+  placeholder,
+  displaySize,
+  defaultValue,
+  onSearch,
+  ...props
+}: SearchBarProps) => {
+  const [searchKeyword, setSearchKeyword] = React.useState<string>(
+    defaultValue ?? "",
+  );
+
+  React.useEffect(() => {
+    setSearchKeyword(defaultValue ?? "");
+  }, [defaultValue]);
 
   function handleSearch() {
-    if (searchKeyword !== undefined) {
-    }
+    onSearch?.(searchKeyword.trim());
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
-    if (event.key === "Enter" && (!searchKeyword || true)) {
+    if (event.key === "Enter") {
+      handleSearch();
     }
   }
 
@@ -41,6 +55,7 @@ const SearchBar = ({ placeholder, displaySize, ...props }: SearchBarProps) => {
         type="search"
         placeholder={placeholder}
         className="h-9"
+        value={searchKeyword}
         onKeyDown={handleKeyDown}
         onChange={(e) => setSearchKeyword(e.target.value)}
         {...props}

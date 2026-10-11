@@ -62,7 +62,7 @@ const CourseDetailPage = () => {
       {isLoading ? <CourseDetailPageSkeleton /> :
         <Fragment>
           <div className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-            <CourseDetailNavbar />
+            <CourseDetailNavbar title={course?.data.title} />
           </div>
 
           <main className="mx-auto w-full max-w-10/12 px-4 py-6 md:px-6">
@@ -185,7 +185,6 @@ const CourseDetailPage = () => {
                     </section>
                   </div>
 
-                  {/* Course content */}
                   <section className="space-y-4">
                     <div className="space-y-1">
                       <h2 className="text-lg font-semibold tracking-tight">
@@ -198,12 +197,10 @@ const CourseDetailPage = () => {
                     <CourseContent />
                   </section>
 
-                  <Separator />
 
-                  {/* Instructor */}
                   <section className="space-y-4">
                     <h2 className="text-lg font-semibold tracking-tight">Instructor</h2>
-                    <div className="flex flex-col gap-4 rounded-xl border p-5 sm:flex-row sm:items-center sm:gap-5">
+                    <div className="flex flex-col gap-4 bg-card rounded-md shadow p-5 sm:flex-row sm:items-center sm:gap-5">
                       <Avatar className="h-14 w-14 shrink-0">
                         <AvatarImage
                           src={instructorAvatar || "/placeholder.svg"}
@@ -256,7 +253,7 @@ const CourseDetailPage = () => {
                     <Accordion
                       type="single"
                       collapsible
-                      className="overflow-hidden rounded-xl border bg-card px-5"
+                      className="overflow-hidden rounded-md shadow bg-card px-5"
                     >
                       {course?.data.faqs.map((faq: Faq) => (
                         <AccordionItem key={faq.id} value={`item-${faq.id}`}>
@@ -271,7 +268,6 @@ const CourseDetailPage = () => {
                     </Accordion>
                   </section>
 
-                  <Separator />
 
                   <CourseReview />
                 </div>

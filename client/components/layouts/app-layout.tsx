@@ -1,8 +1,9 @@
 "use client";
 import AuthProvider from "@/components/providers/auth-provider";
+import ThemeProvider from "@/components/providers/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import { Toaster } from "sonner";
+import { Toaster } from "../ui/sonner";
 import { TooltipProvider } from "../ui/tooltip";
 
 type AppLayoutProps = {
@@ -29,19 +30,14 @@ const queryClient = new QueryClient({
 
 const AppLayout = ({ children }: AppLayoutProps) => {
   return (
-    <>
-      <Toaster
-        visibleToasts={4}
-        expand={true}
-        // theme={theme as "dark" | "light"}
-        richColors={true}
-      />
+    <ThemeProvider>
+      <Toaster visibleToasts={4} expand={true} richColors={true} />
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <TooltipProvider>{children}</TooltipProvider>
         </AuthProvider>
       </QueryClientProvider>
-    </>
+    </ThemeProvider>
   );
 };
 

@@ -83,7 +83,7 @@ const TopCourses = () => {
   ];
 
   return (
-    <section className="py-10 md:py-14 lg:py-28">
+    <section className="py-10 md:py-14 lg:py-28 bg-secondary dark:bg-background">
       <div className="container px-4 md:px-8 lg:px-20 mx-auto">
         <div className="text-center mb-6 md:mb-8">
           <h2 className="mb-2 text-lg font-bold md:text-2xl">

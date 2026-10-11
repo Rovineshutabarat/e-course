@@ -80,7 +80,7 @@ const CourseContent = () => {
   const allExpanded = openValues.length === dummySections.length;
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-card">
+    <div className="overflow-hidden rounded-md shadow bg-card">
       <div className="flex flex-wrap items-start justify-between gap-3 border-b px-5 py-4">
         <p className="text-sm text-muted-foreground">
           {dummySections.length} sections &bull; {totalLessons} lessons &bull; 3h 30m total length

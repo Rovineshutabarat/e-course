@@ -1,3 +1,4 @@
+import ThemeToggle from "@/components/shared/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,11 +19,11 @@ import { ArrowLeft, Heart, Share2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const CourseDetailNavbar = ({
-  courseTitle,
-}: {
-  courseTitle?: string;
-}) => {
+type CourseDetailNavbarProps = {
+  title: string | undefined
+}
+
+const CourseDetailNavbar = ({ title }: CourseDetailNavbarProps) => {
   const router = useRouter();
   const { session, isAuthenticated, logout } = useAuth();
 
@@ -39,12 +40,14 @@ const CourseDetailNavbar = ({
         </Button>
         <span className="text-muted-foreground mx-2 shrink-0">|</span>
         <span className="text-muted-foreground truncate font-medium">
-          {courseTitle ?? "Advanced Figma Techniques"}
+          {title ?? "Advanced Figma Techniques"}
         </span>
       </div>
 
       <div className="flex items-center gap-x-4 shrink-0">
         <div className="flex items-center pr-4 border-r gap-x-1">
+          <ThemeToggle className="relative h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/40" />
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

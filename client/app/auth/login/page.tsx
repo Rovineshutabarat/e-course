@@ -11,7 +11,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -141,7 +141,7 @@ const LoginForm = () => {
             <Link href={`${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/google`} prefetch={false}>
               <Button
                 variant="ghost"
-                className="w-full mb-6 bg-primary/10 shadow-sm shadow-primary/50 dark:shadow-none cursor-pointer"
+                className="w-full mb-6 shadow cursor-pointer"
                 type="button"
               >
                 <Image
@@ -158,7 +158,7 @@ const LoginForm = () => {
               Don't have an account?{" "}
               <Link
                 href="/auth/register"
-                className="text-blue-500 hover:underline"
+                className="text-primary hover:underline"
               >
                 Sign up
               </Link>

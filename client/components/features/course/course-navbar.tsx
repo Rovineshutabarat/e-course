@@ -1,6 +1,7 @@
 "use client";
 
 import SearchBar from "@/components/shared/search-bar";
+import ThemeToggle from "@/components/shared/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,16 +19,26 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
-import { BookOpen, Heart, Search, Share2, ShoppingCart } from "lucide-react";
+import { useCourseFilters } from "@/hooks/use-course-filters";
+import { BookOpen, Heart, Search, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-const iconButtonClass =
-  "relative h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/40";
+import React from "react";
 
 const CourseNavbar = () => {
   const router = useRouter();
   const { session, isAuthenticated, logout } = useAuth();
+  const { filters, setFilters } = useCourseFilters();
+  const [mobileKeyword, setMobileKeyword] = React.useState(filters.slug ?? "");
+
+  React.useEffect(() => {
+    setMobileKeyword(filters.slug ?? "");
+  }, [filters.slug]);
+
+  function commitSearch(keyword: string) {
+    const slug = keyword.trim();
+    setFilters({ slug: slug === "" ? undefined : slug });
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
@@ -46,20 +57,26 @@ const CourseNavbar = () => {
         </button>
 
         <div className="hidden min-w-0 flex-1 justify-center px-2 md:flex">
-          <SearchBar placeholder="Search any course..." displaySize="large" />
+          <SearchBar
+            placeholder="Search any course..."
+            displaySize="large"
+            defaultValue={filters.slug}
+            onSearch={commitSearch}
+          />
         </div>
 
         <nav
           aria-label="Course actions"
           className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-1"
         >
+          <ThemeToggle className="relative h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/40" />
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
                 aria-label="Add to wishlist"
-                className={iconButtonClass}
+                className="relative h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/40"
               >
                 <Heart className="h-4 w-4" />
               </Button>
@@ -72,22 +89,8 @@ const CourseNavbar = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label="Share this course"
-                className={iconButtonClass}
-              >
-                <Share2 className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Share this course</TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
                 aria-label="Your shopping cart, 2 items"
-                className={iconButtonClass}
+                className="relative h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/40"
               >
                 <ShoppingCart className="h-4 w-4" />
                 {/* TODO: connect to cart store */}
@@ -110,7 +113,7 @@ const CourseNavbar = () => {
                 <DropdownMenuTrigger asChild>
                   <Avatar className="h-5 w-5 cursor-pointer ring-1 ring-primary/20 ring-offset-1 ring-offset-background">
                     <AvatarImage src="" alt={session?.user.username} />
-                    <AvatarFallback className="bg-primary/10 text-xs uppercase text-primary">
+                    <AvatarFallback className="text-xs uppercase">
                       {session?.user.username.at(0)}
                     </AvatarFallback>
                   </Avatar>
@@ -156,7 +159,10 @@ const CourseNavbar = () => {
         <form
           role="search"
           className="relative w-full"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={(e) => {
+            e.preventDefault();
+            commitSearch(mobileKeyword);
+          }}
         >
           <label htmlFor="course-search-mobile" className="sr-only">
             Search courses
@@ -166,6 +172,8 @@ const CourseNavbar = () => {
             id="course-search-mobile"
             type="search"
             placeholder="Search any course..."
+            value={mobileKeyword}
+            onChange={(e) => setMobileKeyword(e.target.value)}
             className="h-10 w-full rounded-full border-transparent bg-muted/70 pl-10 pr-4 text-sm shadow-none focus-visible:border-ring focus-visible:bg-background"
           />
         </form>

@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
+import { useCourseFilters } from "@/hooks/use-course-filters";
 import { Star, X } from "lucide-react";
 import React from "react";
 
@@ -20,49 +21,82 @@ type PriceRange = {
 const difficulties = [
   { title: "Beginner", value: "BEGINNER" },
   { title: "Intermediate", value: "INTERMEDIATE" },
-  { title: "Advanced", value: "ADVANCED" },
+  { title: "Advanced", value: "ADVANCE" },
 ];
 const CourseFilter = () => {
+  const { filters, setFilters, resetFilters } = useCourseFilters();
   const [selectedDifficulty, setSelectedDifficulty] = React.useState<
     string | null
-  >(null);
+  >(filters.difficulty ?? null);
 
-  const [selectedPrice, setSelectedPrice] = React.useState<PriceRange>();
+  const [selectedPrice, setSelectedPrice] = React.useState<PriceRange>({
+    lowerPrice: filters.minPrice,
+    upperPrice: filters.maxPrice,
+  });
+  const [priceTouched, setPriceTouched] = React.useState(
+    filters.minPrice !== undefined || filters.maxPrice !== undefined,
+  );
 
-  function applyFilters() {}
+  React.useEffect(() => {
+    setSelectedDifficulty(filters.difficulty ?? null);
+    setSelectedPrice({
+      lowerPrice: filters.minPrice,
+      upperPrice: filters.maxPrice,
+    });
+    setPriceTouched(
+      filters.minPrice !== undefined || filters.maxPrice !== undefined,
+    );
+  }, [filters.difficulty, filters.minPrice, filters.maxPrice]);
+
+  function toggleDifficulty(value: string) {
+    setSelectedDifficulty((current) => (current === value ? null : value));
+  }
+
+  function applyFilters() {
+    setFilters({
+      difficulty: selectedDifficulty ?? undefined,
+      minPrice: priceTouched ? selectedPrice.lowerPrice : undefined,
+      maxPrice: priceTouched ? selectedPrice.upperPrice : undefined,
+    });
+  }
+
+  function handleReset() {
+    resetFilters();
+  }
 
   return (
     <div className="sticky top-20 left-0 w-full">
-      <div className="flex items-center justify-between md:justify-start mb-2">
-        <h2 className="text-lg font-bold">Course Filters</h2>
+      <div className="flex items-center justify-between md:justify-start mb-3">
+        <h2 className="text-lg font-bold tracking-tight">Course Filters</h2>
         <Button variant="ghost" size="sm" className="md:hidden">
           <X className="h-4 w-4" />
         </Button>
       </div>
 
-      <div className="space-y-5 max-h-[calc(100vh-120px)] overflow-y-auto pr-7 pb-4">
+      <div className="max-h-[calc(100vh-120px)] overflow-y-auto pr-5 pb-4">
         <Accordion
           type="multiple"
           defaultValue={["level", "duration", "rating"]}
         >
           <AccordionItem value="level">
-            <AccordionTrigger className="text-sm font-medium py-2">
+            <AccordionTrigger className="py-3 text-sm font-semibold hover:no-underline">
               Level
             </AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {difficulties.map((difficulty, index) => (
-                  <div key={index} className="flex items-center gap-2">
+                  <div
+                    key={index}
+                    className="flex items-center gap-2.5 rounded-lg px-2 py-2 transition-colors hover:bg-muted/60"
+                  >
                     <Checkbox
                       checked={selectedDifficulty === difficulty.value}
-                      onCheckedChange={() =>
-                        setSelectedDifficulty(difficulty.value)
-                      }
+                      onCheckedChange={() => toggleDifficulty(difficulty.value)}
                       className="cursor-pointer"
                     />
                     <span
                       className="text-sm cursor-pointer"
-                      onClick={() => setSelectedDifficulty(difficulty.value)}
+                      onClick={() => toggleDifficulty(difficulty.value)}
                     >
                       {difficulty.title}
                     </span>
@@ -73,11 +107,11 @@ const CourseFilter = () => {
           </AccordionItem>
 
           <AccordionItem value="price">
-            <AccordionTrigger className="text-sm font-medium py-2">
+            <AccordionTrigger className="py-3 text-sm font-semibold hover:no-underline">
               Price Range
             </AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-4">
+              <div className="space-y-4 px-2 pt-1">
                 <Slider
                   value={[
                     selectedPrice?.lowerPrice ? selectedPrice.lowerPrice : 0,
@@ -86,17 +120,18 @@ const CourseFilter = () => {
                   max={500}
                   step={5}
                   onValueChange={(value) => {
+                    setPriceTouched(true);
                     setSelectedPrice({
                       lowerPrice: value[0],
                       upperPrice: value[1],
                     });
                   }}
                 />
-                <div className="flex justify-between">
-                  <span className="text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="rounded-md bg-muted px-2 py-1 text-xs font-medium">
                     ${selectedPrice?.lowerPrice ?? 0}
                   </span>
-                  <span className="text-xs">
+                  <span className="rounded-md bg-muted px-2 py-1 text-xs font-medium">
                     ${selectedPrice?.upperPrice ?? 200}
                   </span>
                 </div>
@@ -105,14 +140,17 @@ const CourseFilter = () => {
           </AccordionItem>
 
           <AccordionItem value="duration">
-            <AccordionTrigger className="text-sm font-medium py-2">
+            <AccordionTrigger className="py-3 text-sm font-semibold hover:no-underline">
               Duration
             </AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {["< 20 hours", "20-40 hours", "40-60 hours", "> 60 hours"].map(
                   (duration, index) => (
-                    <div key={index} className="flex items-center gap-2">
+                    <div
+                      key={index}
+                      className="flex items-center gap-2.5 rounded-lg px-2 py-2 transition-colors hover:bg-muted/60"
+                    >
                       <Checkbox id={`duration-${index}`} />
                       <label
                         htmlFor={`duration-${index}`}
@@ -128,13 +166,16 @@ const CourseFilter = () => {
           </AccordionItem>
 
           <AccordionItem value="rating">
-            <AccordionTrigger className="text-sm font-medium py-2">
+            <AccordionTrigger className="py-3 text-sm font-semibold hover:no-underline">
               Rating
             </AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {[4.5, 4.0, 3.5, 3.0].map((rating, index) => (
-                  <div key={index} className="flex items-center gap-2">
+                  <div
+                    key={index}
+                    className="flex items-center gap-2.5 rounded-lg px-2 py-2 transition-colors hover:bg-muted/60"
+                  >
                     <Checkbox id={`rating-${index}`} />
                     <label
                       htmlFor={`rating-${index}`}
@@ -144,13 +185,12 @@ const CourseFilter = () => {
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
                             key={star}
-                            className={`w-3 h-3 ${
-                              star <= Math.floor(rating)
-                                ? "text-yellow-500 fill-yellow-500"
-                                : star - rating <= 0.5
-                                  ? "text-yellow-500 fill-yellow-500 opacity-50"
-                                  : "text-gray-300"
-                            }`}
+                            className={`w-3 h-3 ${star <= Math.floor(rating)
+                              ? "text-yellow-500 fill-yellow-500"
+                              : star - rating <= 0.5
+                                ? "text-yellow-500 fill-yellow-500 opacity-50"
+                                : "text-muted-foreground/40"
+                              }`}
                           />
                         ))}
                       </div>
@@ -167,7 +207,11 @@ const CourseFilter = () => {
           <Button className="w-full cursor-pointer" onClick={applyFilters}>
             Apply Filters
           </Button>
-          <Button variant="outline" className="w-full cursor-pointer">
+          <Button
+            variant="outline"
+            className="w-full cursor-pointer"
+            onClick={handleReset}
+          >
             Reset
           </Button>
         </div>

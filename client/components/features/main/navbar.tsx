@@ -6,9 +6,10 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/use-auth";
+import ThemeToggle from "@/components/shared/theme-toggle";
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -47,6 +48,7 @@ const Navbar = () => {
         })}
       </ul>
       <div className="flex items-center gap-x-3">
+        <ThemeToggle />
         {isAuthenticated ? (
           <Fragment>
             <p>{session?.user.username}</p>

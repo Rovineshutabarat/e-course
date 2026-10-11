@@ -10,8 +10,10 @@ import org.springframework.stereotype.Repository;
 import com.lerneon.backend.models.entity.Faq;
 import com.lerneon.backend.models.entity.Outcome;
 import com.lerneon.backend.models.entity.Requirement;
+import com.lerneon.backend.models.payload.request.CourseFilterRequest;
 import com.lerneon.backend.models.payload.response.CourseDetailResponse;
 import com.lerneon.backend.models.payload.response.CourseResponse;
+import com.lerneon.backend.models.payload.response.common.PageResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class CourseJDBIRepository {
         private final Jdbi jdbi;
 
-        public List<CourseResponse> getAllCourses() {
-                return jdbi.withHandle(h -> h.createQuery("""
+        public PageResponse<CourseResponse> getAllCourses(CourseFilterRequest courseFilterRequest) {
+                List<CourseResponse> courseResponses = jdbi.withHandle(h -> h.createQuery("""
                                 SELECT
                                     course.id,
                                     course.title,
@@ -45,10 +47,21 @@ public class CourseJDBIRepository {
                                 LEFT JOIN images instructor_image ON instructor_image.id = instructor.image_id
                                 LEFT JOIN images course_image ON course_image.id = course.image_id
                                 where course.visibility = 'PUBLIC'
+                                    AND (:slug IS NULL OR course.slug LIKE CONCAT('%', :slug, '%'))
+                                    AND (:categoryId IS NULL OR course.category_id = :categoryId)
+                                    AND (:difficulty IS NULL OR course.difficulty = :difficulty)
+                                    AND (:minPrice IS NULL OR course.price >= :minPrice)
+                                    AND (:maxPrice IS NULL OR course.price <= :maxPrice)
                                 ORDER BY course.id
+                                LIMIT :limit
+                                OFFSET :offset
                                 """)
+                                .bindBean(courseFilterRequest)
+                                .bind("limit", courseFilterRequest.getSize() + 1)
+                                .bind("offset", courseFilterRequest.getPage() * courseFilterRequest.getSize())
                                 .map(FieldMapper.of(CourseResponse.class))
                                 .list());
+                return PageResponse.of(courseResponses, courseFilterRequest.getPage(), courseFilterRequest.getSize());
         }
 
         public Optional<CourseDetailResponse> getCourseBySlug(String slug) {

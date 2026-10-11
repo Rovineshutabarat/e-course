@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import ThemeToggle from "@/components/shared/theme-toggle";
 import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -42,6 +43,7 @@ const InstructorNavbar = () => {
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-x-5">
+        <ThemeToggle />
         <Avatar className="h-8 w-8 rounded-lg">
           <AvatarImage src={""} alt={session?.user.username} />
           <AvatarFallback className="rounded-lg uppercase">

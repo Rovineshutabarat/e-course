@@ -9,10 +9,12 @@ import com.lerneon.backend.models.entity.Course;
 import com.lerneon.backend.models.enums.Difficulty;
 import com.lerneon.backend.models.enums.Visibility;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
+import com.lerneon.backend.models.payload.request.CourseFilterRequest;
 import com.lerneon.backend.models.payload.request.CourseRequest;
 import com.lerneon.backend.models.payload.request.UpdateCourseVisibilityRequest;
 import com.lerneon.backend.models.payload.response.CourseDetailResponse;
 import com.lerneon.backend.models.payload.response.CourseResponse;
+import com.lerneon.backend.models.payload.response.common.PageResponse;
 import com.lerneon.backend.repositories.CourseRepository;
 import com.lerneon.backend.repositories.FaqRepository;
 import com.lerneon.backend.repositories.OutcomeRepository;
@@ -40,8 +42,8 @@ public class CourseServiceImpl implements CourseService {
     private final CourseJDBIRepository courseJDBIRepository;
 
     @Override
-    public List<CourseResponse> getAllCourses() {
-        return courseJDBIRepository.getAllCourses();
+    public PageResponse<CourseResponse> getAllCourses(CourseFilterRequest courseFilterRequest) {
+        return courseJDBIRepository.getAllCourses(courseFilterRequest);
     }
 
     private Course findCourseById(Integer id) {

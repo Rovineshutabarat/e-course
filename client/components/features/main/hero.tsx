@@ -7,8 +7,8 @@ const Hero = () => {
   return (
     <section className="relative py-10 md:py-14 lg:py-28 overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 right-0 w-75 h-75 md:w-100 md:h-100 lg:w-150 lg:h-150 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-75 h-75 md:w-100 md:h-100 lg:w-150 lg:h-150 bg-teal-400/5 rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-75 h-75 md:w-100 md:h-100 lg:w-150 lg:h-150 dark:bg-teal-400/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-75 h-75 md:w-100 md:h-100 lg:w-150 lg:h-150 dark:bg-teal-400/10 rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl"></div>
       </div>
       <div className="container px-4 md:px-8 lg:px-20 mx-auto">
         <div className="grid items-center grid-cols-1 gap-8 lg:gap-10 lg:grid-cols-2">
@@ -102,8 +102,8 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-            <div className="absolute top-0 right-0 w-64 h-64 bg-teal-400/10 rounded-full -z-10 blur-2xl"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full -z-10 blur-2xl"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 dark:bg-teal-400/10 rounded-full -z-10 blur-2xl"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 dark:bg-primary/10 rounded-full -z-10 blur-2xl"></div>
           </div>
         </div>
       </div>

@@ -39,27 +39,31 @@ public abstract class BaseEntity {
     private LocalDateTime updatedAt;
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o)
             return true;
         if (o == null)
             return false;
-        Class<?> oClass = o instanceof HibernateProxy op
-                ? op.getHibernateLazyInitializer().getPersistentClass()
+
+        Class<?> thisClass = this instanceof HibernateProxy p
+                ? p.getHibernateLazyInitializer().getPersistentClass()
+                : this.getClass();
+        Class<?> otherClass = o instanceof HibernateProxy p
+                ? p.getHibernateLazyInitializer().getPersistentClass()
                 : o.getClass();
-        Class<?> thisClass = this instanceof HibernateProxy tp
-                ? tp.getHibernateLazyInitializer().getPersistentClass()
-                : getClass();
-        if (thisClass != oClass)
+
+        if (thisClass != otherClass)
             return false;
+
         BaseEntity that = (BaseEntity) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy p
-                ? p.getHibernateLazyInitializer().getPersistentClass().hashCode()
-                : getClass().hashCode();
+    public int hashCode() {
+        Class<?> effectiveClass = this instanceof HibernateProxy p
+                ? p.getHibernateLazyInitializer().getPersistentClass()
+                : this.getClass();
+        return effectiveClass.hashCode();
     }
 }

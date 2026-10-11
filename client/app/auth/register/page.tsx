@@ -153,7 +153,7 @@ const RegisterPage = () => {
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="text-blue-500 hover:underline"
+                className="text-primary hover:underline"
               >
                 Sign in
               </Link>

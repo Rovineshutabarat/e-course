@@ -39,7 +39,7 @@ const features: Feature[] = [
 
 const Features = () => {
   return (
-    <section className="relative py-10 md:py-14 lg:py-28 overflow-hidden">
+    <section className="relative py-10 md:py-14 lg:py-28 overflow-hidden bg-secondary dark:bg-background">
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_1px_1px,var(--color-border)_1px,transparent_1px)] bg-size-[24px_24px] opacity-60 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,black,transparent)]"

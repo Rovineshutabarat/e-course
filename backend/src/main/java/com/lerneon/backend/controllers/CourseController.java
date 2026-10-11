@@ -5,15 +5,18 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 import com.lerneon.backend.models.entity.Course;
+import com.lerneon.backend.models.payload.request.CourseFilterRequest;
 import com.lerneon.backend.models.payload.request.CourseRequest;
 import com.lerneon.backend.models.payload.request.UpdateCourseVisibilityRequest;
 import com.lerneon.backend.models.payload.response.CourseDetailResponse;
 import com.lerneon.backend.models.payload.response.CourseResponse;
 import com.lerneon.backend.models.payload.response.ModuleResponse;
+import com.lerneon.backend.models.payload.response.common.PageResponse;
 import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 
 public interface CourseController {
-    ResponseEntity<SuccessResponse<List<CourseResponse>>> getAllCourses();
+    ResponseEntity<SuccessResponse<PageResponse<CourseResponse>>> getAllCourses(
+            CourseFilterRequest courseFilterRequest);
 
     ResponseEntity<SuccessResponse<CourseDetailResponse>> getCourseBySlug(String slug);
 

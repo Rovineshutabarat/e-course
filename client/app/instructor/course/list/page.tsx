@@ -242,10 +242,10 @@ const CourseListPage = () => {
 
     const { data, isLoading } = useQuery({
         queryKey: ["courses"],
-        queryFn: () => CourseService.getAllCourses(),
+        queryFn: () => CourseService.getCourses({ size: 100 }),
     });
 
-    const courses = data?.data ?? [];
+    const courses = data?.data.items ?? [];
 
     const table = useReactTable({
         data: courses,
