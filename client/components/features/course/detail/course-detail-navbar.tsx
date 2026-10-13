@@ -20,7 +20,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type CourseDetailNavbarProps = {
-  title: string | undefined
+  title?: string;
 }
 
 const CourseDetailNavbar = ({ title }: CourseDetailNavbarProps) => {
@@ -40,7 +40,7 @@ const CourseDetailNavbar = ({ title }: CourseDetailNavbarProps) => {
         </Button>
         <span className="text-muted-foreground mx-2 shrink-0">|</span>
         <span className="text-muted-foreground truncate font-medium">
-          {title ?? "Advanced Figma Techniques"}
+          {title ?? "Course Detail"}
         </span>
       </div>
 

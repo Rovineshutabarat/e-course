@@ -2,7 +2,7 @@
 
 import CourseCard from "@/components/features/course/course-card";
 import CourseCardSkeleton from "@/components/features/course/course-card-skeleton";
-import EmptyList from "@/components/shared/empty-list";
+import CourseListEmpty from "@/components/features/course/course-list-empty";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -12,14 +12,14 @@ import { CourseService } from "@/services/course.service";
 import { Category } from "@/types/entity/category";
 import { CourseResponse } from "@/types/payload/response/course.response";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { ArrowRight, Loader2, SearchX } from "lucide-react";
+import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
 import { Fragment, useEffect, useRef } from "react";
 
 
 const CourseListPage = () => {
   const PAGE_SIZE = 20;
   const MAX_VISIBLE_CATEGORY = 20;
-  const { filters, setFilters, resetFilters } = useCourseFilters();
+  const { filters, setFilters } = useCourseFilters();
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const { data: categories } = useQuery({
@@ -96,27 +96,21 @@ const CourseListPage = () => {
       </ScrollArea>
 
       {isError ? (
-        <EmptyList
-          title="Something went wrong"
-          description="We couldn't load courses right now. Please try again."
-          icon={<SearchX className="h-24 w-24 mb-6" />}
-        >
+        <div className="flex flex-col items-center justify-center py-20">
+          <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-muted">
+            <TriangleAlert className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h2 className="mb-4 text-2xl font-semibold">Something went wrong</h2>
+          <p className="mb-8 max-w-md text-center text-sm text-muted-foreground">
+            We couldn&apos;t load courses right now. Please try again.
+          </p>
           <Button className="cursor-pointer" onClick={() => refetch()}>
             <span>Try Again</span>
             <ArrowRight />
           </Button>
-        </EmptyList>
+        </div>
       ) : !isLoading && courses.length === 0 ? (
-        <EmptyList
-          title="No Courses Found"
-          description="We couldn't find any courses that match your search. Try adjusting your filters or browse all courses instead."
-          icon={<SearchX className="h-24 w-24 mb-6" />}
-        >
-          <Button className="cursor-pointer" onClick={() => resetFilters()}>
-            <span>Browse All Courses</span>
-            <ArrowRight />
-          </Button>
-        </EmptyList>
+        <CourseListEmpty />
       ) : (
         <Fragment>
           <div className="grid gap-6 gap-y-6 my-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">

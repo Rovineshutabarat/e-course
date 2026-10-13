@@ -27,8 +27,6 @@ import com.lerneon.backend.repositories.ModuleRepository;
 import com.lerneon.backend.repositories.ResourceRepository;
 import com.lerneon.backend.repositories.RoleRepository;
 import com.lerneon.backend.repositories.UserRepository;
-import com.lerneon.backend.services.CourseService;
-import com.lerneon.backend.services.ModuleService;
 import com.lerneon.backend.services.UserService;
 import com.lerneon.backend.services.implementations.CategoryServiceImpl;
 
@@ -45,9 +43,9 @@ public class AppInitializer implements CommandLineRunner {
         private final UserRepository userRepository;
         private final PasswordEncoder passwordEncoder;
         private final UserService userService;
-        private final CourseService courseService;
+        // private final CourseService courseService;
         private final ModuleRepository moduleRepository;
-        private final ModuleService moduleService;
+        // private final ModuleService moduleService;
         private final ResourceRepository resourceRepository;
 
         @Override

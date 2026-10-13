@@ -4,7 +4,6 @@ import { Fragment } from "react";
 const CourseDetailPageSkeleton = () => {
     return (
         <Fragment>
-            {/* Navbar */}
             <div className="border-b">
                 <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-4 px-4 md:px-6">
                     <Skeleton className="h-8 w-32" />
@@ -12,14 +11,12 @@ const CourseDetailPageSkeleton = () => {
                 </div>
             </div>
 
-            <main className="mx-auto w-full max-w-6xl px-4 py-8 md:px-6 md:py-10">
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-10">
-                    {/* Left Column */}
-                    <div className="min-w-0 space-y-8">
+            <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6">
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10">
+                    <div className="min-w-0 space-y-8 lg:col-span-2">
 
-                        {/* Hero */}
                         <div className="space-y-5">
-                            <Skeleton className="h-[220px] w-full rounded-xl sm:h-[300px] lg:h-[360px]" />
+                            <Skeleton className="h-56 w-full rounded-xl sm:h-72 lg:h-96" />
                             <div className="space-y-3">
                                 <div className="flex flex-wrap gap-2">
                                     <Skeleton className="h-6 w-24 rounded-full" />
@@ -46,7 +43,6 @@ const CourseDetailPageSkeleton = () => {
 
                         <Skeleton className="h-px w-full" />
 
-                        {/* Description */}
                         <div className="space-y-3">
                             <Skeleton className="h-6 w-40" />
                             <div className="space-y-2">
@@ -56,7 +52,6 @@ const CourseDetailPageSkeleton = () => {
                             </div>
                         </div>
 
-                        {/* What You'll Learn + Requirements */}
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10">
                             {["What You'll Learn", "Requirements"].map((title) => (
                                 <div key={title} className="space-y-3">
@@ -73,7 +68,6 @@ const CourseDetailPageSkeleton = () => {
                             ))}
                         </div>
 
-                        {/* Course Content */}
                         <div className="space-y-4">
                             <div className="space-y-1.5">
                                 <Skeleton className="h-6 w-48" />
@@ -98,7 +92,6 @@ const CourseDetailPageSkeleton = () => {
 
                         <Skeleton className="h-px w-full" />
 
-                        {/* Instructor */}
                         <div className="space-y-4">
                             <Skeleton className="h-6 w-28" />
                             <div className="flex flex-col gap-4 rounded-xl border p-5 sm:flex-row sm:items-center">
@@ -114,7 +107,6 @@ const CourseDetailPageSkeleton = () => {
                             </div>
                         </div>
 
-                        {/* FAQ */}
                         <div className="space-y-4">
                             <Skeleton className="h-6 w-56" />
                             <Skeleton className="h-4 w-72" />
@@ -130,7 +122,6 @@ const CourseDetailPageSkeleton = () => {
 
                         <Skeleton className="h-px w-full" />
 
-                        {/* Reviews */}
                         <div className="space-y-4">
                             <Skeleton className="h-6 w-36" />
                             <Skeleton className="h-4 w-64" />
@@ -147,8 +138,7 @@ const CourseDetailPageSkeleton = () => {
                         </div>
                     </div>
 
-                    {/* Right Column — Checkout Sidebar */}
-                    <aside className="lg:w-[340px] lg:shrink-0">
+                    <aside>
                         <div className="space-y-4 rounded-xl border p-5">
                             <div className="space-y-1.5">
                                 <Skeleton className="h-6 w-40" />

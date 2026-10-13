@@ -1,27 +1,27 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { resolvePath } from "@/lib/path-resolver";
 import { formatPrice } from "@/lib/price.formatter";
 import { CourseResponse } from "@/types/payload/response/course.response";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 type CourseCardProps = {
   course: CourseResponse;
 };
 
-function resolveImageSrc(path?: string | null) {
-  if (!path) return undefined;
-  if (/^https?:\/\//.test(path)) return path;
-  return `${process.env.NEXT_PUBLIC_API_URL}/${path}`;
-}
+const FALLBACK_IMAGE = "/img.png";
+
 
 const CourseCard = ({ course }: CourseCardProps) => {
-  const instructorImageSrc = resolveImageSrc(course.instructor?.image?.path);
-  // DUMMY rating & jumlah modul, ganti dengan data asli saat API menyediakannya.
+  const [src, setSrc] = useState<string>(resolvePath(course.image.path.concat("/a")) ?? FALLBACK_IMAGE);
+
   const dummyRating = ((43 + ((course.id ?? 1) * 7) % 7) / 10).toFixed(1);
   const dummyReviews = 40 + ((course.id ?? 1) * 37) % 300;
+
 
   return (
     <Link href={`/course/${course.slug ?? ""}`}
@@ -32,8 +32,8 @@ const CourseCard = ({ course }: CourseCardProps) => {
       <div className="overflow-hidden rounded-lg relative">
         <div className="relative w-full aspect-video">
           <Image
-            src={resolveImageSrc(course.image.path) ?? ""}
-            alt={course.image.name || "Course image"}
+            src={resolvePath(course.image?.path) ?? FALLBACK_IMAGE}
+            alt={course.image?.name || "Course image"}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
@@ -81,13 +81,11 @@ const CourseCard = ({ course }: CourseCardProps) => {
         <div className="flex items-center justify-between gap-2 my-3">
           <div className="flex min-w-0 items-center text-[13px] text-muted-foreground">
             <Avatar className="w-8 h-8 mr-1.5 border">
-              {instructorImageSrc && (
-                <AvatarImage
-                  src={instructorImageSrc}
-                  alt={course.instructor.username}
-                  className="object-cover"
-                />
-              )}
+              <AvatarImage
+                src={resolvePath(course.instructor?.image?.path) || undefined}
+                alt={course.instructor.username}
+                className="object-cover"
+              />
               <AvatarFallback className="">
                 {course.instructor.username?.charAt(0).toUpperCase()}
               </AvatarFallback>

@@ -18,9 +18,9 @@ import { Fragment, useState } from "react";
 import AiQuizPanel from "@/components/features/course/ai-quiz-panel";
 import AiSummaryPanel from "@/components/features/course/ai-summary-panel";
 import CourseCurriculum from "@/components/features/course/course-curriculum";
-import CourseDetailNavbar from "@/components/features/course/course-detail-navbar";
-import CourseDetailPageSkeleton from "@/components/features/course/course-detail-page-skeleton";
 import CourseDiscussion from "@/components/features/course/course-discussion";
+import CourseDetailNavbar from "@/components/features/course/detail/course-detail-navbar";
+import CourseDetailPageSkeleton from "@/components/features/course/detail/course-detail-page-skeleton";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -125,7 +125,7 @@ const CourseResourcePage = () => {
   return (
     <Fragment>
       <div className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-        <CourseDetailNavbar courseTitle={course?.data.title} />
+        <CourseDetailNavbar title={course?.data.title} />
       </div>
 
       <main className="mx-auto w-full max-w-10/12 px-4 py-6 md:px-6">
