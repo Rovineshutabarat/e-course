@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 export type CourseFilters = {
-  slug?: string;
+  key?: string;
   categoryId?: number;
   difficulty?: string;
   minPrice?: number;
@@ -29,7 +29,7 @@ export function useCourseFilters() {
 
   const filters: CourseFilters = useMemo(
     () => ({
-      slug: parseString(searchParams.get("slug")),
+      key: parseString(searchParams.get("key")),
       categoryId: parseNumber(searchParams.get("categoryId")),
       difficulty: parseString(searchParams.get("difficulty")),
       minPrice: parseNumber(searchParams.get("minPrice")),

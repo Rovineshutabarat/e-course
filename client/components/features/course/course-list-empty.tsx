@@ -15,7 +15,7 @@ const CourseListEmpty = () => {
 
   return (
     <div
-      className="relative flex flex-col items-center justify-center overflow-hidden px-4 py-16 text-center sm:py-20"
+      className="relative flex flex-col items-center justify-center overflow-hidden px-4 py-16 text-center sm:py-24"
     >
 
       <div className="relative mb-2">
@@ -30,7 +30,7 @@ const CourseListEmpty = () => {
           width={300}
           height={240}
           priority={false}
-          className="relative h-48 w-auto sm:h-60"
+          className="relative h-40 w-auto sm:h-48"
         />
 
         <div

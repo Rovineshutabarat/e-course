@@ -47,7 +47,11 @@ public class CourseJDBIRepository {
                                 LEFT JOIN images instructor_image ON instructor_image.id = instructor.image_id
                                 LEFT JOIN images course_image ON course_image.id = course.image_id
                                 where course.visibility = 'PUBLIC'
-                                    AND (:slug IS NULL OR course.slug LIKE CONCAT('%', :slug, '%'))
+                                    AND (:key IS NULL
+                                        OR LOWER(course.slug) LIKE LOWER(CONCAT('%', :key, '%'))
+                                        OR LOWER(course.title) LIKE LOWER(CONCAT('%', :key, '%'))
+                                        OR LOWER(category.name) LIKE LOWER(CONCAT('%', :key, '%'))
+                                        OR LOWER(instructor.username) LIKE LOWER(CONCAT('%', :key, '%')))
                                     AND (:categoryId IS NULL OR course.category_id = :categoryId)
                                     AND (:difficulty IS NULL OR course.difficulty = :difficulty)
                                     AND (:minPrice IS NULL OR course.price >= :minPrice)

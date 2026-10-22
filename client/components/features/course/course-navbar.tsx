@@ -29,15 +29,15 @@ const CourseNavbar = () => {
   const router = useRouter();
   const { session, isAuthenticated, logout } = useAuth();
   const { filters, setFilters } = useCourseFilters();
-  const [mobileKeyword, setMobileKeyword] = React.useState(filters.slug ?? "");
+  const [mobileKeyword, setMobileKeyword] = React.useState(filters.key ?? "");
 
   React.useEffect(() => {
-    setMobileKeyword(filters.slug ?? "");
-  }, [filters.slug]);
+    setMobileKeyword(filters.key ?? "");
+  }, [filters.key]);
 
   function commitSearch(keyword: string) {
-    const slug = keyword.trim();
-    setFilters({ slug: slug === "" ? undefined : slug });
+    const key = keyword.trim();
+    setFilters({ key: key === "" ? undefined : key });
   }
 
   return (
@@ -60,7 +60,7 @@ const CourseNavbar = () => {
           <SearchBar
             placeholder="Search any course..."
             displaySize="large"
-            defaultValue={filters.slug}
+            defaultValue={filters.key}
             onSearch={commitSearch}
           />
         </div>
@@ -172,7 +172,15 @@ const CourseNavbar = () => {
             type="search"
             placeholder="Search any course..."
             value={mobileKeyword}
-            onChange={(e) => setMobileKeyword(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              const wasNonEmpty = mobileKeyword !== "";
+              setMobileKeyword(value);
+
+              if (value === "" && wasNonEmpty) {
+                commitSearch("");
+              }
+            }}
             className="h-10 w-full rounded-full bg-muted/70 pl-10 pr-4 text-sm shadow-none focus-visible:border-ring"
           />
         </form>

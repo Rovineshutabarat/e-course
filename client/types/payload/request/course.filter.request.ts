@@ -1,5 +1,5 @@
 export type CourseFilterRequest = {
-  slug?: string;
+  key?: string;
   categoryId?: number;
   difficulty?: string;
   minPrice?: number;

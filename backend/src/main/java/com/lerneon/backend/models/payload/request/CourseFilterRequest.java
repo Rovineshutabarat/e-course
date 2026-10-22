@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CourseFilterRequest {
     @Size(max = 150)
-    private String slug;
+    private String key;
 
     @Min(1)
     private Integer categoryId;

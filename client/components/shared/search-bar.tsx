@@ -44,6 +44,16 @@ const SearchBar = ({
     }
   }
 
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const value = event.target.value;
+    const wasNonEmpty = searchKeyword !== "";
+    setSearchKeyword(value);
+
+    if (value === "" && wasNonEmpty) {
+      onSearch?.("");
+    }
+  }
+
   return (
     <div
       className={cn(
@@ -57,7 +67,7 @@ const SearchBar = ({
         className="h-9"
         value={searchKeyword}
         onKeyDown={handleKeyDown}
-        onChange={(e) => setSearchKeyword(e.target.value)}
+        onChange={handleChange}
         {...props}
       />
       <Button
