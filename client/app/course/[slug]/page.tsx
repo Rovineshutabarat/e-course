@@ -39,7 +39,7 @@ const CourseDetailPage = () => {
             <div className="space-y-8">
               <CourseHero course={course.data} />
 
-              <CourseModule />
+              <CourseModule slug={slug} />
               <CourseInstructor instructor={course.data.instructor} />
               <CourseFaq faqs={course.data.faqs} />
               <CourseReview />

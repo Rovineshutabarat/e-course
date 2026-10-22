@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class ModuleResponse {
     private Integer id;
     private String title;
-    private Integer prderNumber;
+    private Integer orderNumber;
     private List<ResourceResponse> resources;
 }

@@ -35,7 +35,7 @@ const CourseCurriculum = ({
   onSelectResource,
 }: CourseCurriculumProps) => {
   const sortedModules = [...modules].sort(
-    (a, b) => a.order_number - b.order_number,
+    (a, b) => a.orderNumber - b.orderNumber,
   );
   const totalLessons = sortedModules.reduce(
     (acc, m) => acc + m.resources.length,
@@ -97,13 +97,13 @@ const CourseCurriculum = ({
                 <AccordionContent>
                   <div className="space-y-1 py-1">
                     {[...module.resources]
-                      .sort((a, b) => a.order_number - b.order_number)
+                      .sort((a, b) => a.orderNumber - b.orderNumber)
                       .map((resource) => {
                         const isCurrent = currentResourceId === resource.id;
                         const isCompleted = completedResourceIds.includes(
                           resource.id,
                         );
-                        const isLocked = resource.is_available === false;
+                        const isLocked = resource.isAvailable === false;
 
                         return (
                           <button
