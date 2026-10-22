@@ -72,7 +72,7 @@ function goToVerifyAccount(email: string, router: Router) {
 function sendAccountOtp(email: string): Promise<unknown> {
   return AuthService.sendOtp({
     email,
-    verificationType: ACCOUNT_OTP,
+    verification_type: ACCOUNT_OTP,
   });
 }
 
@@ -158,18 +158,18 @@ export function useAuth(): UseAuth {
     mutationFn: (data: SendOtpRequest) => AuthService.sendOtp(data),
     onSuccess: (_response, variables) => {
       const isReset =
-        variables.verificationType === RESET_OTP;
+        variables.verification_type === RESET_OTP;
       toast.success(
         isReset ? MESSAGE.RESET_CODE_SENT : MESSAGE.NEW_VERIFICATION_CODE,
       );
       setPendingVerification({ email: variables.email, resetVerified: false });
-      saveOtpTimestamp(variables.verificationType);
+      saveOtpTimestamp(variables.verification_type);
       router.push(isReset ? ROUTES.VERIFY_RESET : ROUTES.VERIFY_ACCOUNT);
     },
     onError: (error: any, variables: SendOtpRequest) => {
       const parsed = error.parsedBody as ErrorResponse;
       if (
-        variables.verificationType === RESET_OTP &&
+        variables.verification_type === RESET_OTP &&
         parsed?.message === BACKEND_MESSAGE.VERIFY_ACCOUNT_FIRST
       ) {
         const email = variables.email;

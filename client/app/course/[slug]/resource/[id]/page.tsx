@@ -76,13 +76,13 @@ const CourseResourcePage = () => {
   }
 
   const modules: CourseModule[] = [...(modulesResponse?.data ?? [])].sort(
-    (a, b) => a.orderNumber - b.orderNumber,
+    (a, b) => a.order_number - b.order_number,
   );
 
   const flatLessons: { module: CourseModule; resource: Resource }[] =
     modules.flatMap((module) =>
       [...module.resources]
-        .sort((a, b) => a.orderNumber - b.orderNumber)
+        .sort((a, b) => a.order_number - b.order_number)
         .map((resource) => ({ module, resource })),
     );
 

@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.lerneon.backend.models.annotations.ValidEnum;
 import com.lerneon.backend.models.annotations.ValidImage;
 import com.lerneon.backend.models.entity.Faq;
@@ -28,6 +31,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CourseRequest {
 
         @NotBlank(message = "Course name cannot be blank.")
@@ -68,4 +72,9 @@ public class CourseRequest {
 
         @ValidImage
         private MultipartFile banner;
+
+        @JsonIgnore
+        public void setCategory_id(Integer categoryId) {
+                this.categoryId = categoryId;
+        }
 }

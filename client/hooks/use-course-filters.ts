@@ -5,10 +5,10 @@ import { useCallback, useMemo } from "react";
 
 export type CourseFilters = {
   key?: string;
-  categoryId?: number;
+  category_id?: number;
   difficulty?: string;
-  minPrice?: number;
-  maxPrice?: number;
+  min_price?: number;
+  max_price?: number;
 };
 
 function parseNumber(value: string | null): number | undefined {
@@ -30,10 +30,10 @@ export function useCourseFilters() {
   const filters: CourseFilters = useMemo(
     () => ({
       key: parseString(searchParams.get("key")),
-      categoryId: parseNumber(searchParams.get("categoryId")),
+      category_id: parseNumber(searchParams.get("category_id")),
       difficulty: parseString(searchParams.get("difficulty")),
-      minPrice: parseNumber(searchParams.get("minPrice")),
-      maxPrice: parseNumber(searchParams.get("maxPrice")),
+      min_price: parseNumber(searchParams.get("min_price")),
+      max_price: parseNumber(searchParams.get("max_price")),
     }),
     [searchParams],
   );

@@ -1,9 +1,9 @@
 export type CourseFilterRequest = {
   key?: string;
-  categoryId?: number;
+  category_id?: number;
   difficulty?: string;
-  minPrice?: number;
-  maxPrice?: number;
+  min_price?: number;
+  max_price?: number;
   page?: number;
   size?: number;
 };

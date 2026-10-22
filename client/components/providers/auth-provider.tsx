@@ -30,7 +30,7 @@ export default function AuthProvider({
 
   const setSession = React.useCallback((response: AuthResponse | null) => {
     setSessionState(response);
-    setAccessToken(response?.accessToken ?? null);
+    setAccessToken(response?.access_token ?? null);
   }, []);
 
   React.useEffect(() => {
@@ -69,7 +69,7 @@ export default function AuthProvider({
   );
 
   const isAuthenticated = React.useMemo(
-    () => Boolean(session?.accessToken && session?.user),
+    () => Boolean(session?.access_token && session?.user),
     [session],
   );
 

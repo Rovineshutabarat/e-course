@@ -115,7 +115,7 @@ const CourseModulePreview = ({ slug }: CourseModuleProps) => {
                   <AccordionContent className="pb-2">
                     <ul className="-mx-1 space-y-0.5">
                       {module.resources.map((resource) => {
-                        const isLocked = resource.isAvailable === false;
+                        const isLocked = resource.is_available === false;
 
                         return (
                           <li

@@ -43,7 +43,7 @@ const CourseListPage = () => {
       }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) =>
-      lastPage.data.hasNext ? lastPage.data.page + 1 : undefined,
+      lastPage.data.has_next ? lastPage.data.page + 1 : undefined,
   });
 
   const courses: CourseResponse[] =
@@ -70,9 +70,9 @@ const CourseListPage = () => {
         <ScrollArea>
           <div className="flex items-center gap-2">
             <Badge
-              variant={filters.categoryId === undefined ? "default" : "secondary"}
+              variant={filters.category_id === undefined ? "default" : "secondary"}
               className="whitespace-nowrap cursor-pointer rounded-md px-4 py-1.5 text-sm font-medium"
-              onClick={() => setFilters({ categoryId: undefined })}
+              onClick={() => setFilters({ category_id: undefined })}
             >
               All
             </Badge>
@@ -82,10 +82,10 @@ const CourseListPage = () => {
                 <Badge
                   key={category.id}
                   variant={
-                    filters.categoryId === category.id ? "default" : "secondary"
+                    filters.category_id === category.id ? "default" : "secondary"
                   }
                   className="whitespace-nowrap cursor-pointer rounded-md px-4 py-1.5 text-sm font-medium"
-                  onClick={() => setFilters({ categoryId: category.id! })}
+                  onClick={() => setFilters({ category_id: category.id! })}
                 >
                   {category.name}
                 </Badge>

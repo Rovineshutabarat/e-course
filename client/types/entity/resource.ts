@@ -1,8 +1,8 @@
 export type Resource = {
     id: number;
-    moduleId: number;
+    module_id: number;
     title: string;
-    orderNumber: number;
+    order_number: number;
     url: string;
-    isAvailable: boolean | null;
+    is_available: boolean | null;
 }

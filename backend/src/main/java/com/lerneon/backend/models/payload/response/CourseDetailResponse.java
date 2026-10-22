@@ -6,6 +6,8 @@ import java.util.List;
 import org.jdbi.v3.core.mapper.Nested;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.lerneon.backend.models.entity.Faq;
 import com.lerneon.backend.models.entity.Image;
 import com.lerneon.backend.models.entity.Outcome;
@@ -22,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CourseDetailResponse {
     private Integer id;
     private String title;

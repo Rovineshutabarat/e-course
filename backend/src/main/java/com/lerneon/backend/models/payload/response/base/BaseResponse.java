@@ -2,6 +2,8 @@ package com.lerneon.backend.models.payload.response.base;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.lerneon.backend.models.enums.ResponseStatus;
 
 import lombok.Getter;
@@ -13,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public abstract class BaseResponse {
     private ResponseStatus status;
     private Integer code;

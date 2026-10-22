@@ -2,6 +2,10 @@ package com.lerneon.backend.models.payload.request;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -14,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ResourceRequest {
 
     @NotBlank(message = "title is required")
@@ -25,4 +30,9 @@ public class ResourceRequest {
 
     @NotNull(message = "video is required")
     private MultipartFile video;
+
+    @JsonIgnore
+    public void setModule_id(Integer moduleId) {
+        this.moduleId = moduleId;
+    }
 }

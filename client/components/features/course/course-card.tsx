@@ -30,7 +30,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
         <div className="relative w-full aspect-video">
           <Image
             src={resolvePath(course.image?.path) ?? FALLBACK_IMAGE}
-            alt={course.image?.name || "Course image"}
+            alt={course.image?.file_name || "Course image"}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />

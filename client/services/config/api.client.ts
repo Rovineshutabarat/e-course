@@ -53,10 +53,10 @@ export const ApiClient = ky.extend({
 
         try {
           const newSession = await refreshAccessToken();
-          setAccessToken(newSession.accessToken);
+          setAccessToken(newSession.access_token);
 
           const retryHeaders = new Headers(options.headers ?? {});
-          retryHeaders.set("Authorization", `Bearer ${newSession.accessToken}`);
+          retryHeaders.set("Authorization", `Bearer ${newSession.access_token}`);
           retryHeaders.set(RETRIED_HEADER, "1");
 
           return await ApiClient(request, {

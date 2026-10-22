@@ -126,7 +126,7 @@ const columns: ColumnDef<Course>[] = [
         header: "Image",
         cell: ({ row }) => <ImageViewer
             src={`${process.env.NEXT_PUBLIC_API_URL}/${row.original.image.path}`}
-            alt={row.original.image.name || "Course image"}
+            alt={row.original.image.file_name || "Course image"}
             height={20}
         />,
     },

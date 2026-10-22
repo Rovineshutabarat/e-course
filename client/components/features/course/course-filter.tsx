@@ -30,23 +30,23 @@ const CourseFilter = () => {
   >(filters.difficulty ?? null);
 
   const [selectedPrice, setSelectedPrice] = React.useState<PriceRange>({
-    lowerPrice: filters.minPrice,
-    upperPrice: filters.maxPrice,
+    lowerPrice: filters.min_price,
+    upperPrice: filters.max_price,
   });
   const [priceTouched, setPriceTouched] = React.useState(
-    filters.minPrice !== undefined || filters.maxPrice !== undefined,
+    filters.min_price !== undefined || filters.max_price !== undefined,
   );
 
   React.useEffect(() => {
     setSelectedDifficulty(filters.difficulty ?? null);
     setSelectedPrice({
-      lowerPrice: filters.minPrice,
-      upperPrice: filters.maxPrice,
+      lowerPrice: filters.min_price,
+      upperPrice: filters.max_price,
     });
     setPriceTouched(
-      filters.minPrice !== undefined || filters.maxPrice !== undefined,
+      filters.min_price !== undefined || filters.max_price !== undefined,
     );
-  }, [filters.difficulty, filters.minPrice, filters.maxPrice]);
+  }, [filters.difficulty, filters.min_price, filters.max_price]);
 
   function toggleDifficulty(value: string) {
     setSelectedDifficulty((current) => (current === value ? null : value));
@@ -55,8 +55,8 @@ const CourseFilter = () => {
   function applyFilters() {
     setFilters({
       difficulty: selectedDifficulty ?? undefined,
-      minPrice: priceTouched ? selectedPrice.lowerPrice : undefined,
-      maxPrice: priceTouched ? selectedPrice.upperPrice : undefined,
+      min_price: priceTouched ? selectedPrice.lowerPrice : undefined,
+      max_price: priceTouched ? selectedPrice.upperPrice : undefined,
     });
   }
 

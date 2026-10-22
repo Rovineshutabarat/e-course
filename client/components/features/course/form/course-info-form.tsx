@@ -30,7 +30,7 @@ import CreateCategoryDialog from "../../category/create-category-dialog";
 const CourseInfoRequest = CourseRequest.pick({
   title: true,
   description: true,
-  categoryId: true,
+  category_id: true,
   price: true,
 });
 
@@ -52,7 +52,7 @@ const CourseInfoForm = () => {
     defaultValues: {
       title: data?.title ?? "",
       description: data?.description ?? "",
-      categoryId: data?.categoryId ?? 0,
+      category_id: data?.category_id ?? 0,
       price: data?.price ?? 0,
     },
   });
@@ -62,7 +62,7 @@ const CourseInfoForm = () => {
       reset({
         title: "",
         description: "",
-        categoryId: 0,
+        category_id: 0,
         price: 0,
       });
     });
@@ -73,7 +73,7 @@ const CourseInfoForm = () => {
     queryFn: CategoryService.getAllCategories,
   });
 
-  const categoryId = watch("categoryId");
+  const categoryId = watch("category_id");
 
   const onSubmit: SubmitHandler<CourseInfoRequest> = (values) => {
     setData(values);
@@ -143,12 +143,12 @@ const CourseInfoForm = () => {
                     }),
                   )}
                   value={categoryId || null}
-                  onValueChange={(val) => setValue("categoryId", val!)}
+                  onValueChange={(val) => setValue("category_id", val!)}
                   actionComponent={<CreateCategoryDialog />}
                 />
-                {errors.categoryId && (
+                {errors.category_id && (
                   <p className="text-sm text-destructive">
-                    {errors.categoryId.message}
+                    {errors.category_id.message}
                   </p>
                 )}
               </div>

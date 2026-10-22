@@ -46,7 +46,7 @@ export class AuthService {
       json: {
         email,
         code: data.code,
-        verificationType,
+        verification_type: verificationType,
       },
     }).json<SuccessResponse<OneTimePassword>>();
   }

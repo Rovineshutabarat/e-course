@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.lerneon.backend.models.enums.Difficulty;
 import com.lerneon.backend.models.enums.Visibility;
 
@@ -30,6 +32,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table(name = "courses")
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Course extends BaseEntity {
         @Column(nullable = false, length = 150)
         private String title;
