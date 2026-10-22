@@ -2,24 +2,71 @@
 
 import { Button } from "@/components/ui/button";
 import { useCourseFilters } from "@/hooks/use-course-filters";
-import { ArrowRight, SearchX } from "lucide-react";
+import {
+  BookOpenCheck,
+  RotateCcw,
+  Sparkles
+} from "lucide-react";
+import Image from "next/image";
 
 const CourseListEmpty = () => {
   const { resetFilters } = useCourseFilters();
 
+
   return (
-    <div className="flex flex-col items-center justify-center py-20">
-      <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-muted">
-        <SearchX className="h-10 w-10 text-muted-foreground" />
+    <div
+      className="relative flex flex-col items-center justify-center overflow-hidden px-4 py-16 text-center sm:py-20"
+    >
+
+      <div className="relative mb-2">
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-10 bottom-2 h-8 rounded-full bg-foreground/10 blur-xl"
+        />
+        <Image
+          src="/error.png"
+          alt=""
+          aria-hidden="true"
+          width={300}
+          height={240}
+          priority={false}
+          className="relative h-48 w-auto sm:h-60"
+        />
+
+        <div
+          aria-hidden="true"
+          className="absolute -left-28 top-6 hidden -rotate-6 items-center gap-2 rounded-2xl border bg-card px-3 py-2 text-xs font-medium shadow-sm md:flex motion-safe:animate-[float_7s_ease-in-out_infinite]"
+        >
+          <span className="flex h-7 w-7 items-center justify-center rounded-xl text-blue-600">
+            <BookOpenCheck className="h-4 w-4" />
+          </span>
+          0 matches
+        </div>
+        <div
+          aria-hidden="true"
+          className="absolute -right-28 top-10 hidden rotate-3 items-center gap-2 rounded-2xl border bg-card px-3 py-2 text-xs font-medium shadow-sm md:flex motion-safe:animate-[float_8s_ease-in-out_1s_infinite]"
+        >
+          <span className="flex h-7 w-7 items-center justify-center rounded-xl text-blue-600">
+            <Sparkles className="h-4 w-4" />
+          </span>
+          Try another keyword
+        </div>
       </div>
-      <h2 className="mb-4 text-2xl font-semibold">No Courses Found</h2>
-      <p className="mb-8 max-w-md text-center text-sm text-muted-foreground">
-        We couldn.t find any courses that match your search. Try adjusting
-        your filters or browse all courses instead.
+      <h2 className="mb-2 max-w-md text-2xl font-bold tracking-tight text-balance sm:text-3xl">
+        No courses found
+      </h2>
+      <p className="mb-8 max-w-md text-sm leading-6 text-muted-foreground text-balance">
+        We couldn't find any courses that match your search. Try a
+        different keyword or clear the filters to browse everything.
       </p>
-      <Button className="cursor-pointer" onClick={() => resetFilters()}>
-        <span>Browse All Courses</span>
-        <ArrowRight />
+
+      <Button
+        size="lg"
+        className="cursor-pointer"
+        onClick={() => resetFilters()}
+      >
+        <RotateCcw />
+        <span>Refresh</span>
       </Button>
     </div>
   );

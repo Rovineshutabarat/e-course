@@ -1,12 +1,16 @@
-import ky from "ky";
-import { ErrorResponse } from "@/types/payload/response/common/error.response";
 import { refreshAccessToken } from "@/services/config/refresh.client";
+import { ErrorResponse } from "@/types/payload/response/common/error.response";
+import ky from "ky";
 import { toast } from "sonner";
 
 let ACCESS_TOKEN: string | null = null;
 
 export function setAccessToken(token: string | null) {
   ACCESS_TOKEN = token;
+}
+
+export function getAccessToken(): string | null {
+  return ACCESS_TOKEN;
 }
 
 const RETRIED_HEADER = "X-Retried";
@@ -60,8 +64,15 @@ export const ApiClient = ky.extend({
             headers: retryHeaders,
           });
         } catch (error) {
-          toast.error("Your session has expired. Please log in again.");
-          window.location.href = "/auth/login";
+          const refreshStatus = (error as { response?: { status?: number } })?.response?.status;
+          if (refreshStatus === 401) {
+            toast.error("Your session has expired. Please log in again.");
+            window.location.href = "/auth/login";
+          } else if (refreshStatus === 403) {
+            window.location.href = "/unauthorized";
+          } else if (refreshStatus !== 404) {
+            toast.error("Something went wrong. Please try again.");
+          }
           throw error;
         }
       },

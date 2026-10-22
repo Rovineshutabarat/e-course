@@ -1,6 +1,7 @@
 import CourseFilter from "@/components/features/course/course-filter";
 import CourseNavbar from "@/components/features/course/course-navbar";
-import React, { Suspense } from "react";
+import AuthGuard from "@/components/ui/auth-guard";
+import React from "react";
 
 type CourseListLayoutProps = {
   children: React.ReactNode;
@@ -9,7 +10,7 @@ type CourseListLayoutProps = {
 export default function CourseListLayout({ children }: CourseListLayoutProps) {
   return (
     <section className="flex flex-col mx-8">
-      <Suspense>
+      <AuthGuard roles={["ROLE_USER"]}>
         <CourseNavbar />
         <div className="flex flex-1 mt-5 mx-4 md:mx-10 gap-10">
           <div className="hidden md:block w-64 shrink-0">
@@ -18,7 +19,7 @@ export default function CourseListLayout({ children }: CourseListLayoutProps) {
 
           <div className="flex-1 overflow-x-hidden">{children}</div>
         </div>
-      </Suspense>
+      </AuthGuard>
     </section>
   );
 }

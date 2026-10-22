@@ -41,7 +41,7 @@ const CourseNavbar = () => {
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/60">
       <div className="mx-auto flex h-16 max-w-full items-center gap-3 sm:gap-4 ">
         <button
           onClick={() => router.push("/course/list")}
@@ -49,7 +49,7 @@ const CourseNavbar = () => {
           aria-label="Peak LMS - back to course list"
         >
           <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
-            <BookOpen className="h-[18px] w-[18px]" />
+            <BookOpen className="h-4.5 w-4.5" />
           </span>
           <span className="hidden text-[17px] font-bold tracking-tight min-[400px]:block">
             Peak<span className="text-primary"> LMS</span>
@@ -93,7 +93,6 @@ const CourseNavbar = () => {
                 className="relative h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/40"
               >
                 <ShoppingCart className="h-4 w-4" />
-                {/* TODO: connect to cart store */}
                 <span className="absolute right-0 top-1 grid size-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold leading-none text-primary-foreground">
                   2
                 </span>
@@ -174,7 +173,7 @@ const CourseNavbar = () => {
             placeholder="Search any course..."
             value={mobileKeyword}
             onChange={(e) => setMobileKeyword(e.target.value)}
-            className="h-10 w-full rounded-full border-transparent bg-muted/70 pl-10 pr-4 text-sm shadow-none focus-visible:border-ring focus-visible:bg-background"
+            className="h-10 w-full rounded-full bg-muted/70 pl-10 pr-4 text-sm shadow-none focus-visible:border-ring"
           />
         </form>
       </div>

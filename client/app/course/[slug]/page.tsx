@@ -7,12 +7,11 @@ import CourseFaq from "@/components/features/course/detail/course-faq";
 import CourseHero from "@/components/features/course/detail/course-hero";
 import CourseInstructor from "@/components/features/course/detail/course-instructor";
 import CourseModule from "@/components/features/course/detail/course-module";
-import CourseNotFound from "@/components/features/course/detail/course-not-found";
 import CourseReview from "@/components/features/course/detail/course-review";
 import Footer from "@/components/features/main/footer";
 import { CourseService } from "@/services/course.service";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { Fragment } from "react";
 
 const CourseDetailPage = () => {
@@ -26,7 +25,7 @@ const CourseDetailPage = () => {
   });
 
   if (isLoading) return <CourseDetailPageSkeleton />;
-  if (!course?.data) return <CourseNotFound />;
+  if (!course?.data) return notFound();
 
   return (
     <Fragment>
@@ -47,11 +46,9 @@ const CourseDetailPage = () => {
             </div>
           </div>
 
-          <aside>
-            <div className="lg:sticky lg:top-20">
-              <CourseCheckoutSidebar price={course.data.price} />
-            </div>
-          </aside>
+          <div className="lg:sticky lg:top-20">
+            <CourseCheckoutSidebar price={course.data.price} />
+          </div>
         </div>
       </main>
       <Footer />

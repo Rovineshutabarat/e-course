@@ -15,5 +15,5 @@ public interface RefreshTokenService {
 
     AuthResponse refreshToken(HttpServletResponse response);
 
-    void deletePreviousTokenByUser(User user);
+    void deleteToken(RefreshToken refreshToken);
 }

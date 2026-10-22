@@ -4,7 +4,6 @@ import CourseCard from "@/components/features/course/course-card";
 import CourseCardSkeleton from "@/components/features/course/course-card-skeleton";
 import CourseListEmpty from "@/components/features/course/course-list-empty";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useCourseFilters } from "@/hooks/use-course-filters";
 import { CategoryService } from "@/services/category.service";
@@ -12,7 +11,7 @@ import { CourseService } from "@/services/course.service";
 import { Category } from "@/types/entity/category";
 import { CourseResponse } from "@/types/payload/response/course.response";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { ArrowRight, Loader2, TriangleAlert } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Fragment, useEffect, useRef } from "react";
 
 
@@ -31,7 +30,6 @@ const CourseListPage = () => {
     data: coursePages,
     isLoading,
     isError,
-    refetch,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -68,47 +66,37 @@ const CourseListPage = () => {
 
   return (
     <div className="flex flex-col">
-      <ScrollArea>
-        <div className="flex items-center gap-2">
-          <Badge
-            variant={filters.categoryId === undefined ? "default" : "secondary"}
-            className="whitespace-nowrap cursor-pointer rounded-md px-4 py-1.5 text-sm font-medium"
-            onClick={() => setFilters({ categoryId: undefined })}
-          >
-            All
-          </Badge>
-          {categories?.data
-            .slice(0, MAX_VISIBLE_CATEGORY)
-            .map((category: Category) => (
-              <Badge
-                key={category.id}
-                variant={
-                  filters.categoryId === category.id ? "default" : "secondary"
-                }
-                className="whitespace-nowrap cursor-pointer rounded-md px-4 py-1.5 text-sm font-medium"
-                onClick={() => setFilters({ categoryId: category.id! })}
-              >
-                {category.name}
-              </Badge>
-            ))}
-        </div>
-        <ScrollBar orientation="horizontal" className="hidden" />
-      </ScrollArea>
+      {(categories?.data?.length ?? 0) > 0 && (
+        <ScrollArea>
+          <div className="flex items-center gap-2">
+            <Badge
+              variant={filters.categoryId === undefined ? "default" : "secondary"}
+              className="whitespace-nowrap cursor-pointer rounded-md px-4 py-1.5 text-sm font-medium"
+              onClick={() => setFilters({ categoryId: undefined })}
+            >
+              All
+            </Badge>
+            {categories?.data
+              .slice(0, MAX_VISIBLE_CATEGORY)
+              .map((category: Category) => (
+                <Badge
+                  key={category.id}
+                  variant={
+                    filters.categoryId === category.id ? "default" : "secondary"
+                  }
+                  className="whitespace-nowrap cursor-pointer rounded-md px-4 py-1.5 text-sm font-medium"
+                  onClick={() => setFilters({ categoryId: category.id! })}
+                >
+                  {category.name}
+                </Badge>
+              ))}
+          </div>
+          <ScrollBar orientation="horizontal" className="hidden" />
+        </ScrollArea>
+      )}
 
       {isError ? (
-        <div className="flex flex-col items-center justify-center py-20">
-          <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-muted">
-            <TriangleAlert className="h-10 w-10 text-muted-foreground" />
-          </div>
-          <h2 className="mb-4 text-2xl font-semibold">Something went wrong</h2>
-          <p className="mb-8 max-w-md text-center text-sm text-muted-foreground">
-            We couldn&apos;t load courses right now. Please try again.
-          </p>
-          <Button className="cursor-pointer" onClick={() => refetch()}>
-            <span>Try Again</span>
-            <ArrowRight />
-          </Button>
-        </div>
+        <CourseListEmpty />
       ) : !isLoading && courses.length === 0 ? (
         <CourseListEmpty />
       ) : (

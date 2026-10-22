@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.lerneon.backend.models.exceptions.AuthException;
+import com.lerneon.backend.models.exceptions.BadRequestException;
 import com.lerneon.backend.models.exceptions.DuplicateElementException;
+import com.lerneon.backend.models.exceptions.ForbiddenException;
 import com.lerneon.backend.models.exceptions.MailDeliveryException;
+import com.lerneon.backend.models.exceptions.RateLimitException;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.models.exceptions.TranscodeException;
 import com.lerneon.backend.models.exceptions.TranscodeFatalException;
@@ -68,6 +71,36 @@ public class GlobalExceptionHandler {
                         HttpServletRequest request) {
                 return ResponseHandler.buildErrorResponse(
                                 HttpStatus.UNAUTHORIZED,
+                                exception.getMessage(),
+                                request);
+        }
+
+        @ExceptionHandler(ForbiddenException.class)
+        public ResponseEntity<ErrorResponse> handleForbiddenException(
+                        ForbiddenException exception,
+                        HttpServletRequest request) {
+                return ResponseHandler.buildErrorResponse(
+                                HttpStatus.FORBIDDEN,
+                                exception.getMessage(),
+                                request);
+        }
+
+        @ExceptionHandler(RateLimitException.class)
+        public ResponseEntity<ErrorResponse> handleRateLimitException(
+                        RateLimitException exception,
+                        HttpServletRequest request) {
+                return ResponseHandler.buildErrorResponse(
+                                HttpStatus.TOO_MANY_REQUESTS,
+                                exception.getMessage(),
+                                request);
+        }
+
+        @ExceptionHandler(BadRequestException.class)
+        public ResponseEntity<ErrorResponse> handleBadRequestException(
+                        BadRequestException exception,
+                        HttpServletRequest request) {
+                return ResponseHandler.buildErrorResponse(
+                                HttpStatus.BAD_REQUEST,
                                 exception.getMessage(),
                                 request);
         }

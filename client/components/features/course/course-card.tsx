@@ -7,18 +7,15 @@ import { CourseResponse } from "@/types/payload/response/course.response";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
 type CourseCardProps = {
   course: CourseResponse;
 };
 
-const FALLBACK_IMAGE = "/img.png";
+const FALLBACK_IMAGE = "/dummy.png";
 
 
 const CourseCard = ({ course }: CourseCardProps) => {
-  const [src, setSrc] = useState<string>(resolvePath(course.image.path.concat("/a")) ?? FALLBACK_IMAGE);
-
   const dummyRating = ((43 + ((course.id ?? 1) * 7) % 7) / 10).toFixed(1);
   const dummyReviews = 40 + ((course.id ?? 1) * 37) % 300;
 

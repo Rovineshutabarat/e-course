@@ -1,5 +1,5 @@
 "use client";
-import { setAccessToken } from "@/services/config/api.client";
+import { getAccessToken, setAccessToken } from "@/services/config/api.client";
 import { refreshAccessToken } from "@/services/config/refresh.client";
 import { Role } from "@/types/entity/role";
 import { AuthResponse } from "@/types/payload/response/auth.response";
@@ -38,6 +38,10 @@ export default function AuthProvider({
       setIsRefreshLoading(false);
       return;
     }
+    if (getAccessToken()) {
+      setIsRefreshLoading(false);
+      return;
+    }
     (async () => {
       try {
         const response = await refreshAccessToken();
@@ -48,7 +52,8 @@ export default function AuthProvider({
         setIsRefreshLoading(false);
       }
     })();
-  }, [pathname, setSession]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const hasRoles = React.useCallback(
     (roles: string[]): boolean => {

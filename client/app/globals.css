@@ -140,6 +140,16 @@
   }
 }
 
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -8px;
+  }
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: #d2d0d0 transparent;
