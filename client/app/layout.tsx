@@ -1,6 +1,6 @@
-import AppLayout from "@/components/layouts/app-layout";
+import AppProviders from "@/components/providers/app-providers";
 import type { Metadata } from "next";
-import React, { Fragment } from "react";
+import React from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,10 +15,8 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body className="dark" suppressHydrationWarning>
-        <Fragment>
-          <AppLayout>{children}</AppLayout>
-        </Fragment>
+      <body>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

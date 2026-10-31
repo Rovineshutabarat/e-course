@@ -1,5 +1,6 @@
 // "use client";
 
+
 // import {
 //     AlertCircle,
 //     ChevronDown,
@@ -271,3 +272,9 @@
 // };
 
 // export default ContentEditorSplitPanel;
+
+const CourseContentPage = () => {
+  return null;
+};
+
+export default CourseContentPage;

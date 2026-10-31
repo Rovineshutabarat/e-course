@@ -1,6 +1,6 @@
 "use client";
 
-import DataTablePlaceholder from "@/components/shared/data-table-placeholder";
+import DataTablePlaceholder from "@/components/shared/table-skeleton";
 import SearchBar from "@/components/shared/search-bar";
 import { Button } from "@/components/ui/button";
 import {

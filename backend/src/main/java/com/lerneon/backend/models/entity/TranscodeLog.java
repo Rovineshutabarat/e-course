@@ -2,6 +2,8 @@ package com.lerneon.backend.models.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.lerneon.backend.models.enums.TranscodeStatus;
 import com.lerneon.backend.models.enums.VideoResolution;
 
@@ -11,19 +13,18 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Data
-@SuperBuilder
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity
 @Table(name = "transcode_log")
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TranscodeLog extends BaseEntity {
     private String source;
     private String destination;

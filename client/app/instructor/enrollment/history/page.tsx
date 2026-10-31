@@ -30,7 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import DataTablePlaceholder from "@/components/shared/data-table-placeholder";
+import DataTablePlaceholder from "@/components/shared/table-skeleton";
 import { cn } from "@/lib/utils";
 import {
   ArrowDown,

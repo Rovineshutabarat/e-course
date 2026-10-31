@@ -15,8 +15,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,12 +22,10 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
+@SuperBuilder
 @Entity
 @Table(name = "one_time_password")
-@EqualsAndHashCode(callSuper = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class OneTimePassword extends BaseEntity {
     @Column(nullable = false, unique = true)

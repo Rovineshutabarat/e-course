@@ -9,6 +9,8 @@ import React from "react";
 interface SearchBarProps extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder: string;
   displaySize: "small" | "medium" | "large";
+  defaultValue?: string;
+  onSearch?: (keyword: string) => void;
 }
 
 const sizeClasses = {
@@ -17,16 +19,38 @@ const sizeClasses = {
   large: "w-[30rem]",
 };
 
-const SearchBar = ({ placeholder, displaySize, ...props }: SearchBarProps) => {
-  const [searchKeyword, setSearchKeyword] = React.useState<string>("");
+const SearchBar = ({
+  placeholder,
+  displaySize,
+  defaultValue,
+  onSearch,
+  ...props
+}: SearchBarProps) => {
+  const [keyword, setKeyword] = React.useState<string>(
+    defaultValue ?? "",
+  );
+
+  React.useEffect(() => {
+    setKeyword(defaultValue ?? "");
+  }, [defaultValue]);
 
   function handleSearch() {
-    if (searchKeyword !== undefined) {
-    }
+    onSearch?.(keyword.trim());
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
-    if (event.key === "Enter" && (!searchKeyword || true)) {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  }
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const value = event.target.value;
+    const wasNonEmpty = keyword !== "";
+    setKeyword(value);
+
+    if (value === "" && wasNonEmpty) {
+      onSearch?.("");
     }
   }
 
@@ -41,8 +65,9 @@ const SearchBar = ({ placeholder, displaySize, ...props }: SearchBarProps) => {
         type="search"
         placeholder={placeholder}
         className="h-9"
+        value={keyword}
         onKeyDown={handleKeyDown}
-        onChange={(e) => setSearchKeyword(e.target.value)}
+        onChange={handleChange}
         {...props}
       />
       <Button

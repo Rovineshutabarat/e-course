@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class CookieUtil {
+    private static final String SAME_SITE = System.getenv().getOrDefault("COOKIE_SAMESITE", "Strict");
+    private static final boolean SECURE = Boolean.parseBoolean(System.getenv().getOrDefault("COOKIE_SECURE", "false"));
+
     public static Optional<String> getCookie(String name) {
         HttpServletRequest request = RequestUtil.getCurrentRequest();
         if (request.getCookies() != null) {
@@ -24,10 +27,10 @@ public class CookieUtil {
     public static void setCookie(HttpServletResponse response, String name, String value, Long maxAge) {
         ResponseCookie responseCookie = ResponseCookie.from(name, value)
                 .httpOnly(true)
-                .secure(false)
+                .secure(SECURE)
                 .path("/")
                 .maxAge(maxAge)
-                .sameSite(org.springframework.boot.web.server.Cookie.SameSite.STRICT.toString())
+                .sameSite(SAME_SITE)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
     }
@@ -35,10 +38,10 @@ public class CookieUtil {
     public static void removeCookie(HttpServletResponse response, String name) {
         ResponseCookie responseCookie = ResponseCookie.from(name, "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(SECURE)
                 .path("/")
                 .maxAge(0)
-                .sameSite(org.springframework.boot.web.server.Cookie.SameSite.STRICT.toString())
+                .sameSite(SAME_SITE)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
     }

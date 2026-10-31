@@ -18,46 +18,53 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lerneon.backend.controllers.CourseController;
 import com.lerneon.backend.handlers.ResponseHandler;
 import com.lerneon.backend.models.entity.Course;
-import com.lerneon.backend.models.entity.Module;
+import com.lerneon.backend.models.payload.request.CourseFilterRequest;
 import com.lerneon.backend.models.payload.request.CourseRequest;
 import com.lerneon.backend.models.payload.request.UpdateCourseVisibilityRequest;
+import com.lerneon.backend.models.payload.response.CourseDetailResponse;
+import com.lerneon.backend.models.payload.response.CourseResponse;
+import com.lerneon.backend.models.payload.response.ModuleResponse;
+import com.lerneon.backend.models.payload.response.common.PageResponse;
 import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 import com.lerneon.backend.services.CourseService;
+import com.lerneon.backend.services.ModuleService;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/course")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CourseControllerImpl implements CourseController {
         private final CourseService courseService;
+        private final ModuleService moduleService;
 
         @GetMapping
         @Override
-        public ResponseEntity<SuccessResponse<List<Course>>> findAllCourses() {
+        public ResponseEntity<SuccessResponse<PageResponse<CourseResponse>>> getAllCourses(
+                        @ModelAttribute @Valid CourseFilterRequest courseFilterRequest) {
                 return ResponseHandler.buildSuccessResponse(
                                 HttpStatus.OK,
                                 "Success fetching all courses",
-                                courseService.findAllCourses());
-        }
-
-        @GetMapping("/{slug}/modules")
-        @Override
-        public ResponseEntity<SuccessResponse<List<Module>>> findAllModules(@PathVariable String slug) {
-                return ResponseHandler.buildSuccessResponse(
-                                HttpStatus.OK,
-                                "Success fetching all course modules",
-                                courseService.findAllModules(slug));
+                                courseService.getAllCourses(courseFilterRequest));
         }
 
         @GetMapping("/{slug}")
         @Override
-        public ResponseEntity<SuccessResponse<Course>> findCourseBySlug(@PathVariable String slug) {
+        public ResponseEntity<SuccessResponse<CourseDetailResponse>> getCourseBySlug(@PathVariable String slug) {
                 return ResponseHandler.buildSuccessResponse(
                                 HttpStatus.OK,
                                 "Success fetching course by slug",
-                                courseService.findCourseBySlug(slug));
+                                courseService.getCourseBySlug(slug));
+        }
+
+        @GetMapping("/{slug}/modules")
+        @Override
+        public ResponseEntity<SuccessResponse<List<ModuleResponse>>> getAllModuleBySlug(@PathVariable String slug) {
+                return ResponseHandler.buildSuccessResponse(
+                                HttpStatus.OK,
+                                "Success fetching all course modules",
+                                moduleService.getAllModuleByCourseSlug(slug));
         }
 
         @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

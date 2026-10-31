@@ -4,13 +4,16 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.lerneon.backend.models.enums.AccountProvider;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,8 +23,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,13 +30,11 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
+@SuperBuilder
 @Entity
 @Table(name = "users")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, length = 50)
     private String username;
@@ -48,19 +47,18 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
 
     @Column(nullable = false)
+    @JsonIgnore
     private Boolean isVerified;
 
     @Column(nullable = false)
+    @JsonIgnore
     private Boolean canUpdatePassword;
 
+    @JsonIgnore
     private AccountProvider accountProvider;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id",
-                    nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id",
-                    nullable = false))
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false))
     private List<Role> roles;
 
     @JsonIgnore
@@ -72,7 +70,7 @@ public class User extends BaseEntity implements UserDetails {
     @JsonIgnore
     private String userAgent;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 

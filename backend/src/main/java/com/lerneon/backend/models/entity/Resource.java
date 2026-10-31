@@ -3,6 +3,8 @@ package com.lerneon.backend.models.entity;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -12,19 +14,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Data
-@SuperBuilder
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Entity
 @Table(name = "resources")
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Resource extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String title;

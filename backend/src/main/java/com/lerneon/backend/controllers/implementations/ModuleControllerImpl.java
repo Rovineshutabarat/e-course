@@ -21,11 +21,11 @@ import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 import com.lerneon.backend.services.ModuleService;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/module")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ModuleControllerImpl implements ModuleController {
         private final ModuleService moduleService;
 

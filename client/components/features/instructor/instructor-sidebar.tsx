@@ -1,7 +1,7 @@
 "use client";
 
 import AppSidebar from "@/components/shared/app-sidebar";
-import { Sidebar } from "@/types/sidebar";
+import { Sidebar } from "@/types/common/sidebar";
 import {
   Bell,
   BookCheck,

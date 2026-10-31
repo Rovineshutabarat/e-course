@@ -2,29 +2,37 @@ package com.lerneon.backend.services.implementations;
 
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lerneon.backend.models.entity.User;
 import com.lerneon.backend.models.exceptions.AuthException;
+import com.lerneon.backend.models.exceptions.ForbiddenException;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.models.payload.request.UpdatePasswordRequest;
 import com.lerneon.backend.models.payload.request.UpdateProfileRequest;
 import com.lerneon.backend.repositories.UserRepository;
 import com.lerneon.backend.services.UserService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public User getCurrentAuthenticatedUser() {
-        // TODO Auto-generated method stub
-        return null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!authentication.isAuthenticated()) {
+            throw new AuthException("Request is not authenticated");
+        }
+
+        return (User) authentication.getPrincipal();
     }
 
     public Optional<User> findOptionalUserByEmail(String email) {
@@ -52,7 +60,7 @@ public class UserServiceImpl implements UserService {
         User user = findUserByEmail(updatePasswordRequest.getEmail());
 
         if (!user.getCanUpdatePassword()) {
-            throw new AuthException("You are not authorized to update the password.");
+            throw new ForbiddenException("You are not authorized to update the password.");
         }
 
         user.setPassword(passwordEncoder.encode(updatePasswordRequest.getPassword()));

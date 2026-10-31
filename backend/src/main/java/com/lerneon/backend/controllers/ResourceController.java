@@ -9,7 +9,7 @@ import com.lerneon.backend.models.payload.request.UpdateResourceOrderNumberReque
 import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 
 public interface ResourceController {
-    ResponseEntity<SuccessResponse<Resource>> findResourceById(Integer id);
+    ResponseEntity<SuccessResponse<Resource>> getResourceById(Integer id);
 
     SseEmitter streamTranscodeProgress(Integer transcodeLogId);
 

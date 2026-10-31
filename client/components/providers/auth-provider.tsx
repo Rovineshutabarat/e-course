@@ -1,6 +1,6 @@
 "use client";
-import { setAccessToken } from "@/services/config/api.client";
-import { refreshAccessToken } from "@/services/config/refresh.client";
+import { getAccessToken, setAccessToken } from "@/configurations/api.client";
+import { refreshAccessToken } from "@/configurations/refresh.client";
 import { Role } from "@/types/entity/role";
 import { AuthResponse } from "@/types/payload/response/auth.response";
 import { usePathname, useRouter } from "next/navigation";
@@ -30,11 +30,15 @@ export default function AuthProvider({
 
   const setSession = React.useCallback((response: AuthResponse | null) => {
     setSessionState(response);
-    setAccessToken(response?.accessToken ?? null);
+    setAccessToken(response?.access_token ?? null);
   }, []);
 
   React.useEffect(() => {
     if (pathname.startsWith("/auth")) {
+      setIsRefreshLoading(false);
+      return;
+    }
+    if (getAccessToken()) {
       setIsRefreshLoading(false);
       return;
     }
@@ -48,7 +52,8 @@ export default function AuthProvider({
         setIsRefreshLoading(false);
       }
     })();
-  }, [pathname, setSession]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const hasRoles = React.useCallback(
     (roles: string[]): boolean => {
@@ -64,7 +69,7 @@ export default function AuthProvider({
   );
 
   const isAuthenticated = React.useMemo(
-    () => Boolean(session?.accessToken && session?.user),
+    () => Boolean(session?.access_token && session?.user),
     [session],
   );
 

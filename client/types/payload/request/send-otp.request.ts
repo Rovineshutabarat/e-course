@@ -17,7 +17,7 @@ export const SendOtpRequest = z.object({
     })
     .toLowerCase()
     .trim(),
-  verificationType: VerificationType,
+  verification_type: VerificationType,
 });
 
 export type SendOtpRequest = z.infer<typeof SendOtpRequest>;

@@ -1,5 +1,7 @@
 package com.lerneon.backend.models.payload.request;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.lerneon.backend.models.annotations.ValidEnum;
 import com.lerneon.backend.models.enums.VerificationType;
 
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class VerifyOTPRequest {
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Please provide a valid email address")

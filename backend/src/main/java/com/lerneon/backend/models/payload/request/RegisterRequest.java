@@ -1,5 +1,8 @@
 package com.lerneon.backend.models.payload.request;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -12,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RegisterRequest {
     @NotBlank(message = "Username cannot be blank")
     @Size(min = 5, message = "Username is too short. Please enter at least 5 characters")

@@ -20,32 +20,32 @@ import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 import com.lerneon.backend.services.implementations.CategoryServiceImpl;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/category")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class CategoryControllerImpl implements CategoryController {
     private final CategoryServiceImpl categoryService;
 
     @GetMapping
     @Override
-    public ResponseEntity<SuccessResponse<List<Category>>> findAllCategories() {
+    public ResponseEntity<SuccessResponse<List<Category>>> getAllCategories() {
         return ResponseHandler.buildSuccessResponse(
                 HttpStatus.OK,
                 "Categories retrieved successfully.",
-                categoryService.findAllCategories());
+                categoryService.getAllCategories());
     }
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<SuccessResponse<Category>> findCategoryById(@PathVariable Integer id) {
+    public ResponseEntity<SuccessResponse<Category>> getCategoryById(@PathVariable Integer id) {
         return ResponseHandler.buildSuccessResponse(
                 HttpStatus.OK,
                 "Category retrieved successfully.",
-                categoryService.findCategoryById(id));
+                categoryService.getCategoryById(id));
     }
 
     @PostMapping

@@ -18,11 +18,11 @@ import com.lerneon.backend.models.payload.response.common.SuccessResponse;
 import com.lerneon.backend.services.UserService;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/user")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
     private final UserService userService;
 

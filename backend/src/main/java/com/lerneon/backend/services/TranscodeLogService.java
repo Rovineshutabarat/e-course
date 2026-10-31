@@ -6,7 +6,7 @@ import com.lerneon.backend.models.event.TranscodeEvent;
 
 public interface TranscodeLogService {
 
-    TranscodeLog findTranscodeLogById(Integer id);
+    TranscodeLog getTranscodeLogById(Integer id);
 
     TranscodeLog createTranscodeLog(TranscodeLog transcodeLog);
 

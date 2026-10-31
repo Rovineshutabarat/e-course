@@ -6,7 +6,7 @@ import com.lerneon.backend.models.payload.request.UpdateResourceOrderNumberReque
 
 public interface ResourceService {
 
-    Resource findResourceById(Integer id);
+    Resource getResourceById(Integer id);
 
     void createResource(ResourceRequest resourceRequest);
 

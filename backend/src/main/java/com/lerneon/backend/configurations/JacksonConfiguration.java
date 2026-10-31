@@ -1,29 +1,19 @@
 package com.lerneon.backend.configurations;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 
 @Configuration
 public class JacksonConfiguration {
+
     @Bean
-    ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        JavaTimeModule module = new JavaTimeModule();
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(formatter));
-        module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(formatter));
-
-        mapper.registerModule(module);
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-        return mapper;
+    Module hibernateModule() {
+        Hibernate6Module module = new Hibernate6Module();
+        module.configure(Hibernate6Module.Feature.FORCE_LAZY_LOADING, false);
+        module.configure(Hibernate6Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS, false);
+        return module;
     }
 }

@@ -16,12 +16,12 @@ import com.lerneon.backend.models.exceptions.UploadException;
 import com.lerneon.backend.models.properties.UploadProperties;
 import com.lerneon.backend.services.UploadVideoService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 // implement chunk upload
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class UploadVideoServiceImpl implements UploadVideoService {
 

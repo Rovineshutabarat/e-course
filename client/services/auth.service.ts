@@ -1,4 +1,4 @@
-import { ApiClient } from "@/services/config/api.client";
+import { ApiClient } from "@/configurations/api.client";
 import { OneTimePassword } from "@/types/entity/one.time.password";
 import { User } from "@/types/entity/user";
 import { VerificationType } from "@/types/enums/verification.type";
@@ -46,7 +46,7 @@ export class AuthService {
       json: {
         email,
         code: data.code,
-        verificationType,
+        verification_type: verificationType,
       },
     }).json<SuccessResponse<OneTimePassword>>();
   }

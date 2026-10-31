@@ -72,7 +72,7 @@ const Page = () => {
     if (!email) return;
     sendOtp({
       email,
-      verificationType: VerificationType.Values.ACCOUNT_VERIFICATION,
+      verification_type: VerificationType.Values.ACCOUNT_VERIFICATION,
     });
   }
 

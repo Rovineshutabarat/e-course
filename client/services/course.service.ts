@@ -1,19 +1,29 @@
-import { ApiClient } from "@/services/config/api.client";
+import { ApiClient } from "@/configurations/api.client";
 import { Course } from "@/types/entity/course";
+import { CourseFilterRequest } from "@/types/payload/request/course.filter.request";
 import { UpdateCourseVisibilityRequest } from "@/types/payload/request/update.course.visibility.request";
+import { PageResponse } from "@/types/payload/response/common/page.response";
 import { SuccessResponse } from "@/types/payload/response/common/success.response";
+import { CourseDetailResponse } from "@/types/payload/response/course.detail.response";
+import { CourseResponse } from "@/types/payload/response/course.response";
+import { ModuleResponse } from "@/types/payload/response/module.response";
 
 export class CourseService {
-    static async getAllCourses() {
-        return ApiClient.get("course").json<SuccessResponse<Course[]>>();
+    static async getAllCourses(filter: CourseFilterRequest = {}) {
+        const searchParams = Object.fromEntries(
+            Object.entries(filter).filter(
+                ([, value]) => value !== undefined && value !== null && value !== "",
+            ),
+        );
+        return ApiClient.get("course", { searchParams }).json<SuccessResponse<PageResponse<CourseResponse>>>();
     }
 
-    // static async getCourseById(id: number) {
-    //     return ApiClient.get(`course/${id}`).json<SuccessResponse<Course>>();
-    // }
-
     static async getCourseBySlug(slug: string) {
-        return ApiClient.get(`course/${slug}`).json<SuccessResponse<Course>>();
+        return ApiClient.get(`course/${slug}`).json<SuccessResponse<CourseDetailResponse>>();
+    }
+
+    static async getAllModuleBySlug(slug: string) {
+        return ApiClient.get(`course/${slug}/modules`).json<SuccessResponse<ModuleResponse[]>>();
     }
 
     static async createCourse(data: FormData) {

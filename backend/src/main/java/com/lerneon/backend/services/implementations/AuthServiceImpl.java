@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import com.lerneon.backend.models.entity.User;
 import com.lerneon.backend.models.enums.AccountProvider;
 import com.lerneon.backend.models.enums.VerificationType;
 import com.lerneon.backend.models.exceptions.AuthException;
+import com.lerneon.backend.models.exceptions.DuplicateElementException;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.models.payload.request.LoginRequest;
 import com.lerneon.backend.models.payload.request.RegisterRequest;
@@ -83,8 +85,11 @@ public class AuthServiceImpl implements AuthService {
 
         } catch (BadCredentialsException exception) {
             throw new AuthException("Invalid email or password.");
+        } catch (DisabledException exception) {
+            throw new AuthException("User is disabled");
         } catch (Exception exception) {
-            throw new AuthException(exception.getMessage());
+            log.error("Unexpected error during login", exception);
+            throw new AuthException("Something went wrong. Please try again.");
         }
     }
 
@@ -93,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
         HttpServletRequest request = RequestUtil.getCurrentRequest();
 
         if (userService.existByEmail(registerRequest.getEmail())) {
-            throw new AuthException("Email already taken.");
+            throw new DuplicateElementException("Email already taken.");
         }
 
         List<Role> defaultRoles = new ArrayList<>();
@@ -122,8 +127,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<String> refreshTokenCookie = CookieUtil.getCookie(refreshTokenProperties.getCookieName());
 
         refreshTokenCookie.flatMap(refreshTokenService::findByToken)
-                .ifPresent(refreshToken -> refreshTokenService
-                        .deletePreviousTokenByUser(refreshToken.getUser()));
+                .ifPresent(refreshTokenService::deleteToken);
 
         CookieUtil.removeCookie(
                 response,

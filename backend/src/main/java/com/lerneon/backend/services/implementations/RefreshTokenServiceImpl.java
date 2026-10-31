@@ -35,8 +35,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Transactional
     @Override
     public RefreshToken generateRefreshToken(User user) {
-        this.deletePreviousTokenByUser(user);
-
         return refreshTokenRepository.save(RefreshToken.builder()
                 .token(UUID.randomUUID().toString())
                 .user(user)
@@ -63,6 +61,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         RefreshToken newRefreshToken = generateRefreshToken(refreshToken.getUser());
         String accessToken = jwtService.generateAccessToken(newRefreshToken.getUser());
 
+        deleteToken(refreshToken);
+
         CookieUtil.removeCookie(response, refreshTokenProperties.getCookieName());
 
         CookieUtil.setCookie(
@@ -79,7 +79,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Transactional
     @Override
-    public void deletePreviousTokenByUser(User user) {
-        refreshTokenRepository.deleteAllByUser(user);
+    public void deleteToken(RefreshToken refreshToken) {
+        refreshTokenRepository.delete(refreshToken);
     }
 }

@@ -24,22 +24,22 @@ import com.lerneon.backend.services.ResourceService;
 import com.lerneon.backend.services.TranscodeService;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/resource")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ResourceControllerImpl implements ResourceController {
         private final ResourceService resourceService;
         private final TranscodeService transcodeService;
 
         @GetMapping("/{id}")
         @Override
-        public ResponseEntity<SuccessResponse<Resource>> findResourceById(@PathVariable Integer id) {
+        public ResponseEntity<SuccessResponse<Resource>> getResourceById(@PathVariable Integer id) {
                 return ResponseHandler.buildSuccessResponse(
                                 HttpStatus.OK,
                                 "Success get resource by id",
-                                resourceService.findResourceById(id));
+                                resourceService.getResourceById(id));
         }
 
         @GetMapping(path = "/progress/{transcodeLogId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

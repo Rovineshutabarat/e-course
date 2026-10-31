@@ -11,11 +11,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-<<<<<<< HEAD
-import React, { useEffect, useState } from "react";
-=======
-import { useEffect, useState, Suspense } from "react";
->>>>>>> 7cf934f (async OTP delivery using RabbitMQ and align frontend flows)
+import { Suspense, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -24,12 +20,7 @@ const LoginForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-<<<<<<< HEAD
-  const { signIn, isLoading } = useAuth();
-  
-=======
   const { signIn, isSigningIn } = useAuth();
->>>>>>> 7cf934f (async OTP delivery using RabbitMQ and align frontend flows)
 
   useEffect(() => {
     const error = searchParams.get("error");
@@ -78,7 +69,6 @@ const LoginForm = () => {
                   placeholder="Enter Your Email"
                   {...register("email")}
                 />
-
                 {errors.email && (
                   <p className="mt-1 text-destructive text-sm">
                     *{errors.email.message}
@@ -151,7 +141,7 @@ const LoginForm = () => {
             <Link href={`${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/google`} prefetch={false}>
               <Button
                 variant="ghost"
-                className="w-full mb-6 bg-primary/10 shadow-sm shadow-primary/50 dark:shadow-none cursor-pointer"
+                className="w-full mb-6 shadow cursor-pointer"
                 type="button"
               >
                 <Image
@@ -168,7 +158,7 @@ const LoginForm = () => {
               Don't have an account?{" "}
               <Link
                 href="/auth/register"
-                className="text-blue-500 hover:underline"
+                className="text-primary hover:underline"
               >
                 Sign up
               </Link>

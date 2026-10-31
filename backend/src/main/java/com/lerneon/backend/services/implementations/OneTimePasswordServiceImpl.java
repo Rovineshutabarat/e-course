@@ -13,6 +13,10 @@ import com.lerneon.backend.models.entity.OneTimePassword;
 import com.lerneon.backend.models.entity.User;
 import com.lerneon.backend.models.enums.VerificationType;
 import com.lerneon.backend.models.exceptions.AuthException;
+import com.lerneon.backend.models.exceptions.BadRequestException;
+import com.lerneon.backend.models.exceptions.DuplicateElementException;
+import com.lerneon.backend.models.exceptions.ForbiddenException;
+import com.lerneon.backend.models.exceptions.RateLimitException;
 import com.lerneon.backend.models.payload.request.VerifyOTPRequest;
 import com.lerneon.backend.models.properties.OneTimePasswordProperties;
 import com.lerneon.backend.repositories.OneTimePasswordRepository;
@@ -45,7 +49,7 @@ public class OneTimePasswordServiceImpl implements OneTimePasswordService {
         switch (verificationType) {
             case ACCOUNT_VERIFICATION -> mailEventProducer.produceVerifyAccountEvent(oneTimePasswordMailEvent);
             case FORGOT_PASSWORD -> mailEventProducer.produceForgotPasswordEvent(oneTimePasswordMailEvent);
-            default -> throw new AuthException("Unsupported verification type: " + verificationType);
+            default -> throw new BadRequestException("Unsupported verification type: " + verificationType);
         }
     }
 
@@ -53,7 +57,7 @@ public class OneTimePasswordServiceImpl implements OneTimePasswordService {
         User user = userService.findUserByEmail(email);
 
         if (!user.isEnabled() && verificationType == VerificationType.FORGOT_PASSWORD) {
-            throw new AuthException("Please verify your account first.");
+            throw new ForbiddenException("Please verify your account first.");
         }
 
         OneTimePassword existing = oneTimePasswordRepository
@@ -62,7 +66,7 @@ public class OneTimePasswordServiceImpl implements OneTimePasswordService {
 
         if (existing != null && existing.getLastOtpRequest() != null
                 && existing.getLastOtpRequest().isAfter(LocalDateTime.now().minusMinutes(1))) {
-            throw new AuthException("Please wait before requesting another OTP.");
+            throw new RateLimitException("Please wait before requesting another OTP.");
         }
 
         deletePreviousOtpByUserAndVerificationType(user, verificationType);
@@ -103,7 +107,7 @@ public class OneTimePasswordServiceImpl implements OneTimePasswordService {
 
         if (verificationType == VerificationType.ACCOUNT_VERIFICATION) {
             if (user.getIsVerified()) {
-                throw new AuthException("Account is already verified.");
+                throw new DuplicateElementException("Account is already verified.");
             }
             user.setIsVerified(true);
             user.setVerifiedAt(LocalDateTime.now());

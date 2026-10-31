@@ -1,5 +1,7 @@
 package com.lerneon.backend.services.implementations;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.lerneon.backend.models.entity.Course;
@@ -7,30 +9,39 @@ import com.lerneon.backend.models.entity.Module;
 import com.lerneon.backend.models.exceptions.ResourceNotFoundException;
 import com.lerneon.backend.models.payload.request.ModuleRequest;
 import com.lerneon.backend.models.payload.request.UpdateModuleOrderNumberRequest;
+import com.lerneon.backend.models.payload.response.ModuleResponse;
+import com.lerneon.backend.repositories.CourseRepository;
 import com.lerneon.backend.repositories.ModuleRepository;
-import com.lerneon.backend.services.CourseService;
+import com.lerneon.backend.repositories.jdbi.ModuleJDBIRepository;
 import com.lerneon.backend.services.ModuleService;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class ModuleServiceImpl implements ModuleService {
     private final ModuleRepository moduleRepository;
-    private final CourseService courseService;
+    private final CourseRepository courseRepository;
+    private final ModuleJDBIRepository moduleJDBIRepository;
 
     @Override
-    public Module findModuleById(Integer id) {
+    public Module getModuleById(Integer id) {
         return moduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Module was not found."));
     }
 
     @Override
+    public List<ModuleResponse> getAllModuleByCourseSlug(String slug) {
+        return moduleJDBIRepository.getAllModuleByCourseSlug(slug);
+    }
+
+    @Override
     public Module createModule(ModuleRequest moduleRequest) {
-        Course course = courseService.findCourseById(moduleRequest.getCourseId());
+        Course course = courseRepository.findById(moduleRequest.getCourseId()).orElseThrow(
+                () -> new ResourceNotFoundException("Course was not found"));
 
         return moduleRepository.save(Module.builder()
                 .title(moduleRequest.getTitle())
@@ -41,7 +52,7 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public Module updateModule(Integer id, ModuleRequest moduleRequest) {
-        Module module = findModuleById(id);
+        Module module = getModuleById(id);
         module.setTitle(moduleRequest.getTitle());
 
         return moduleRepository.save(module);
@@ -65,7 +76,7 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public Module deleteModule(Integer id) {
-        Module module = findModuleById(id);
+        Module module = getModuleById(id);
         moduleRepository.delete(module);
         return module;
     }

@@ -24,14 +24,14 @@ export default function page() {
     resolver: zodResolver(SendOtpRequest),
     mode: "onSubmit",
     defaultValues: {
-      verificationType: VerificationType.Values.FORGOT_PASSWORD,
+      verification_type: VerificationType.Values.FORGOT_PASSWORD,
     },
   });
 
   const onSubmit: SubmitHandler<SendOtpRequest> = (data) => {
     sendOtp({
       email: data.email,
-      verificationType: VerificationType.Values.FORGOT_PASSWORD,
+      verification_type: VerificationType.Values.FORGOT_PASSWORD,
     });
   };
 

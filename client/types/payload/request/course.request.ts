@@ -13,7 +13,7 @@ export const CourseRequest = z.object({
     .min(50, "Description must be at least 50 characters."),
   price: z.number()
     .min(0, "Price must be greater than or equal to 0."),
-  categoryId: z.number({ required_error: "Category is required." }),
+  category_id: z.number({ required_error: "Category is required." }),
   difficulty: Difficulty,
   visibility: Visibility,
   language: z.string()

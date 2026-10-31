@@ -70,7 +70,7 @@ const Page = () => {
     if (!email) return;
     sendOtp({
       email,
-      verificationType: VerificationType.Values.FORGOT_PASSWORD,
+      verification_type: VerificationType.Values.FORGOT_PASSWORD,
     });
   }
 
