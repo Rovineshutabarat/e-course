@@ -20,4 +20,8 @@ public class ModuleResponse {
     private String title;
     private Integer orderNumber;
     private List<ResourceResponse> resources;
+
+    public int getTotalResources() {
+        return resources == null ? 0 : resources.size();
+    }
 }

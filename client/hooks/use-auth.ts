@@ -9,6 +9,7 @@ import {
   setPendingVerification,
 } from "@/lib/pending-verification";
 import { AuthService } from "@/services/auth.service";
+import { UseAuth } from "@/types/common/use.auth";
 import { OneTimePassword } from "@/types/entity/one.time.password";
 import { VerificationType } from "@/types/enums/verification.type";
 import { LoginRequest } from "@/types/payload/request/login.request";
@@ -18,7 +19,6 @@ import { SendOtpRequest } from "@/types/payload/request/send-otp.request";
 import { UpdatePasswordRequest } from "@/types/payload/request/update.password.request";
 import { ErrorResponse } from "@/types/payload/response/common/error.response";
 import { SuccessResponse } from "@/types/payload/response/common/success.response";
-import { UseAuth } from "@/types/use.auth";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React from "react";

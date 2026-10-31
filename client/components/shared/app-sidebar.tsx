@@ -32,10 +32,10 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
-import { NavigationGroup } from "@/types/navigation.group";
-import { NavigationSubItem } from "@/types/navigation.sub.item";
-import { NavigationItem } from "@/types/navogation.item";
-import { Sidebar as NavigationSidebar } from "@/types/sidebar";
+import { NavigationGroup } from "@/types/common/navigation.group";
+import { NavigationItem } from "@/types/common/navigation.item";
+import { NavigationSubItem } from "@/types/common/navigation.sub.item";
+import { Sidebar as NavigationSidebar } from "@/types/common/sidebar";
 import {
   BadgeCheck,
   Bell,

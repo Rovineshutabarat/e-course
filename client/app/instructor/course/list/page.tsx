@@ -1,6 +1,6 @@
 "use client";
 
-import DataTablePlaceholder from "@/components/shared/data-table-placeholder";
+import DataTablePlaceholder from "@/components/shared/table-skeleton";
 import { ImageViewer } from "@/components/shared/image-viewer";
 import SearchBar from "@/components/shared/search-bar";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { CourseService } from "@/services/course.service";
-import { Course } from "@/types/entity/course";
+import { CourseResponse } from "@/types/payload/response/course.response";
 import { Visibility } from "@/types/enums/visibility";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -46,7 +46,7 @@ import Link from "next/link";
 import { Fragment, useState } from "react";
 import { toast } from "sonner";
 
-const columns: ColumnDef<Course>[] = [
+const columns: ColumnDef<CourseResponse>[] = [
     { accessorKey: "id", header: "ID" },
     {
         accessorKey: "title",
@@ -73,7 +73,7 @@ const columns: ColumnDef<Course>[] = [
         accessorKey: "category",
         header: "Category",
         cell: ({ row }) => (
-            <div className="text-center">{row.original.category.name}</div>
+            <div className="text-center">{row.original.category}</div>
         ),
     },
     {
@@ -242,7 +242,7 @@ const CourseListPage = () => {
 
     const { data, isLoading } = useQuery({
         queryKey: ["courses"],
-        queryFn: () => CourseService.getCourses({ size: 100 }),
+        queryFn: () => CourseService.getAllCourses({ size: 100 }),
     });
 
     const courses = data?.data.items ?? [];

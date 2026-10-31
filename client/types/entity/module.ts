@@ -1,8 +1,10 @@
+import { Course } from "./course";
 import { Resource } from "./resource";
 
-export type CourseModule = {
+export type Module = {
     id: number;
     title: string;
     order_number: number;
+    course: Course;
     resources: Resource[];
 }

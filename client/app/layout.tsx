@@ -1,4 +1,4 @@
-import AppLayout from "@/components/layouts/app-layout";
+import AppProviders from "@/components/providers/app-providers";
 import type { Metadata } from "next";
 import React from "react";
 import "./globals.css";
@@ -16,7 +16,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
-        <AppLayout>{children}</AppLayout>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

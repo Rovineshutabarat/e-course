@@ -1,6 +1,3 @@
-"use client";
-
-import SearchBar from "@/components/shared/search-bar";
 import ThemeToggle from "@/components/shared/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -12,71 +9,51 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
-import { useCourseFilters } from "@/hooks/use-course-filters";
-import { BookOpen, Heart, Search, ShoppingCart } from "lucide-react";
+import { ArrowLeft, Heart, Share2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
 
-const CourseNavbar = () => {
+type NavbarProps = {
+  title?: string;
+}
+
+const Navbar = ({ title }: NavbarProps) => {
   const router = useRouter();
   const { session, isAuthenticated, logout } = useAuth();
-  const { filters, setFilters } = useCourseFilters();
-  const [mobileKeyword, setMobileKeyword] = React.useState(filters.key ?? "");
-
-  React.useEffect(() => {
-    setMobileKeyword(filters.key ?? "");
-  }, [filters.key]);
-
-  function commitSearch(keyword: string) {
-    const key = keyword.trim();
-    setFilters({ key: key === "" ? undefined : key });
-  }
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/60">
-      <div className="mx-auto flex h-16 max-w-full items-center gap-3 sm:gap-4 ">
-        <button
-          onClick={() => router.push("/course/list")}
-          className="group flex shrink-0 items-center gap-2.5 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
-          aria-label="Peak LMS - back to course list"
+    <div className="container mx-auto py-2 px-4 flex justify-between items-center">
+      <div className="flex items-center text-sm min-w-0">
+        <Button
+          variant="link"
+          className="p-0 mr-2 cursor-pointer shrink-0"
+          onClick={() => router.push("/courses")}
         >
-          <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
-            <BookOpen className="h-4.5 w-4.5" />
-          </span>
-          <span className="hidden text-[17px] font-bold tracking-tight min-[400px]:block">
-            Peak<span className="text-primary"> LMS</span>
-          </span>
-        </button>
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Back to Courses
+        </Button>
+        <span className="text-muted-foreground mx-2 shrink-0">|</span>
+        <span className="text-muted-foreground truncate font-medium">
+          {title ?? "Course Detail"}
+        </span>
+      </div>
 
-        <div className="hidden min-w-0 flex-1 justify-center px-2 md:flex">
-          <SearchBar
-            placeholder="Search any course..."
-            displaySize="large"
-            defaultValue={filters.key}
-            onSearch={commitSearch}
-          />
-        </div>
-
-        <nav
-          aria-label="Course actions"
-          className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-1"
-        >
+      <div className="flex items-center gap-x-4 shrink-0">
+        <div className="flex items-center pr-4 border-r gap-x-1">
           <ThemeToggle className="relative h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/40" />
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label="Add to wishlist"
-                className="relative h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/40"
+                className="h-8 w-8 text-muted-foreground cursor-pointer"
               >
                 <Heart className="h-4 w-4" />
               </Button>
@@ -89,104 +66,67 @@ const CourseNavbar = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label="Your shopping cart, 2 items"
-                className="relative h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/40"
+                className="h-8 w-8 text-muted-foreground cursor-pointer"
+              >
+                <Share2 className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Share this course</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground cursor-pointer"
               >
                 <ShoppingCart className="h-4 w-4" />
-                <span className="absolute right-0 top-1 grid size-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold leading-none text-primary-foreground">
-                  2
-                </span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>Your Shopping Cart</TooltipContent>
           </Tooltip>
+        </div>
 
-          <div aria-hidden className="mx-2 h-6 w-px bg-border" />
-
+        <div className="flex items-center gap-x-3 pl-2">
           {isAuthenticated ? (
             <div className="flex items-center gap-x-2">
-              <p className="hidden max-w-28 truncate text-sm font-medium sm:block">
-                {session?.user.username}
-              </p>
+              <p className="text-sm">{session?.user.username}</p>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Avatar className="h-5 w-5 cursor-pointer ring-1 ring-primary/20 ring-offset-1 ring-offset-background">
-                    <AvatarImage src="" alt={session?.user.username} />
+                  <Avatar className="h-8 w-8 cursor-pointer border">
+                    <AvatarImage src="" />
                     <AvatarFallback className="text-xs uppercase">
                       {session?.user.username.at(0)}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuItem
-                    onClick={() => router.push("profile")}
-                    className="cursor-pointer"
-                  >
+                  <DropdownMenuItem onClick={() => router.push("profile")}>
                     Profile
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    variant="destructive"
-                    onClick={logout}
-                    className="cursor-pointer"
-                  >
+                  <DropdownMenuItem onClick={logout} className="text-red-600">
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
           ) : (
-            <div className="flex items-center gap-x-2 sm:gap-x-3">
-              <Link
-                href="/auth/login"
-                className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:block"
-              >
+            <div className="flex items-center gap-x-4 text-sm font-medium">
+              <Link href="/auth/login" className="hover:text-primary">
                 Sign In
               </Link>
               <Link href="/auth/register">
-                <Button size="sm" className="rounded-full px-5 shadow-sm">
-                  Sign Up
-                </Button>
+                <Button size="sm">Sign Up</Button>
               </Link>
             </div>
           )}
-        </nav>
+        </div>
       </div>
-
-      <div className="border-t border-border/60 px-4 pb-3 pt-2 md:hidden">
-        <form
-          role="search"
-          className="relative w-full"
-          onSubmit={(e) => {
-            e.preventDefault();
-            commitSearch(mobileKeyword);
-          }}
-        >
-          <label htmlFor="course-search-mobile" className="sr-only">
-            Search courses
-          </label>
-          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-          <Input
-            id="course-search-mobile"
-            type="search"
-            placeholder="Search any course..."
-            value={mobileKeyword}
-            onChange={(e) => {
-              const value = e.target.value;
-              const wasNonEmpty = mobileKeyword !== "";
-              setMobileKeyword(value);
-
-              if (value === "" && wasNonEmpty) {
-                commitSearch("");
-              }
-            }}
-            className="h-10 w-full rounded-full bg-muted/70 pl-10 pr-4 text-sm shadow-none focus-visible:border-ring"
-          />
-        </form>
-      </div>
-    </header>
+    </div>
   );
 };
 
-export default CourseNavbar;
+export default Navbar;

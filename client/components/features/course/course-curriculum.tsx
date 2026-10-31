@@ -17,12 +17,12 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { CourseModule } from "@/types/entity/module";
+import { ModuleResponse } from "@/types/payload/response/module.response";
 import { Resource } from "@/types/entity/resource";
 import { Check, Download, ListVideo, Lock, PlayCircle } from "lucide-react";
 
 type CourseCurriculumProps = {
-  modules: CourseModule[];
+  modules: ModuleResponse[];
   currentResourceId: number | null;
   completedResourceIds?: number[];
   onSelectResource?: (resource: Resource) => void;
@@ -34,16 +34,12 @@ const CourseCurriculum = ({
   completedResourceIds = [],
   onSelectResource,
 }: CourseCurriculumProps) => {
-  const sortedModules = [...modules].sort(
-    (a, b) => a.order_number - b.order_number,
-  );
-  const totalLessons = sortedModules.reduce(
-    (acc, m) => acc + m.resources.length,
-    0,
-  );
+  const totalModules: number = modules.length
+  const totalResources: number = modules.flatMap((module) => module.resources).length
+
   const completedCount = completedResourceIds.length;
   const progress =
-    totalLessons === 0 ? 0 : Math.round((completedCount / totalLessons) * 100);
+    totalResources === 0 ? 0 : Math.round((completedCount / totalResources) * 100);
 
   return (
     <Card>
@@ -51,7 +47,7 @@ const CourseCurriculum = ({
         <CardTitle>Course Content</CardTitle>
         <div className="flex items-center justify-between">
           <CardDescription>
-            {sortedModules.length} modules &bull; {totalLessons} lessons
+            {totalModules} modules {totalResources} lessons
           </CardDescription>
           <div className="text-sm">
             <span className="font-medium">
@@ -59,11 +55,11 @@ const CourseCurriculum = ({
             </span>
           </div>
         </div>
-        {totalLessons > 0 && <Progress value={progress} className="mt-2" />}
+        {totalResources > 0 && <Progress value={progress} className="mt-2" />}
       </CardHeader>
 
       <CardContent className="max-h-[calc(100vh-200px)] overflow-y-auto">
-        {sortedModules.length === 0 ? (
+        {modules.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-8 text-center">
             <ListVideo className="h-8 w-8 text-muted-foreground" />
             <p className="text-sm font-medium">No lessons yet</p>
@@ -74,12 +70,10 @@ const CourseCurriculum = ({
         ) : (
           <Accordion
             type="multiple"
-            defaultValue={
-              sortedModules.length > 0 ? [String(sortedModules[0].id)] : []
-            }
+            defaultValue={[String(modules[0].id)]}
             className="w-full"
           >
-            {sortedModules.map((module) => (
+            {modules.map((module) => (
               <AccordionItem
                 key={module.id}
                 value={module.id.toString()}

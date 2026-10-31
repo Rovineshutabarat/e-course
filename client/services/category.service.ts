@@ -1,4 +1,4 @@
-import { ApiClient } from "@/services/config/api.client";
+import { ApiClient } from "@/configurations/api.client";
 import { Category } from "@/types/entity/category";
 import { SuccessResponse } from "@/types/payload/response/common/success.response";
 

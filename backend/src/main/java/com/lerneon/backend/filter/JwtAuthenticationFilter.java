@@ -47,22 +47,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String header = extractHeader(request);
+        String token = extractToken(request);
 
-        if (!StringUtils.hasText(header)) {
-            log.debug("Request does not contain JWT header.");
+        if (!StringUtils.hasText(token)) {
+            log.debug("Request does not contain JWT token.");
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (!jwtService.isValidToken(header)) {
+        if (!jwtService.isValidToken(token)) {
             log.debug("Invalid JWT token provided.");
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            String email = jwtService.extractEmail(header);
+            String email = jwtService.extractEmail(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -81,7 +81,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String extractHeader(HttpServletRequest request) {
+    private String extractToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (StringUtils.hasText(header) && header.startsWith(jwtProperties.getPrefix().concat(" "))) {
             return header.substring(7);

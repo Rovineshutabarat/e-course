@@ -301,7 +301,7 @@ public class AppInitializer implements CommandLineRunner {
                                 Resource resource = Resource.builder()
                                                 .title("Resource " + j)
                                                 .orderNumber(j)
-                                                .url("https://example.com/resource-" + i + "-" + j)
+                                                .url("uploads/stream/12039d5f-a97a-42e2-861d-5920e24c09b1/master.m3u8")
                                                 .isAvailable(true)
                                                 .module(module)
                                                 .build();

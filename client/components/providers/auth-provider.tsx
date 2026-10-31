@@ -1,6 +1,6 @@
 "use client";
-import { getAccessToken, setAccessToken } from "@/services/config/api.client";
-import { refreshAccessToken } from "@/services/config/refresh.client";
+import { getAccessToken, setAccessToken } from "@/configurations/api.client";
+import { refreshAccessToken } from "@/configurations/refresh.client";
 import { Role } from "@/types/entity/role";
 import { AuthResponse } from "@/types/payload/response/auth.response";
 import { usePathname, useRouter } from "next/navigation";

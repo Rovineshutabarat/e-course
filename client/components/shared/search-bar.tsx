@@ -26,16 +26,16 @@ const SearchBar = ({
   onSearch,
   ...props
 }: SearchBarProps) => {
-  const [searchKeyword, setSearchKeyword] = React.useState<string>(
+  const [keyword, setKeyword] = React.useState<string>(
     defaultValue ?? "",
   );
 
   React.useEffect(() => {
-    setSearchKeyword(defaultValue ?? "");
+    setKeyword(defaultValue ?? "");
   }, [defaultValue]);
 
   function handleSearch() {
-    onSearch?.(searchKeyword.trim());
+    onSearch?.(keyword.trim());
   }
 
   function handleKeyDown(event: React.KeyboardEvent) {
@@ -46,8 +46,8 @@ const SearchBar = ({
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
-    const wasNonEmpty = searchKeyword !== "";
-    setSearchKeyword(value);
+    const wasNonEmpty = keyword !== "";
+    setKeyword(value);
 
     if (value === "" && wasNonEmpty) {
       onSearch?.("");
@@ -65,7 +65,7 @@ const SearchBar = ({
         type="search"
         placeholder={placeholder}
         className="h-9"
-        value={searchKeyword}
+        value={keyword}
         onKeyDown={handleKeyDown}
         onChange={handleChange}
         {...props}
